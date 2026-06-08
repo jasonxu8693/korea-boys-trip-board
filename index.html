@@ -180,11 +180,11 @@
       overflow: hidden;
       border: 1px solid rgba(255,255,255,0.14);
       background:
-        radial-gradient(circle at 16% 18%, rgba(255,151,202,0.16), transparent 24%),
-        radial-gradient(circle at 82% 20%, rgba(114,244,255,0.22), transparent 24%),
-        radial-gradient(circle at 52% 76%, rgba(215,230,255,0.14), transparent 22%),
-        linear-gradient(180deg, rgba(20, 28, 41, 0.94), rgba(11, 16, 24, 0.98));
-      box-shadow: inset 0 0 110px rgba(255,255,255,0.04);
+        radial-gradient(circle at 80% 14%, rgba(255,179,120,0.20), transparent 26%),
+        radial-gradient(circle at 20% 18%, rgba(255,151,202,0.16), transparent 24%),
+        radial-gradient(circle at 52% 88%, rgba(120,170,255,0.12), transparent 26%),
+        linear-gradient(180deg, #131a30 0%, #281f3e 42%, #45283f 74%, #59333f 100%);
+      box-shadow: inset 0 0 110px rgba(255,255,255,0.05);
     }
     .board:before { content: ""; position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg width='180' height='180' viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.07)' stroke-width='1'%3E%3Cpath d='M0 92 C26 70, 44 104, 70 84 S122 70, 180 98'/%3E%3Cpath d='M14 132 C42 112, 63 150, 98 128 S142 120, 170 144'/%3E%3C/g%3E%3C/svg%3E"); opacity: 0.7; }
     .sea { position: absolute; left: -5%; right: -5%; bottom: -10%; height: 36%; background: linear-gradient(180deg, rgba(114,244,255,0.16), rgba(21, 63, 92, 0.60)); border-radius: 50% 50% 0 0; filter: blur(0.2px); }
@@ -378,6 +378,41 @@
     .confetti { position: absolute; top: -14px; width: 9px; height: 14px; border-radius: 2px; opacity: 0.95; will-change: transform, opacity; animation: confettiFall linear forwards; }
     @keyframes confettiFall { 0% { transform: translateY(-10px) rotate(0deg); opacity: 1; } 100% { transform: translateY(102vh) rotate(640deg); opacity: 0.9; } }
 
+    /* Korean board scene + per-player vibes + countdown (added) */
+    .k-scene { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
+    .taegeuk { position: absolute; top: 11%; right: 10%; width: 84px; height: 84px; border-radius: 50%; background: linear-gradient(to right, #cd2e3a 50%, #0047a0 50%); box-shadow: 0 0 42px rgba(205,46,58,0.30), 0 0 54px rgba(0,71,160,0.24); animation: spin 28s linear infinite; z-index: 1; }
+    .taegeuk:before, .taegeuk:after { content: ""; position: absolute; left: 21px; width: 42px; height: 42px; border-radius: 50%; }
+    .taegeuk:before { top: 0; background: #cd2e3a; }
+    .taegeuk:after { top: 42px; background: #0047a0; }
+    .lantern { position: absolute; width: 26px; height: 35px; border-radius: 13px 13px 14px 14px; background: linear-gradient(180deg, #ff7a7a, #cd2e3a); box-shadow: 0 0 20px rgba(205,46,58,0.65); transform-origin: top center; animation: sway 4.5s ease-in-out infinite; z-index: 2; }
+    .lantern:before { content: ""; position: absolute; top: -9px; left: 50%; transform: translateX(-50%); width: 2px; height: 9px; background: rgba(255,255,255,0.45); }
+    .lantern:after { content: ""; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%); width: 8px; height: 6px; background: #ffd15c; border-radius: 0 0 3px 3px; box-shadow: 0 0 12px rgba(255,209,92,0.85); }
+    .lantern.l1 { left: 26%; top: 13%; }
+    .lantern.l2 { left: 49%; top: 11%; background: linear-gradient(180deg, #7db8ff, #0047a0); box-shadow: 0 0 20px rgba(0,71,160,0.6); animation-delay: 0.8s; }
+    .lantern.l3 { left: 62%; top: 15%; animation-delay: 1.6s; }
+    @keyframes sway { 0%,100% { transform: rotate(-7deg); } 50% { transform: rotate(7deg); } }
+    .leaves { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 3; }
+    .leaf { position: absolute; top: -26px; opacity: 0; animation: leafFall linear infinite; will-change: transform, opacity; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.25)); }
+    @keyframes leafFall { 0% { transform: translateY(-30px) translateX(0) rotate(0deg); opacity: 0; } 12% { opacity: 0.95; } 88% { opacity: 0.85; } 100% { transform: translateY(900px) translateX(46px) rotate(360deg); opacity: 0; } }
+
+    .vibe-block { margin-top: 16px; }
+    .vibe-picker { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 9px; }
+    .vibe-chip { display: grid; justify-items: center; gap: 4px; padding: 10px 6px; border: 1px solid rgba(255,255,255,0.13); border-radius: 15px; background: rgba(0,0,0,0.2); color: var(--muted); transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease; }
+    .vibe-chip:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.26); }
+    .vibe-chip.active { background: rgba(255,209,92,0.18); border-color: rgba(255,209,92,0.42); color: #ffe7ae; box-shadow: 0 8px 22px rgba(255,209,92,0.12); }
+    .vibe-chip .vibe-emoji { font-size: 21px; line-height: 1; }
+    .vibe-chip .vibe-name { font-size: 10px; font-weight: 900; letter-spacing: 0.02em; }
+
+    .roster-row { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; padding: 12px; border: 1px solid rgba(255,255,255,0.12); border-radius: 18px; background: rgba(255,255,255,0.05); }
+    .roster-fields { display: grid; grid-template-columns: 1.1fr 1fr 1fr; gap: 10px; }
+    .roster-fields select { width: 100%; border: 1px solid rgba(255,255,255,0.14); border-radius: 14px; background: rgba(0,0,0,0.2); color: var(--ink); padding: 11px 12px; outline: none; }
+    .roster-fields select option { color: #111; }
+    @media (max-width: 620px) { .roster-fields { grid-template-columns: 1fr; } }
+
+    .token-vibe { position: absolute; top: -11px; right: -11px; width: 20px; height: 20px; border-radius: 50%; background: rgba(7,18,38,0.94); border: 1px solid rgba(255,255,255,0.5); display: grid; place-items: center; font-size: 11px; line-height: 1; box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
+    .traveller-vibe { font-size: 13px; margin-left: 4px; }
+    .countdown-card .big { background: linear-gradient(100deg, #ffd15c, #ff97ca 60%, #72f4ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
     @media (max-width: 980px) {
       .hero-content { grid-template-columns: 1fr; align-items: end; }
       .layout { grid-template-columns: 1fr; }
@@ -424,24 +459,24 @@
             <button class="btn" data-jump="board">Open board</button>
             <button class="btn secondary" data-jump="tasks">Boss tasks</button>
             <button class="btn ghost" data-jump="ideas">Activity Market</button>
-            <button class="btn ghost" id="openSetup">Trip vibe</button>
+            <button class="btn ghost" data-jump="settings">Set your vibe</button>
           </div>
         </div>
         <aside class="stat-card">
-          <div class="glass flight-card">
-            <div class="label">Flight status</div>
-            <div class="big">LHR → ICN booked</div>
-            <div class="micro">Jason only · QW901 · Fri 23 Oct 22:05 → Sat 24 Oct 21:35 · e-ticket pending</div>
+          <div class="glass countdown-card">
+            <div class="label">Countdown to Seoul</div>
+            <div class="big"><span id="countdownDays">—</span></div>
+            <div class="micro" id="countdownSub">Seoul + Jeju · 23 Oct to 2 Nov 2026</div>
             <div class="pill-row">
-              <span class="pill done">✅ Outbound locked</span>
-              <span class="pill warn">⚠️ Return TBC</span>
-              <span class="pill warn">⚠️ Jeju leg TBC</span>
+              <span class="pill hot">🍁 Autumn in Korea</span>
+              <span class="pill" id="travellerCountPill">7 travellers</span>
             </div>
           </div>
           <div class="glass">
-            <div class="label">Group setup</div>
-            <div class="big">7 travellers</div>
-            <div class="micro">Names, budget, accommodation and Jeju transport TBC.</div>
+            <div class="label">Group progress</div>
+            <div class="big"><span id="heroProgressPct">0%</span></div>
+            <div class="progress-bar" style="margin-top:12px"><div class="progress-fill" id="heroProgressFill"></div></div>
+            <div class="micro" id="heroProgressSub" style="margin-top:10px">Group bosses cleared together.</div>
           </div>
         </aside>
       </div>
@@ -452,8 +487,7 @@
       <button data-tab="tasks">🎬 Group tasks</button>
       <button class="market-tab" data-tab="ideas">🎯 Activity Market</button>
       <button data-tab="intel">📍 Trip intel</button>
-      <button data-tab="sync">🔄 Sync</button>
-      <button data-tab="settings">⚙️ Roster</button>
+      <button data-tab="settings">⚙️ Roster &amp; vibes</button>
       <button class="sync-chip" id="syncChip" title="Tap to pull the latest from the group">
         <span class="dot"></span><span class="ico">↻</span><span id="syncChipText">Live</span>
       </button>
@@ -469,7 +503,7 @@
                 <p class="panel-sub">Track progress, votes and group decisions.</p>
               </div>
               <div class="pill-row" style="margin:0">
-                <span class="pill hot" id="personalityBadge">Trip mode: unset</span>
+                <span class="pill hot" id="vibeSummaryBadge">0/7 vibes set</span>
                 <span class="pill warn" id="groupProgressBadge">Group bosses 0%</span>
               </div>
             </div>
@@ -495,7 +529,42 @@
             </div>
             <div class="board-shell">
               <div class="board" id="questBoard">
-                <div class="cloud c1"></div><div class="cloud c2"></div><div class="sea"></div><div class="island"></div><div class="volcano"></div><div class="lava"></div>
+                <svg class="k-scene" viewBox="0 0 1000 660" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="mtnBack" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6b3f5e"/><stop offset="1" stop-color="#2c1f3c"/></linearGradient>
+                    <linearGradient id="mtnFront" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4670"/><stop offset="1" stop-color="#171f36"/></linearGradient>
+                    <linearGradient id="hanok" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a3550"/><stop offset="1" stop-color="#0f1626"/></linearGradient>
+                    <linearGradient id="volc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a4a5e"/><stop offset="1" stop-color="#241a2c"/></linearGradient>
+                  </defs>
+                  <path fill="url(#mtnBack)" opacity="0.9" d="M0 360 L120 250 L230 330 L330 238 L430 330 L520 268 L620 350 L740 246 L860 332 L1000 268 L1000 660 L0 660 Z"/>
+                  <path fill="url(#mtnFront)" d="M0 444 Q160 360 320 432 T640 432 T1000 420 L1000 660 L0 660 Z"/>
+                  <g transform="translate(150 312)" opacity="0.92">
+                    <rect x="-3" y="-150" width="6" height="150" fill="#cfd9ff" opacity="0.45"/>
+                    <ellipse cx="0" cy="-150" rx="15" ry="8" fill="#9fb4e6"/>
+                    <rect x="-2" y="-188" width="4" height="38" fill="#cfd9ff" opacity="0.7"/>
+                    <circle cx="0" cy="-191" r="3.4" fill="#ffd15c"><animate attributeName="opacity" values="0.5;1;0.5" dur="3s" repeatCount="indefinite"/></circle>
+                  </g>
+                  <g fill="url(#hanok)" stroke="rgba(255,255,255,0.12)" stroke-width="1">
+                    <path d="M250 500 C268 470 300 463 318 465 C350 469 392 474 416 500 C392 493 366 491 333 491 C300 491 276 493 250 500 Z"/>
+                    <path d="M300 472 C320 432 360 422 380 424 C420 428 470 434 500 472 C470 464 440 462 400 462 C360 462 330 464 300 472 Z"/>
+                    <path d="M420 488 C440 452 480 444 500 446 C540 450 590 456 620 488 C590 480 560 478 520 478 C480 478 450 480 420 488 Z"/>
+                  </g>
+                  <g fill="#ffce6b"><rect x="352" y="474" width="9" height="9" rx="2" opacity="0.85"/><rect x="476" y="490" width="9" height="9" rx="2" opacity="0.8"/><rect x="318" y="497" width="9" height="9" rx="2" opacity="0.7"/></g>
+                  <path fill="url(#volc)" d="M690 480 L772 318 Q790 298 810 318 L892 480 Z"/>
+                  <path fill="#0f1626" opacity="0.55" d="M772 320 Q790 300 810 320 Q794 334 791 334 Q788 334 772 320 Z"/>
+                  <g transform="translate(905 548)">
+                    <ellipse cx="0" cy="22" rx="20" ry="9" fill="#241a2c" opacity="0.6"/>
+                    <path d="M-15 22 Q-18 -8 0 -14 Q18 -8 15 22 Z" fill="#6f6e7e"/>
+                    <path d="M-16 -7 Q0 -23 16 -7 Q0 -15 -16 -7 Z" fill="#54535f"/>
+                    <circle cx="-6" cy="2" r="3" fill="#241a2c"/><circle cx="6" cy="2" r="3" fill="#241a2c"/>
+                    <path d="M-5 11 Q0 15 5 11" stroke="#241a2c" stroke-width="2" fill="none"/>
+                  </g>
+                </svg>
+                <div class="taegeuk" aria-hidden="true"></div>
+                <div class="cloud c1"></div><div class="cloud c2"></div>
+                <div class="lantern l1"></div><div class="lantern l2"></div><div class="lantern l3"></div>
+                <div class="sea"></div>
+                <div class="leaves" id="leaves" aria-hidden="true"></div>
                 <svg class="route-svg" viewBox="0 0 1000 660" preserveAspectRatio="none" aria-hidden="true">
                   <path class="route-shadow" d="M105 540 C145 410 255 455 255 342 C255 230 385 248 420 150 C460 42 640 98 655 220 C672 356 765 298 835 390 C900 475 850 560 745 555" />
                   <path class="route-line" d="M105 540 C145 410 255 455 255 342 C255 230 385 248 420 150 C460 42 640 98 655 220 C672 356 765 298 835 390 C900 475 850 560 745 555" />
@@ -527,6 +596,10 @@
               <div class="pill-row">
                 <span class="pill" id="selectedRole">🧭 No role yet</span>
                 <span class="pill" id="selectedStage">Spawn point</span>
+              </div>
+              <div class="vibe-block">
+                <div class="label">Their vibe</div>
+                <div class="vibe-picker" id="vibePicker"></div>
               </div>
             </div>
 
@@ -679,37 +752,6 @@
         </div>
       </section>
 
-      <section id="sync" class="section">
-        <div class="panel pad">
-          <h2>Live group sync</h2>
-          <p class="panel-sub">This board is connected to a shared Google Sheet. Everyone's votes and progress save to the same place.</p>
-
-          <div class="sync-live-banner">
-            <div class="pulse">🟢</div>
-            <div>
-              <div class="s-title">Sync is live</div>
-              <div class="s-sub">Changes you make are saved to the group sheet automatically. To see what other people have done since you opened the page, pull the latest.</div>
-              <div class="sync-stamp" id="syncTabStamp">Checking…</div>
-            </div>
-            <button class="btn small" id="syncRefreshBtn">↻ Refresh now</button>
-          </div>
-
-          <div class="sync-diagram">
-            <div class="sync-box"><div class="emoji">📱</div><div class="sync-title">Your board</div><div class="sync-copy">You vote and tick things off on your own phone or laptop.</div></div>
-            <div class="sync-box"><div class="emoji">⚡</div><div class="sync-title">Google Apps Script</div><div class="sync-copy">A tiny script catches the update and writes it to the sheet.</div></div>
-            <div class="sync-box"><div class="emoji">🗂️</div><div class="sync-title">Shared Google Sheet</div><div class="sync-copy">The whole board lives in one sheet that everyone shares.</div></div>
-          </div>
-
-          <h3 style="margin:24px 0 12px">Good to know</h3>
-          <div class="grid-2">
-            <div class="info-card"><div class="emoji">🔄</div><h3>Refresh to see others</h3><p>Your own changes save instantly. To pull in what other people changed, tap the <strong>Live</strong> chip at the top or the Refresh button above. The board also checks for updates by itself every 25 seconds.</p></div>
-            <div class="info-card"><div class="emoji">✍️</div><h3>Last save wins</h3><p>If two people tap at the exact same second, the most recent save is the one that sticks. Totally fine for a seven person trip.</p></div>
-            <div class="info-card"><div class="emoji">🙋</div><h3>Pick yourself first</h3><p>Use the player dropdown to choose who you are before voting. The board remembers your pick on your own device, even after a sync.</p></div>
-            <div class="info-card"><div class="emoji">🔐</div><h3>Keep the link private</h3><p>Anyone with the page can edit the board, so share the link only with the boys.</p></div>
-          </div>
-        </div>
-      </section>
-
       <section id="settings" class="section">
         <div class="layout">
           <div class="panel pad">
@@ -726,19 +768,6 @@
         </div>
       </section>
     </main>
-  </div>
-
-  <div class="modal" id="setupModal" role="dialog" aria-modal="true" aria-labelledby="setupTitle">
-    <div class="modal-card">
-      <div class="eyebrow">Choose your trip energy</div>
-      <h2 id="setupTitle">Choose your Korea mode</h2>
-      <p>Pick a board identity. You can change it later.</p>
-      <div class="personality-grid" id="personalityGrid"></div>
-      <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; margin-top:18px">
-        <button class="btn secondary" id="skipSetup">Skip</button>
-        <button class="btn" id="saveSetup">Start</button>
-      </div>
-    </div>
   </div>
 
   <div class="toast" id="toast"></div>
@@ -771,6 +800,19 @@
     const colours = ["#72f4ff", "#ff97ca", "#d7e6ff", "#8be8d4", "#8fa9ff", "#9ec9ff", "#f5f8ff"];
     const roles = ["🎤 Frontman", "🍜 Food Scout", "📸 Visual Lead", "🧾 Money Manager", "🚘 Ride Lead", "🎬 Content Lead", "🪪 Admin Lead"];
 
+    // Each traveller picks their own vibe — shown on their token and roster card.
+    const vibes = [
+      { id: "foodie", emoji: "🍜", name: "Foodie", tag: "Here for the food" },
+      { id: "spontaneous", emoji: "🎧", name: "Spontaneous", tag: "Go with the flow" },
+      { id: "planner", emoji: "🗓️", name: "Planner", tag: "Loves a plan" },
+      { id: "party", emoji: "🍻", name: "Party", tag: "Last one standing" },
+      { id: "culture", emoji: "🏯", name: "Culture", tag: "Temples and history" },
+      { id: "chill", emoji: "🌊", name: "Chill", tag: "Easy does it" }
+    ];
+    function vibeById(id) { return vibes.find(v => v.id === id) || null; }
+
+    const TRIP_START = new Date(2026, 9, 23); // 23 Oct 2026 (month is 0-indexed)
+
 
     const defaultIdeas = [
       { id: "colourAnalysis", emoji: "🎨", title: "Colour analysis", city: "Seoul", desc: "Personal colour consult. Good for shopping and group content." },
@@ -781,17 +823,16 @@
 
     const defaultState = {
       selectedPlayer: 0,
-      personality: null,
       ideas: structuredClone(defaultIdeas),
       ideaVotes: {},
       players: [
-        { name: "Jason", initials: "J", colour: colours[0], role: roles[0], progress: 2, completed: { squad: true, outbound: true } },
-        { name: "Traveller 2", initials: "T2", colour: colours[1], role: roles[1], progress: 0, completed: {} },
-        { name: "Traveller 3", initials: "T3", colour: colours[2], role: roles[2], progress: 0, completed: {} },
-        { name: "Traveller 4", initials: "T4", colour: colours[3], role: roles[3], progress: 0, completed: {} },
-        { name: "Traveller 5", initials: "T5", colour: colours[4], role: roles[4], progress: 0, completed: {} },
-        { name: "Traveller 6", initials: "T6", colour: colours[5], role: roles[5], progress: 0, completed: {} },
-        { name: "Traveller 7", initials: "T7", colour: colours[6], role: roles[6], progress: 0, completed: {} }
+        { name: "Jason", initials: "J", colour: colours[0], role: roles[0], vibe: "foodie", progress: 2, completed: { squad: true, outbound: true } },
+        { name: "Traveller 2", initials: "T2", colour: colours[1], role: roles[1], vibe: null, progress: 0, completed: {} },
+        { name: "Traveller 3", initials: "T3", colour: colours[2], role: roles[2], vibe: null, progress: 0, completed: {} },
+        { name: "Traveller 4", initials: "T4", colour: colours[3], role: roles[3], vibe: null, progress: 0, completed: {} },
+        { name: "Traveller 5", initials: "T5", colour: colours[4], role: roles[4], vibe: null, progress: 0, completed: {} },
+        { name: "Traveller 6", initials: "T6", colour: colours[5], role: roles[5], vibe: null, progress: 0, completed: {} },
+        { name: "Traveller 7", initials: "T7", colour: colours[6], role: roles[6], vibe: null, progress: 0, completed: {} }
       ],
       groupDone: {
         flightKraken: false,
@@ -830,16 +871,7 @@
       { id: "offlinePack", icon: "📲", title: "Generate the offline pack", desc: "Tickets, accommodation, transport, insurance, maps and emergency contacts saved.", priority: "P3" }
     ];
 
-    const personalities = [
-      { id: "chaotic", emoji: "⚡", name: "After Party", badge: "Trip vibe: chaotic" },
-      { id: "spontaneous", emoji: "🎧", name: "Night Run", badge: "Trip vibe: spontaneous" },
-      { id: "rigid", emoji: "🗓️", name: "Clean Plan", badge: "Trip vibe: structured" },
-      { id: "food", emoji: "🍜", name: "Food Hunt", badge: "Trip vibe: food led" },
-      { id: "chill", emoji: "🌊", name: "Easy Mode", badge: "Trip vibe: chill" }
-    ];
-
     let state = loadState();
-    let selectedPersonality = state.personality;
 
     function loadState() {
       try {
@@ -1056,7 +1088,8 @@
         const radius = stackIndex === 0 ? 0 : 2.7 + Math.floor((stackIndex - 1) / 6) * 2;
         const x = cp.x + Math.cos(angle) * radius;
         const y = cp.y + Math.sin(angle) * radius;
-        return `<div class="token ${idx === state.selectedPlayer ? "active" : ""}" data-name="${escapeHtml(p.name)}" style="left:${x}%; top:${y}%; background:${p.colour}" onclick="void(0)">${escapeHtml(p.initials)}</div>`;
+        const v = vibeById(p.vibe);
+        return `<div class="token ${idx === state.selectedPlayer ? "active" : ""}" data-name="${escapeHtml(p.name)}${v ? " · " + v.name : ""}" style="left:${x}%; top:${y}%; background:${p.colour}" onclick="void(0)">${escapeHtml(p.initials)}${v ? `<span class="token-vibe">${v.emoji}</span>` : ""}</div>`;
       }).join("");
     }
 
@@ -1069,9 +1102,10 @@
       const holder = document.getElementById("travellerGrid");
       holder.innerHTML = state.players.map((p, idx) => {
         const progress = computePlayerProgress(p);
+        const v = vibeById(p.vibe);
         return `<div class="traveller-row" role="button" tabindex="0" data-player="${idx}">
           <div class="avatar-dot" style="background:${p.colour}">${escapeHtml(p.initials)}</div>
-          <div><div class="traveller-name">${escapeHtml(p.name)}</div><div class="traveller-progress">${checkpoints[progress].title}</div></div>
+          <div><div class="traveller-name">${escapeHtml(p.name)}${v ? `<span class="traveller-vibe">${v.emoji}</span>` : ""}</div><div class="traveller-progress">${v ? v.name + " · " : ""}${checkpoints[progress].title}</div></div>
           <span class="pill ${idx === state.selectedPlayer ? "done" : ""}">${Math.round(progress / (checkpoints.length - 1) * 100)}%</span>
         </div>`;
       }).join("");
@@ -1245,44 +1279,96 @@
     }
 
     function renderBadges() {
-      const chosen = personalities.find(x => x.id === state.personality);
-      document.getElementById("personalityBadge").textContent = chosen ? `${chosen.emoji} ${chosen.badge}` : "Trip mode: unset";
+      const vibeSet = state.players.filter(p => p.vibe).length;
+      const vibeBadge = document.getElementById("vibeSummaryBadge");
+      if (vibeBadge) vibeBadge.textContent = `${vibeSet}/${state.players.length} vibes set`;
       const groupTotal = groupTasks.length;
       const groupDone = Object.values(state.groupDone).filter(Boolean).length;
       const percent = Math.round(groupDone / groupTotal * 100);
-      document.getElementById("groupProgressBadge").textContent = `Group bosses ${percent}%`;
+      const gpb = document.getElementById("groupProgressBadge");
+      if (gpb) gpb.textContent = `Group bosses ${percent}%`;
+    }
+
+    function renderHero() {
+      const days = Math.ceil((TRIP_START - new Date()) / 86400000);
+      const daysEl = document.getElementById("countdownDays");
+      const subEl = document.getElementById("countdownSub");
+      if (daysEl) {
+        if (days > 1) { daysEl.textContent = `${days} days`; if (subEl) subEl.textContent = "until you land in Seoul · 23 Oct 2026"; }
+        else if (days === 1) { daysEl.textContent = "1 day"; if (subEl) subEl.textContent = "Seoul tomorrow — pack the bags"; }
+        else if (days === 0) { daysEl.textContent = "Today ✈️"; if (subEl) subEl.textContent = "Departure day"; }
+        else { daysEl.textContent = "In Korea 🇰🇷"; if (subEl) subEl.textContent = "Seoul + Jeju · 23 Oct to 2 Nov 2026"; }
+      }
+      const groupDone = Object.values(state.groupDone).filter(Boolean).length;
+      const pct = Math.round(groupDone / groupTasks.length * 100);
+      const pctEl = document.getElementById("heroProgressPct");
+      const fillEl = document.getElementById("heroProgressFill");
+      const subP = document.getElementById("heroProgressSub");
+      if (pctEl) pctEl.textContent = `${pct}%`;
+      if (fillEl) fillEl.style.width = `${pct}%`;
+      if (subP) subP.textContent = `${groupDone} of ${groupTasks.length} group bosses cleared together.`;
+      const tcp = document.getElementById("travellerCountPill");
+      if (tcp) tcp.textContent = `${state.players.length} travellers`;
+    }
+
+    function renderVibePicker() {
+      const holder = document.getElementById("vibePicker");
+      if (!holder) return;
+      const p = selectedPlayer();
+      holder.innerHTML = vibes.map(v => `
+        <button class="vibe-chip ${p.vibe === v.id ? "active" : ""}" data-vibe="${v.id}" title="${escapeAttr(v.tag)}">
+          <span class="vibe-emoji">${v.emoji}</span><span class="vibe-name">${v.name}</span>
+        </button>`).join("");
+      holder.querySelectorAll(".vibe-chip").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const player = selectedPlayer();
+          player.vibe = player.vibe === btn.dataset.vibe ? null : btn.dataset.vibe;
+          saveState();
+          renderAll();
+          const chosen = vibeById(player.vibe);
+          toast(chosen ? `${player.name}: ${chosen.name} ${chosen.emoji}` : `${player.name} cleared their vibe`);
+        });
+      });
+    }
+
+    function spawnLeaves() {
+      const holder = document.getElementById("leaves");
+      if (!holder) return;
+      const glyphs = ["🍁", "🍂", "🍃"];
+      let html = "";
+      for (let i = 0; i < 11; i++) {
+        const left = Math.round(Math.random() * 100);
+        const dur = (7 + Math.random() * 8).toFixed(1);
+        const delay = (Math.random() * 12).toFixed(1);
+        const size = (14 + Math.random() * 12).toFixed(0);
+        html += `<span class="leaf" style="left:${left}%; font-size:${size}px; animation-duration:${dur}s; animation-delay:-${delay}s;">${glyphs[i % 3]}</span>`;
+      }
+      holder.innerHTML = html;
     }
 
     function renderRosterEditor() {
       const holder = document.getElementById("rosterEditor");
-      holder.innerHTML = state.players.map((p, idx) => `<div class="task-card" style="grid-template-columns:auto 1fr">
+      holder.innerHTML = state.players.map((p, idx) => `<div class="roster-row">
         <div class="avatar-dot" style="background:${p.colour}; width:42px; height:42px">${escapeHtml(p.initials)}</div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
-          <input type="text" value="${escapeAttr(p.name)}" data-field="name" data-idx="${idx}" aria-label="Name for traveller ${idx + 1}" />
-          <input type="text" value="${escapeAttr(p.role)}" data-field="role" data-idx="${idx}" aria-label="Role for traveller ${idx + 1}" />
+        <div class="roster-fields">
+          <input type="text" value="${escapeAttr(p.name)}" data-field="name" data-idx="${idx}" aria-label="Name for traveller ${idx + 1}" placeholder="Name" />
+          <input type="text" value="${escapeAttr(p.role)}" data-field="role" data-idx="${idx}" aria-label="Role for traveller ${idx + 1}" placeholder="Role" />
+          <select data-field="vibe" data-idx="${idx}" aria-label="Vibe for traveller ${idx + 1}">
+            <option value="">Pick a vibe…</option>
+            ${vibes.map(v => `<option value="${v.id}" ${p.vibe === v.id ? "selected" : ""}>${v.emoji} ${v.name}</option>`).join("")}
+          </select>
         </div>
       </div>`).join("");
-      holder.querySelectorAll("input").forEach(input => {
-        input.addEventListener("input", e => {
-          const idx = Number(e.target.dataset.idx);
-          const field = e.target.dataset.field;
-          state.players[idx][field] = e.target.value;
-          if (field === "name") state.players[idx].initials = makeInitials(e.target.value, idx);
-          saveState();
-          renderPlayerSelect(); renderTravellerGrid(); renderTokens(); renderSelectedPanel(); renderNextActions();
-        });
-      });
-    }
-
-    function renderPersonalities() {
-      const holder = document.getElementById("personalityGrid");
-      holder.innerHTML = personalities.map(p => `<button class="personality ${selectedPersonality === p.id ? "selected" : ""}" data-personality="${p.id}"><div class="emoji">${p.emoji}</div><div class="name">${p.name}</div></button>`).join("");
-      holder.querySelectorAll(".personality").forEach(btn => {
-        btn.addEventListener("click", () => {
-          selectedPersonality = btn.dataset.personality;
-          renderPersonalities();
-        });
-      });
+      const onChange = e => {
+        const idx = Number(e.target.dataset.idx);
+        const field = e.target.dataset.field;
+        state.players[idx][field] = field === "vibe" ? (e.target.value || null) : e.target.value;
+        if (field === "name") state.players[idx].initials = makeInitials(e.target.value, idx);
+        saveState();
+        renderPlayerSelect(); renderTravellerGrid(); renderTokens(); renderSelectedPanel(); renderVibePicker(); renderNextActions(); renderBadges();
+      };
+      holder.querySelectorAll("input").forEach(el => el.addEventListener("input", onChange));
+      holder.querySelectorAll("select").forEach(el => el.addEventListener("change", onChange));
     }
 
     function makeInitials(name, idx) {
@@ -1296,7 +1382,7 @@
     function escapeAttr(str) { return escapeHtml(str).replace(/'/g, "&#039;"); }
 
     function renderAll() {
-      renderNodes(); renderTokens(); renderPlayerSelect(); renderTravellerGrid(); renderSelectedPanel(); renderTasks(); renderIdeas(); renderBoardIdeaPreview(); renderNextActions(); renderBadges(); renderRosterEditor();
+      renderNodes(); renderTokens(); renderPlayerSelect(); renderTravellerGrid(); renderSelectedPanel(); renderVibePicker(); renderTasks(); renderIdeas(); renderBoardIdeaPreview(); renderNextActions(); renderBadges(); renderRosterEditor(); renderHero();
     }
 
     function toast(message) {
@@ -1326,6 +1412,7 @@
 
     document.querySelectorAll(".nav button").forEach(btn => {
       btn.addEventListener("click", () => {
+        if (!btn.dataset.tab) return; // the sync chip is a nav button with no tab
         document.querySelectorAll(".nav button").forEach(x => x.classList.remove("active"));
         document.querySelectorAll(".section").forEach(x => x.classList.remove("active"));
         btn.classList.add("active");
@@ -1390,7 +1477,7 @@
         `Group boss progress: ${groupDoneCount}/${groupTasks.length}`,
         "",
         "Traveller progress:",
-        ...state.players.map(p => `• ${p.name}: ${checkpoints[computePlayerProgress(p)].title}`),
+        ...state.players.map(p => { const v = vibeById(p.vibe); return `• ${p.name}${v ? ` (${v.name})` : ""}: ${checkpoints[computePlayerProgress(p)].title}`; }),
         "",
         "Shortlist ideas:",
         ...allIdeas().filter(i => ideaStatus(tallyIdea(i.id)).label === "Shortlist").map(i => `• ${i.title} (${i.city})`),
@@ -1408,25 +1495,16 @@
       try { state = { ...structuredClone(defaultState), ...JSON.parse(raw) }; saveState(); renderAll(); toast("Snapshot imported"); } catch (e) { alert("Invalid JSON snapshot"); }
     });
 
-    const modal = document.getElementById("setupModal");
-    document.getElementById("openSetup").addEventListener("click", () => { selectedPersonality = state.personality; renderPersonalities(); modal.classList.add("active"); });
-    document.getElementById("skipSetup").addEventListener("click", () => { modal.classList.remove("active"); });
-    document.getElementById("saveSetup").addEventListener("click", () => { state.personality = selectedPersonality; saveState(); renderAll(); modal.classList.remove("active"); toast("Trip personality saved"); });
-    modal.addEventListener("click", e => { if (e.target === modal) modal.classList.remove("active"); });
-
     document.getElementById("syncChip").addEventListener("click", () => remotePull({ manual: true }));
     const syncRefreshBtn = document.getElementById("syncRefreshBtn");
     if (syncRefreshBtn) syncRefreshBtn.addEventListener("click", () => remotePull({ manual: true }));
 
-    renderPersonalities();
+    spawnLeaves();
     renderAll();
     setSyncChip(hasRemoteSync() ? "syncing" : "disabled");
     remotePull({ initial: true });
     startSyncLoops();
-    if (!state.personality && !localStorage.getItem(STORE_KEY + "Seen")) {
-      localStorage.setItem(STORE_KEY + "Seen", "1");
-      modal.classList.add("active");
-    }
+    setInterval(renderHero, 3600000); // refresh the countdown hourly
   </script>
 </body>
 </html>
