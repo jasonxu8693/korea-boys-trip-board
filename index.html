@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Korea Boys Trip Board</title>
+  <style>
+    :root {
+      --ink: #f5f8ff;
+      --muted: rgba(245, 248, 255, 0.76);
+      --subtle: rgba(245, 248, 255, 0.58);
+      --panel: rgba(19, 24, 36, 0.70);
+      --panel-strong: rgba(13, 18, 28, 0.90);
+      --line: rgba(255, 255, 255, 0.16);
+      --gold: #d7e6ff;
+      --sun: #7de6ff;
+      --neon: #72f4ff;
+      --pink: #ff97ca;
+      --green: #8be8d4;
+      --purple: #8fa9ff;
+      --danger: #ff7575;
+      --shadow: 0 24px 80px rgba(5, 9, 18, 0.42);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 14% 14%, rgba(255, 151, 202, 0.22), transparent 22%),
+        radial-gradient(circle at 84% 16%, rgba(114, 244, 255, 0.24), transparent 24%),
+        radial-gradient(circle at 50% 84%, rgba(215, 230, 255, 0.15), transparent 28%),
+        linear-gradient(145deg, #070b13 0%, #0d1420 34%, #111c2a 68%, #0a1019 100%);
+      overflow-x: hidden;
+    }
+
+    body:before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.14) 0 2px, transparent 2.5px),
+        radial-gradient(circle at 70% 24%, rgba(114,244,255,0.16) 0 1.6px, transparent 2px),
+        radial-gradient(circle at 45% 70%, rgba(255,151,202,0.14) 0 1.8px, transparent 2.2px),
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 240px 240px, 280px 280px, 320px 320px, 48px 48px, 48px 48px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.95), transparent 88%);
+      z-index: -1;
+    }
+
+    body:after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 16% 18%, rgba(255,255,255,0.08), transparent 10%),
+        radial-gradient(circle at 86% 26%, rgba(255,255,255,0.08), transparent 10%),
+        radial-gradient(circle at 28% 80%, rgba(255,255,255,0.08), transparent 10%);
+      mix-blend-mode: screen;
+      z-index: -1;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+
+    .app { width: min(1280px, calc(100% - 28px)); margin: 0 auto; padding: 18px 0 52px; }
+
+    .hero {
+      position: relative;
+      min-height: 420px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(8, 12, 20, 0.28), rgba(8, 12, 20, 0.90)),
+        radial-gradient(circle at 14% 18%, rgba(255, 151, 202, 0.22), transparent 22%),
+        radial-gradient(circle at 82% 18%, rgba(114, 244, 255, 0.24), transparent 26%),
+        linear-gradient(135deg, rgba(22, 29, 42, 0.95), rgba(10, 16, 25, 0.92));
+      box-shadow: var(--shadow);
+      isolation: isolate;
+    }
+
+    .hero-art {
+      position: absolute;
+      inset: 0;
+      opacity: 0.95;
+      z-index: -1;
+    }
+
+    .skyline { position: absolute; left: 0; right: 0; bottom: 0; height: 54%; }
+    .building { position: absolute; bottom: 0; width: 6%; border-radius: 18px 18px 0 0; background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)); border: 1px solid rgba(255,255,255,0.10); box-shadow: inset 0 0 30px rgba(114,244,255,0.08), 0 0 20px rgba(0,0,0,0.10); }
+    .building:before, .building:after { content: ""; position: absolute; left: 18%; width: 16%; height: 8px; background: rgba(114,244,255,0.72); border-radius: 8px; box-shadow: 22px 0 rgba(255,151,202,0.42), 44px 0 rgba(215,230,255,0.52); }
+    .building:before { top: 22px; }
+    .building:after { top: 58px; }
+    .b1 { left: 3%; height: 38%; }
+    .b2 { left: 11%; height: 48%; width: 7%; }
+    .b3 { left: 20%; height: 31%; }
+    .b4 { right: 22%; height: 42%; }
+    .b5 { right: 12%; height: 55%; width: 8%; }
+    .b6 { right: 3%; height: 34%; }
+
+    .mountain { position: absolute; bottom: -2%; clip-path: polygon(50% 0%, 100% 100%, 0 100%); background: linear-gradient(180deg, rgba(63,78,102,0.72), rgba(21,28,42,0.92)); filter: drop-shadow(0 12px 28px rgba(5,9,18,0.32)); }
+    .m1 { left: 42%; width: 30%; height: 46%; }
+    .m2 { left: 31%; width: 26%; height: 36%; opacity: 0.84; }
+    .m3 { right: 18%; width: 30%; height: 34%; opacity: 0.78; }
+    .moon { position: absolute; right: 9%; top: 9%; width: 106px; height: 106px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.96), rgba(215,230,255,0.96) 38%, rgba(114,244,255,0.88) 68%, rgba(114,244,255,0.30) 100%); box-shadow: 0 0 80px rgba(114,244,255,0.28); overflow: hidden; }
+    .moon:before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(45deg, rgba(255,255,255,0.32) 0 8px, rgba(255,255,255,0.08) 8px 16px); mix-blend-mode: screen; }
+    .dragon { display: none; }
+    .dragon span { position: absolute; display: block; border-radius: 999px; background: linear-gradient(90deg, #ff5cc8, #ffd15c); box-shadow: 0 8px 24px rgba(255,92,200,0.3); }
+    .dragon .body { left: 12px; top: 28px; width: 78px; height: 18px; transform: rotate(-8deg); }
+    .dragon .head { right: 12px; top: 18px; width: 30px; height: 28px; }
+    .dragon .wing { left: 34px; top: 0; width: 40px; height: 34px; border-radius: 60% 10% 60% 10%; background: rgba(95,230,255,0.8); transform: rotate(28deg); }
+    .dragon .tail { left: 0; top: 33px; width: 26px; height: 9px; background: #ff8b3d; transform: rotate(18deg); }
+    @keyframes floatDragon { 0%,100% { transform: translateY(0) translateX(0); } 50% { transform: translateY(-15px) translateX(9px); } }
+    .hero:after { content: ""; position: absolute; inset: auto -8% 8% -8%; height: 160px; background:
+      radial-gradient(circle at 20% 0%, rgba(255,255,255,0.16), transparent 28%),
+      radial-gradient(circle at 50% 0%, rgba(114,244,255,0.24), transparent 30%),
+      radial-gradient(circle at 80% 0%, rgba(255,151,202,0.16), transparent 28%);
+      pointer-events: none; filter: blur(18px); opacity: 0.9; }
+
+    .hero-content { position: relative; z-index: 1; padding: 28px; display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 28px; min-height: 420px; align-items: end; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; width: fit-content; padding: 8px 12px; border: 1px solid rgba(255,255,255,0.16); border-radius: 999px; background: rgba(255,255,255,0.08); backdrop-filter: blur(14px); color: var(--muted); font-size: 13px; letter-spacing: 0.02em; }
+    .hero h1 { margin: 18px 0 12px; font-size: clamp(40px, 7vw, 82px); line-height: 0.92; letter-spacing: -0.07em; max-width: 760px; }
+    .hero h1 .shine { display: block; background: linear-gradient(100deg, #fff6d1, #5fe6ff 44%, #ff5cc8 72%, #ffd15c); -webkit-background-clip: text; color: transparent; }
+    .hero p { max-width: 720px; color: var(--muted); font-size: 17px; line-height: 1.55; margin: 0; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
+    .btn { border: 0; border-radius: 999px; padding: 13px 17px; color: #0c1520; background: linear-gradient(135deg, #f7fbff, #8defff); font-weight: 800; box-shadow: 0 12px 30px rgba(114, 244, 255, 0.20); transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease; }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 18px 40px rgba(114, 244, 255, 0.28); }
+    .btn.secondary { color: var(--ink); background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); box-shadow: none; }
+    .btn.ghost { color: var(--ink); background: transparent; border: 1px solid rgba(255,255,255,0.18); box-shadow: none; }
+    .btn.small { padding: 9px 12px; font-size: 13px; }
+    .btn.danger { background: rgba(255,100,100,0.18); color: #ffdada; border: 1px solid rgba(255,100,100,0.32); box-shadow: none; }
+
+    .stat-card { align-self: stretch; display: grid; gap: 14px; align-content: end; }
+    .glass { border: 1px solid rgba(255,255,255,0.16); border-radius: var(--radius-lg); background: linear-gradient(180deg, rgba(255,255,255,0.11), rgba(255,255,255,0.06)); backdrop-filter: blur(18px); padding: 18px; }
+    .flight-card { position: relative; overflow: hidden; }
+    .flight-card:before { content: ""; position: absolute; inset: -60% auto auto -20%; width: 170px; height: 170px; background: radial-gradient(circle, rgba(95,230,255,0.26), transparent 62%); }
+    .label { color: var(--subtle); font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 800; }
+    .big { font-size: 30px; font-weight: 900; letter-spacing: -0.05em; margin-top: 6px; }
+    .micro { color: var(--muted); font-size: 13px; line-height: 1.45; }
+    .pill-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .pill { display: inline-flex; align-items: center; gap: 6px; border: 1px solid rgba(255,255,255,0.14); background: rgba(0,0,0,0.18); color: var(--muted); border-radius: 999px; padding: 7px 10px; font-size: 12px; font-weight: 700; }
+    .pill.done { color: #c8ffdc; border-color: rgba(119,240,168,0.28); background: rgba(119,240,168,0.12); }
+    .pill.warn { color: #ffe7ae; border-color: rgba(255,209,92,0.3); background: rgba(255,209,92,0.12); }
+    .pill.hot { color: #ffd7f1; border-color: rgba(255,92,200,0.3); background: rgba(255,92,200,0.12); }
+
+    .nav { position: sticky; top: 10px; z-index: 20; margin: 18px 0; display: flex; gap: 10px; padding: 8px; border: 1px solid var(--line); border-radius: 999px; background: rgba(15, 19, 29, 0.76); backdrop-filter: blur(18px); overflow-x: auto; box-shadow: 0 12px 38px rgba(5,9,18,0.22); }
+    .nav button { white-space: nowrap; border: 0; border-radius: 999px; color: var(--muted); background: transparent; padding: 11px 14px; font-weight: 800; font-size: 13px; }
+    .nav button.active { color: #0d1621; background: linear-gradient(135deg, rgba(247,251,255,0.98), rgba(189,245,255,0.96)); }
+
+    .section { display: none; animation: fadeIn 0.25s ease both; }
+    .section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    .layout { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(330px, 0.55fr); gap: 18px; align-items: start; }
+    .panel { border: 1px solid var(--line); border-radius: var(--radius-xl); background: linear-gradient(180deg, rgba(24, 30, 44, 0.72), rgba(12, 17, 27, 0.78)); box-shadow: 0 18px 60px rgba(5,9,18,0.24); backdrop-filter: blur(18px); overflow: hidden; }
+    .panel.pad { padding: 20px; }
+    .panel-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 20px; border-bottom: 1px solid var(--line); }
+    .panel h2, .panel h3 { margin: 0; letter-spacing: -0.035em; }
+    .panel h2 { font-size: 26px; }
+    .panel h3 { font-size: 18px; }
+    .panel-sub { color: var(--muted); margin: 6px 0 0; line-height: 1.45; font-size: 14px; }
+
+    .board-shell { position: relative; padding: 16px; }
+    .board {
+      position: relative;
+      min-height: 660px;
+      border-radius: 30px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.14);
+      background:
+        radial-gradient(circle at 16% 18%, rgba(255,151,202,0.16), transparent 24%),
+        radial-gradient(circle at 82% 20%, rgba(114,244,255,0.22), transparent 24%),
+        radial-gradient(circle at 52% 76%, rgba(215,230,255,0.14), transparent 22%),
+        linear-gradient(180deg, rgba(20, 28, 41, 0.94), rgba(11, 16, 24, 0.98));
+      box-shadow: inset 0 0 110px rgba(255,255,255,0.04);
+    }
+    .board:before { content: ""; position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg width='180' height='180' viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.07)' stroke-width='1'%3E%3Cpath d='M0 92 C26 70, 44 104, 70 84 S122 70, 180 98'/%3E%3Cpath d='M14 132 C42 112, 63 150, 98 128 S142 120, 170 144'/%3E%3C/g%3E%3C/svg%3E"); opacity: 0.7; }
+    .sea { position: absolute; left: -5%; right: -5%; bottom: -10%; height: 36%; background: linear-gradient(180deg, rgba(114,244,255,0.16), rgba(21, 63, 92, 0.60)); border-radius: 50% 50% 0 0; filter: blur(0.2px); }
+    .island { position: absolute; width: 240px; height: 150px; right: 8%; bottom: 8%; background: linear-gradient(180deg, rgba(63,87,110,0.52), rgba(24, 38, 50, 0.92)); border-radius: 54% 46% 42% 58%; box-shadow: 0 18px 44px rgba(5,9,18,0.24); border: 1px solid rgba(255,255,255,0.14); }
+    .volcano { position: absolute; right: 15%; bottom: 17%; width: 150px; height: 140px; clip-path: polygon(50% 0%, 90% 100%, 10% 100%); background: linear-gradient(180deg, #7e93ae, #2f3a4b); filter: drop-shadow(0 14px 22px rgba(5,9,18,0.28)); }
+    .lava { position: absolute; right: 19.5%; bottom: 27%; width: 56px; height: 86px; clip-path: polygon(50% 0, 64% 28%, 55% 54%, 72% 100%, 35% 100%, 45% 52%, 34% 28%); background: linear-gradient(180deg, #f8fdff, #72f4ff 58%, #ff97ca); opacity: 0.78; animation: lavaPulse 2.2s ease-in-out infinite; }
+    @keyframes lavaPulse { 0%,100% { opacity: 0.45; } 50% { opacity: 0.86; } }
+    .cloud { position: absolute; width: 150px; height: 50px; border-radius: 999px; background: rgba(255,255,255,0.12); filter: blur(0.3px); }
+    .cloud:before, .cloud:after { content: ""; position: absolute; border-radius: 50%; background: inherit; }
+    .cloud:before { width: 70px; height: 70px; left: 25px; top: -36px; }
+    .cloud:after { width: 58px; height: 58px; right: 24px; top: -26px; }
+    .c1 { left: 16%; top: 16%; animation: drift 14s linear infinite; }
+    .c2 { right: 20%; top: 12%; transform: scale(0.7); opacity: 0.7; animation: drift2 17s linear infinite; }
+    @keyframes drift { 50% { transform: translateX(26px); } }
+    @keyframes drift2 { 50% { transform: translateX(-22px) scale(0.7); } }
+
+    .route-svg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+    .route-line { fill: none; stroke: rgba(215, 230, 255, 0.72); stroke-width: 8; stroke-linecap: round; stroke-dasharray: 2 18; filter: drop-shadow(0 0 8px rgba(114,244,255,0.34)); }
+    .route-shadow { fill: none; stroke: rgba(0, 0, 0, 0.28); stroke-width: 14; stroke-linecap: round; stroke-dasharray: 2 18; }
+
+    .node { position: absolute; z-index: 5; width: 118px; min-height: 112px; transform: translate(-50%, -50%); display: grid; justify-items: center; gap: 7px; text-align: center; }
+    .node-core { width: 62px; height: 62px; border-radius: 22px; display: grid; place-items: center; font-size: 30px; color: #071226; background: var(--ink); border: 2px solid rgba(255,255,255,0.4); box-shadow: 0 18px 36px rgba(0,0,0,0.3), 0 0 0 6px rgba(255,255,255,0.08); transition: transform 0.2s ease; }
+    .node:hover .node-core { transform: translateY(-4px) rotate(-3deg); }
+    .node-title { font-size: 12px; line-height: 1.15; font-weight: 900; text-shadow: 0 2px 6px rgba(0,0,0,0.6); }
+    .node-meta { font-size: 10px; color: var(--muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; }
+    .node.group .node-core { background: linear-gradient(135deg, #eef6ff, #8defff); }
+    .node.boss .node-core { background: linear-gradient(135deg, #1c2434, #4e6480); color: white; animation: bossPulse 3s ease-in-out infinite; }
+    .node.personal .node-core { background: linear-gradient(135deg, #f7fbff, #d1e6ff); }
+    @keyframes bossPulse { 0%,100% { box-shadow: 0 18px 36px rgba(0,0,0,0.3), 0 0 0 6px rgba(114,244,255,0.08); } 50% { box-shadow: 0 18px 36px rgba(0,0,0,0.3), 0 0 0 12px rgba(114,244,255,0.16); } }
+
+    .token-layer { position: absolute; inset: 0; z-index: 8; pointer-events: none; }
+    .token { position: absolute; width: 38px; height: 38px; border-radius: 16px 16px 16px 6px; transform: translate(-50%, -50%) rotate(-6deg); display: grid; place-items: center; font-weight: 1000; font-size: 15px; color: #061020; border: 2px solid rgba(255,255,255,0.72); box-shadow: 0 14px 28px rgba(0,0,0,0.35); transition: left 0.45s cubic-bezier(.2,.8,.2,1), top 0.45s cubic-bezier(.2,.8,.2,1), transform 0.2s ease; }
+    .token.active { z-index: 10; transform: translate(-50%, -50%) rotate(4deg) scale(1.1); box-shadow: 0 16px 34px rgba(0,0,0,0.42), 0 0 0 7px rgba(255,255,255,0.13); }
+    .token:after { content: attr(data-name); position: absolute; top: 42px; left: 50%; transform: translateX(-50%); white-space: nowrap; color: var(--ink); background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.12); border-radius: 999px; padding: 4px 8px; font-size: 10px; opacity: 0; transition: opacity 0.2s ease; }
+    .token.active:after, .token:hover:after { opacity: 1; }
+
+    .side-stack { display: grid; gap: 18px; }
+    .player-card { padding: 18px; }
+    .select-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; margin: 14px 0; }
+    select, input[type="text"] { width: 100%; border: 1px solid rgba(255,255,255,0.14); border-radius: 14px; background: rgba(0,0,0,0.2); color: var(--ink); padding: 12px 13px; outline: none; }
+    select option { color: #111; }
+    .progress-wrap { margin-top: 14px; }
+    .progress-head { display: flex; justify-content: space-between; color: var(--muted); font-weight: 800; font-size: 12px; margin-bottom: 8px; }
+    .progress-bar { height: 12px; background: rgba(255,255,255,0.09); border-radius: 999px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); }
+    .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #5fe6ff, #77f0a8, #ffd15c); border-radius: inherit; transition: width 0.35s ease; }
+
+    .traveller-grid { display: grid; grid-template-columns: 1fr; gap: 9px; margin-top: 14px; }
+    .traveller-row { display: grid; grid-template-columns: auto 1fr auto; gap: 9px; align-items: center; padding: 10px; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; background: rgba(255,255,255,0.05); }
+    .avatar-dot { width: 26px; height: 26px; border-radius: 10px; display: grid; place-items: center; color: #061020; font-weight: 1000; font-size: 12px; border: 1px solid rgba(255,255,255,0.55); }
+    .traveller-name { font-weight: 850; font-size: 13px; }
+    .traveller-progress { color: var(--subtle); font-size: 11px; }
+
+    .task-list { display: grid; gap: 10px; }
+    .task-card { border: 1px solid rgba(255,255,255,0.12); border-radius: 18px; background: rgba(255,255,255,0.06); padding: 14px; display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: start; transition: transform 0.16s ease, border-color 0.16s ease; }
+    .task-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.22); }
+    .task-card.completed { background: rgba(119, 240, 168, 0.1); border-color: rgba(119, 240, 168, 0.32); }
+    .task-card.group-done { background: rgba(255, 209, 92, 0.1); border-color: rgba(255, 209, 92, 0.28); }
+    .task-icon { width: 40px; height: 40px; border-radius: 15px; display: grid; place-items: center; background: rgba(255,255,255,0.12); font-size: 22px; }
+    .task-title { font-weight: 950; letter-spacing: -0.02em; }
+    .task-desc { color: var(--muted); font-size: 13px; line-height: 1.45; margin-top: 4px; }
+    .task-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .tag { font-size: 10px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 7px; border-radius: 999px; background: rgba(255,255,255,0.08); color: var(--muted); }
+    .tag.p1 { background: rgba(255,100,100,0.14); color: #ffd8d8; }
+    .tag.p2 { background: rgba(255,209,92,0.14); color: #ffe7ae; }
+    .tag.personal { background: rgba(95,230,255,0.14); color: #d4f9ff; }
+    .toggle { appearance: none; width: 50px; height: 30px; border-radius: 999px; background: rgba(255,255,255,0.13); border: 1px solid rgba(255,255,255,0.15); position: relative; transition: background 0.2s ease; margin: 3px 0 0; }
+    .toggle:before { content: ""; width: 22px; height: 22px; position: absolute; left: 3px; top: 3px; border-radius: 50%; background: white; transition: transform 0.2s ease; }
+    .toggle:checked { background: rgba(119,240,168,0.8); }
+    .toggle:checked:before { transform: translateX(20px); }
+
+
+    .idea-toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .idea-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .idea-card { position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.14); border-radius: 24px; background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05)); padding: 16px; display: grid; gap: 13px; box-shadow: 0 14px 34px rgba(24,7,49,0.12); }
+    .idea-card:before { content: ""; position: absolute; width: 160px; height: 160px; border-radius: 50%; right: -60px; top: -78px; background: rgba(255,209,92,0.10); pointer-events: none; }
+    .idea-top { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: start; position: relative; }
+    .idea-emoji { width: 48px; height: 48px; border-radius: 18px; display: grid; place-items: center; font-size: 26px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.12); }
+    .idea-title { font-weight: 1000; letter-spacing: -0.03em; font-size: 17px; }
+    .idea-desc { color: var(--muted); font-size: 13px; line-height: 1.45; margin-top: 4px; }
+    .idea-city { align-self: start; white-space: nowrap; }
+    .vote-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; position: relative; }
+    .vote-btn { border: 1px solid rgba(255,255,255,0.13); border-radius: 14px; background: rgba(0,0,0,0.18); color: var(--muted); padding: 10px 8px; font-weight: 950; font-size: 12px; transition: transform 0.16s ease, background 0.16s ease, border-color 0.16s ease; }
+    .vote-btn:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.24); }
+    .vote-btn.active.keen { background: rgba(119,240,168,0.18); color: #c8ffdc; border-color: rgba(119,240,168,0.38); }
+    .vote-btn.active.maybe { background: rgba(255,209,92,0.18); color: #ffe7ae; border-color: rgba(255,209,92,0.38); }
+    .vote-btn.active.no { background: rgba(255,100,100,0.18); color: #ffdada; border-color: rgba(255,100,100,0.38); }
+    .vote-meter { display: grid; gap: 8px; position: relative; }
+    .meter-track { height: 11px; display: flex; overflow: hidden; border-radius: 999px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.08); }
+    .meter-keen { background: rgba(119,240,168,0.85); }
+    .meter-maybe { background: rgba(255,209,92,0.85); }
+    .meter-no { background: rgba(255,100,100,0.85); }
+    .vote-counts { display: flex; flex-wrap: wrap; gap: 6px; color: var(--subtle); font-size: 11px; font-weight: 850; }
+    .idea-status { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; padding: 7px 10px; font-size: 11px; font-weight: 1000; letter-spacing: 0.05em; text-transform: uppercase; background: rgba(255,255,255,0.08); color: var(--muted); border: 1px solid rgba(255,255,255,0.12); }
+    .idea-status.hot { background: rgba(119,240,168,0.14); color: #c8ffdc; border-color: rgba(119,240,168,0.32); }
+    .idea-status.watch { background: rgba(255,209,92,0.14); color: #ffe7ae; border-color: rgba(255,209,92,0.32); }
+    .idea-status.cold { background: rgba(255,100,100,0.14); color: #ffdada; border-color: rgba(255,100,100,0.32); }
+    .idea-summary-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
+    .mini-score { border: 1px solid rgba(255,255,255,0.1); border-radius: 18px; padding: 12px; background: rgba(255,255,255,0.05); }
+    .mini-score .num { font-size: 26px; font-weight: 1000; letter-spacing: -0.05em; }
+    .mini-score .txt { color: var(--muted); font-size: 12px; line-height: 1.35; }
+    .add-idea-form { display: grid; grid-template-columns: 0.9fr 0.8fr 1.4fr auto; gap: 10px; margin-top: 16px; }
+    .idea-help { color: var(--muted); font-size: 13px; line-height: 1.5; }
+
+
+
+    .planning-hub { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; padding: 16px 20px 0; }
+    .hub-card { text-align: left; border: 1px solid rgba(255,255,255,0.13); border-radius: 22px; background: rgba(255,255,255,0.06); color: var(--ink); padding: 15px; min-height: 118px; display: grid; align-content: start; gap: 8px; transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease; }
+    .hub-card:hover { transform: translateY(-3px); border-color: rgba(255,209,92,0.34); background: rgba(255,255,255,0.09); }
+    .hub-card.primary { background: linear-gradient(135deg, rgba(114,244,255,0.16), rgba(255,151,202,0.10)); border-color: rgba(114,244,255,0.28); box-shadow: 0 16px 42px rgba(114,244,255,0.10); }
+    .hub-icon { font-size: 26px; }
+    .hub-title { font-weight: 1000; letter-spacing: -0.03em; font-size: 16px; }
+    .hub-copy { color: var(--muted); font-size: 12px; line-height: 1.42; }
+    .hub-status { width: fit-content; border-radius: 999px; padding: 6px 9px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.12); color: var(--muted); font-size: 11px; font-weight: 900; }
+
+    .nav button.market-tab { color: #fff3c3; border: 1px solid rgba(255,209,92,0.22); background: rgba(255,209,92,0.08); }
+    .nav button.market-tab.active { color: #071226; background: linear-gradient(90deg, #ffd15c, #ff8b3d); }
+
+    .activity-spotlight { border-color: rgba(114,244,255,0.24); background: linear-gradient(180deg, rgba(114,244,255,0.10), rgba(255,255,255,0.04)); }
+    .activity-spotlight h3 { font-size: 21px; margin: 8px 0 6px; letter-spacing: -0.04em; }
+    .activity-spotlight p { color: var(--muted); font-size: 13px; line-height: 1.5; margin: 0; }
+    .mini-idea-list { display: grid; gap: 8px; margin: 14px 0; }
+    .mini-idea-row { display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: center; padding: 9px 10px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.15); }
+    .mini-idea-name { font-weight: 900; font-size: 12px; }
+    .mini-idea-meta { color: var(--subtle); font-size: 11px; }
+
+    .flow-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 16px 0 18px; }
+    .flow-step { border: 1px solid rgba(255,255,255,0.11); border-radius: 18px; background: rgba(255,255,255,0.05); padding: 12px; }
+    .flow-step strong { display: block; font-size: 13px; margin-bottom: 5px; }
+    .flow-step span { display: block; color: var(--muted); font-size: 12px; line-height: 1.35; }
+
+    .quest-controls { display: flex; flex-wrap: wrap; gap: 10px; padding: 16px 20px 20px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .info-card { border: 1px solid rgba(255,255,255,0.12); border-radius: var(--radius-lg); background: rgba(255,255,255,0.06); padding: 16px; min-height: 140px; position: relative; overflow: hidden; }
+    .info-card:before { content: ""; position: absolute; width: 110px; height: 110px; border-radius: 50%; background: rgba(95,230,255,0.12); right: -32px; top: -34px; }
+    .info-card .emoji { font-size: 34px; margin-bottom: 10px; }
+    .info-card h3 { font-size: 17px; margin: 0 0 8px; }
+    .info-card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.48; }
+    .info-card ul { margin: 10px 0 0 18px; padding: 0; color: var(--muted); line-height: 1.5; font-size: 13px; }
+
+    .timeline { display: grid; gap: 10px; }
+    .timeline-item { display: grid; grid-template-columns: 92px 1fr; gap: 12px; padding: 14px; border-radius: 18px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); }
+    .timeline-date { color: var(--gold); font-weight: 1000; font-size: 13px; }
+    .timeline-title { font-weight: 950; }
+    .timeline-body { color: var(--muted); font-size: 13px; margin-top: 4px; line-height: 1.45; }
+
+    .sync-diagram { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 16px; }
+    .sync-box { border: 1px solid rgba(255,255,255,0.12); border-radius: 22px; padding: 18px; background: rgba(255,255,255,0.06); text-align: center; min-height: 180px; display: grid; align-content: center; gap: 8px; }
+    .sync-box .emoji { font-size: 42px; }
+    .sync-title { font-weight: 1000; }
+    .sync-copy { color: var(--muted); line-height: 1.45; font-size: 13px; }
+
+    .modal { position: fixed; inset: 0; display: none; place-items: center; padding: 18px; background: rgba(2, 8, 18, 0.76); backdrop-filter: blur(14px); z-index: 80; }
+    .modal.active { display: grid; }
+    .modal-card { width: min(780px, 100%); border: 1px solid rgba(255,255,255,0.18); border-radius: 34px; background: linear-gradient(180deg, rgba(24, 30, 44, 0.98), rgba(12, 17, 27, 0.98)); box-shadow: var(--shadow); padding: 24px; }
+    .modal-card h2 { margin: 0 0 8px; font-size: clamp(28px, 6vw, 50px); letter-spacing: -0.06em; }
+    .modal-card p { color: var(--muted); line-height: 1.55; }
+    .personality-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin: 18px 0; }
+    .personality { border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; background: rgba(255,255,255,0.06); color: var(--ink); padding: 14px 10px; text-align: center; transition: transform 0.18s ease, background 0.18s ease; }
+    .personality:hover, .personality.selected { transform: translateY(-3px); background: rgba(255,209,92,0.18); border-color: rgba(255,209,92,0.36); }
+    .personality .emoji { font-size: 28px; }
+    .personality .name { font-weight: 1000; font-size: 12px; margin-top: 8px; line-height: 1.15; }
+
+    .toast { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%) translateY(20px); opacity: 0; pointer-events: none; z-index: 100; background: rgba(7,18,38,0.94); color: var(--ink); border: 1px solid rgba(255,255,255,0.14); border-radius: 999px; padding: 11px 15px; box-shadow: 0 12px 36px rgba(0,0,0,0.32); transition: opacity 0.2s ease, transform 0.2s ease; font-weight: 800; font-size: 13px; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    .source-note { color: var(--subtle); font-size: 12px; line-height: 1.5; padding: 16px 20px 20px; border-top: 1px solid var(--line); }
+    .source-note a { color: #bdefff; text-decoration: underline; text-underline-offset: 3px; }
+
+    @media (max-width: 980px) {
+      .hero-content { grid-template-columns: 1fr; align-items: end; }
+      .layout { grid-template-columns: 1fr; }
+      .grid-3, .grid-2, .sync-diagram, .idea-grid, .idea-summary-grid, .add-idea-form, .planning-hub, .flow-steps { grid-template-columns: 1fr; }
+      .board { min-height: 720px; }
+      .personality-grid { grid-template-columns: repeat(2, 1fr); }
+      .node { width: 94px; }
+      .node-core { width: 54px; height: 54px; border-radius: 19px; font-size: 26px; }
+    }
+
+    @media (max-width: 620px) {
+      .app { width: min(100% - 16px, 1280px); padding-top: 8px; }
+      .hero { min-height: 520px; border-radius: 24px; }
+      .hero-content { padding: 20px; min-height: 520px; }
+      .panel, .board { border-radius: 24px; }
+      .panel-head { display: grid; }
+      .board-shell { padding: 8px; }
+      .board { min-height: 780px; }
+      .node-title { font-size: 10px; }
+      .node-meta { display: none; }
+      .token { width: 32px; height: 32px; border-radius: 13px 13px 13px 5px; font-size: 13px; }
+      .timeline-item { grid-template-columns: 1fr; }
+      .nav { top: 6px; border-radius: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="hero">
+      <div class="hero-art" aria-hidden="true">
+        <div class="moon"></div>
+        <div class="dragon"><span class="wing"></span><span class="tail"></span><span class="body"></span><span class="head"></span></div>
+        <div class="skyline">
+          <div class="building b1"></div><div class="building b2"></div><div class="building b3"></div><div class="building b4"></div><div class="building b5"></div><div class="building b6"></div>
+          <div class="mountain m1"></div><div class="mountain m2"></div><div class="mountain m3"></div>
+        </div>
+      </div>
+      <div class="hero-content">
+        <div>
+          <div class="eyebrow">🇰🇷 Seoul + Jeju tour board · 23 Oct to 2 Nov 2026</div>
+          <h1><span>Korea boys trip</span><span class="shine">tour board</span></h1>
+          <p>Votes, flights, bookings and group progress.</p>
+          <div class="hero-actions">
+            <button class="btn" data-jump="board">Open board</button>
+            <button class="btn secondary" data-jump="tasks">Boss tasks</button>
+            <button class="btn ghost" data-jump="ideas">Activity Market</button>
+            <button class="btn ghost" id="openSetup">Trip vibe</button>
+          </div>
+        </div>
+        <aside class="stat-card">
+          <div class="glass flight-card">
+            <div class="label">Flight status</div>
+            <div class="big">LHR → ICN booked</div>
+            <div class="micro">Jason only · QW901 · Fri 23 Oct 22:05 → Sat 24 Oct 21:35 · e-ticket pending</div>
+            <div class="pill-row">
+              <span class="pill done">✅ Outbound locked</span>
+              <span class="pill warn">⚠️ Return TBC</span>
+              <span class="pill warn">⚠️ Jeju leg TBC</span>
+            </div>
+          </div>
+          <div class="glass">
+            <div class="label">Group setup</div>
+            <div class="big">7 travellers</div>
+            <div class="micro">Names, budget, accommodation and Jeju transport TBC.</div>
+          </div>
+        </aside>
+      </div>
+    </header>
+
+    <nav class="nav" aria-label="App sections">
+      <button class="active" data-tab="board">🗺️ Board</button>
+      <button data-tab="tasks">🎬 Group tasks</button>
+      <button class="market-tab" data-tab="ideas">🎯 Activity Market</button>
+      <button data-tab="intel">📍 Trip intel</button>
+      <button data-tab="sync">🔄 Sync</button>
+      <button data-tab="settings">⚙️ Roster</button>
+    </nav>
+
+    <main>
+      <section id="board" class="section active">
+        <div class="layout">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>Trip board</h2>
+                <p class="panel-sub">Track progress, votes and group decisions.</p>
+              </div>
+              <div class="pill-row" style="margin:0">
+                <span class="pill hot" id="personalityBadge">Trip mode: unset</span>
+                <span class="pill warn" id="groupProgressBadge">Group bosses 0%</span>
+              </div>
+            </div>
+            <div class="planning-hub" aria-label="Planning shortcuts">
+              <button class="hub-card primary" data-jump="ideas">
+                <span class="hub-icon">🎯</span>
+                <span class="hub-title">Activity Market</span>
+                <span class="hub-copy">Vote on Seoul and Jeju ideas.</span>
+                <span class="hub-status" id="boardVoteStatus">0 votes cast</span>
+              </button>
+              <button class="hub-card" data-jump="tasks">
+                <span class="hub-icon">🐉</span>
+                <span class="hub-title">Group tasks</span>
+                <span class="hub-copy">Flights, budget, accommodation, transport and itinerary.</span>
+                <span class="hub-status">Shared progress</span>
+              </button>
+              <button class="hub-card" data-jump="settings">
+                <span class="hub-icon">👥</span>
+                <span class="hub-title">Roster</span>
+                <span class="hub-copy">Names, roles and tokens.</span>
+                <span class="hub-status">Edit roster</span>
+              </button>
+            </div>
+            <div class="board-shell">
+              <div class="board" id="questBoard">
+                <div class="cloud c1"></div><div class="cloud c2"></div><div class="sea"></div><div class="island"></div><div class="volcano"></div><div class="lava"></div>
+                <svg class="route-svg" viewBox="0 0 1000 660" preserveAspectRatio="none" aria-hidden="true">
+                  <path class="route-shadow" d="M105 540 C145 410 255 455 255 342 C255 230 385 248 420 150 C460 42 640 98 655 220 C672 356 765 298 835 390 C900 475 850 560 745 555" />
+                  <path class="route-line" d="M105 540 C145 410 255 455 255 342 C255 230 385 248 420 150 C460 42 640 98 655 220 C672 356 765 298 835 390 C900 475 850 560 745 555" />
+                </svg>
+                <div id="nodes"></div>
+                <div class="token-layer" id="tokens"></div>
+              </div>
+            </div>
+            <div class="quest-controls">
+              <button class="btn small" id="advanceBtn">Move player forward</button>
+              <button class="btn small secondary" id="undoBtn">Move player back</button>
+              <button class="btn small ghost" id="copySummaryBtn">Copy summary</button>
+              <button class="btn small danger" id="resetBtn">Reset board</button>
+            </div>
+            <div class="source-note">Saved in this browser only. Use Export if sharing manually.</div>
+          </div>
+
+          <aside class="side-stack">
+            <div class="panel player-card">
+              <div class="label">Selected player</div>
+              <div class="select-row">
+                <select id="playerSelect" aria-label="Selected traveller"></select>
+                <button class="btn small secondary" id="focusPlayerBtn">Focus</button>
+              </div>
+              <div class="progress-wrap">
+                <div class="progress-head"><span id="selectedName">Jason</span><span id="selectedProgress">0%</span></div>
+                <div class="progress-bar"><div class="progress-fill" id="selectedProgressFill"></div></div>
+              </div>
+              <div class="pill-row">
+                <span class="pill" id="selectedRole">🧭 No role yet</span>
+                <span class="pill" id="selectedStage">Spawn point</span>
+              </div>
+            </div>
+
+            <div class="panel pad">
+              <div class="label">Roster</div>
+              <div class="traveller-grid" id="travellerGrid"></div>
+            </div>
+
+            <div class="panel pad activity-spotlight">
+              <div class="label">Next thing</div>
+              <h3>Vote first. Lock it later.</h3>
+              <p>Keep the good ideas alive until the group picks a shortlist.</p>
+              <div class="mini-idea-list" id="boardIdeaPreview"></div>
+              <button class="btn small" data-jump="ideas">Activity Market</button>
+            </div>
+
+            <div class="panel pad">
+              <div class="label">Next three actions</div>
+              <div id="nextActions" class="task-list" style="margin-top:12px"></div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="tasks" class="section">
+        <div class="layout">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>Group tasks</h2>
+                <p class="panel-sub">Personal tasks move one player. Group tasks move everyone.</p>
+              </div>
+              <button class="btn small secondary" id="markJasonFactsBtn">Apply Jason facts</button>
+            </div>
+            <div style="padding:20px">
+              <h3 style="margin-bottom:12px">Personal checkpoints</h3>
+              <div class="task-list" id="personalTasks"></div>
+              <h3 style="margin:24px 0 12px">Group tasks</h3>
+              <div class="task-list" id="groupTasks"></div>
+            </div>
+          </div>
+          <aside class="side-stack">
+            <div class="panel pad">
+              <div class="label">Why these matter</div>
+              <div class="info-card" style="margin-top:12px">
+                <div class="emoji">🐉</div>
+                <h3>Route lock</h3>
+                <p>Lock dates and Jeju flight logic before accommodation.</p>
+              </div>
+              <div class="info-card" style="margin-top:12px">
+                <div class="emoji">🚐</div>
+                <h3>Ride plan</h3>
+                <p>Decide early: van, two cars, transfers or taxis.</p>
+              </div>
+              <div class="info-card" style="margin-top:12px">
+                <div class="emoji">🛂</div>
+                <h3>Entry check</h3>
+                <p>K-ETA exemption currently runs to 31 Dec 2026. Recheck passports and entry rules before departure.</p>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+
+      <section id="ideas" class="section">
+        <div class="layout">
+          <div class="panel pad">
+            <div class="panel-head" style="padding:0 0 18px; border-bottom:0">
+              <div>
+                <h2>Activity Market</h2>
+                <p class="panel-sub">Vote on ideas before they become itinerary items.</p>
+              </div>
+              <div class="pill-row" style="margin:0">
+                <span class="pill done" id="ideasHotBadge">0 shortlist ideas</span>
+                <span class="pill warn" id="ideasVotesBadge">0 votes cast</span>
+              </div>
+            </div>
+            <div class="flow-steps">
+              <div class="flow-step"><strong>1. Pick yourself</strong><span>Use the player dropdown.</span></div>
+              <div class="flow-step"><strong>2. Vote lightly</strong><span>Keen, maybe or no.</span></div>
+              <div class="flow-step"><strong>3. Shortlist later</strong><span>Shortlist the strongest ideas later.</span></div>
+            </div>
+            <div class="idea-toolbar">
+              <div class="idea-help">Rule of thumb: 4+ keen = shortlist · 2+ no = discuss · mostly maybe = optional.</div>
+              <button class="btn small secondary" id="copyIdeasBtn">Copy vote summary</button>
+            </div>
+            <div class="idea-grid" id="ideaGrid"></div>
+            <h3 style="margin:24px 0 8px">Add a new idea</h3>
+            <div class="add-idea-form">
+              <input type="text" id="newIdeaTitle" placeholder="Idea name" />
+              <input type="text" id="newIdeaCity" placeholder="Seoul, Jeju, or both" />
+              <input type="text" id="newIdeaDesc" placeholder="Why it could be good" />
+              <button class="btn small" id="addIdeaBtn">Add idea</button>
+            </div>
+          </div>
+          <aside class="side-stack">
+            <div class="panel pad">
+              <div class="label">Decision logic</div>
+              <div class="idea-summary-grid">
+                <div class="mini-score"><div class="num" id="hotIdeaCount">0</div><div class="txt">Strong shortlist ideas</div></div>
+                <div class="mini-score"><div class="num" id="maybeIdeaCount">0</div><div class="txt">Maybe list</div></div>
+                <div class="mini-score"><div class="num" id="blockedIdeaCount">0</div><div class="txt">Needs discussion</div></div>
+              </div>
+              <div class="info-card" style="margin-top:14px">
+                <div class="emoji">💡</div>
+                <h3>Wishlist checkpoint</h3>
+                <p>Vote on one idea to clear your wishlist checkpoint.</p>
+              </div>
+              <div class="info-card" style="margin-top:12px">
+                <div class="emoji">♨️</div>
+                <h3>Korean spa note</h3>
+                <p>Likely jjimjilbang or Korean bathhouse. Keep optional until the group is comfortable.</p>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="intel" class="section">
+        <div class="panel pad">
+          <div class="panel-head" style="padding:0 0 18px; border-bottom:0">
+            <div>
+              <h2>Trip facts</h2>
+              <p class="panel-sub">Locked details and planning assumptions.</p>
+            </div>
+          </div>
+          <div class="grid-3">
+            <div class="info-card"><div class="emoji">📅</div><h3>Dates</h3><p>Fri 23 Oct to Mon 2 Nov 2026. Seoul and Jeju split TBC.</p></div>
+            <div class="info-card"><div class="emoji">✈️</div><h3>Route</h3><p>Likely London → Seoul → Jeju via ICN or GMP to CJU.</p></div>
+            <div class="info-card"><div class="emoji">🏝️</div><h3>Why Jeju</h3><p>Volcanic island, scenic drives, hiking, seafood, golf and Jeju City bars.</p></div>
+          </div>
+
+          <h3 style="margin:24px 0 12px">Draft rhythm</h3>
+          <div class="timeline">
+            <div class="timeline-item"><div class="timeline-date">23 Oct</div><div><div class="timeline-title">Jason departs London</div><div class="timeline-body">LHR T3 · QW901 · 22:05 departure · e-ticket and PNR pending.</div></div></div>
+            <div class="timeline-item"><div class="timeline-date">24 Oct</div><div><div class="timeline-title">Arrive Seoul late</div><div class="timeline-body">ICN T1 · 21:35 arrival · light arrival night.</div></div></div>
+            <div class="timeline-item"><div class="timeline-date">25 to 27 Oct</div><div><div class="timeline-title">Seoul opening arc</div><div class="timeline-body">Food, nightlife, shopping, recovery and group arrivals.</div></div></div>
+            <div class="timeline-item"><div class="timeline-date">27 to 31 Oct</div><div><div class="timeline-title">Jeju main quest</div><div class="timeline-body">Island base, scenic drives, Hallasan or viewpoints, seafood and group adventure day.</div></div></div>
+            <div class="timeline-item"><div class="timeline-date">1 to 2 Nov</div><div><div class="timeline-title">Return arc</div><div class="timeline-body">Return via Seoul or connect CJU → Seoul → London if timings work.</div></div></div>
+          </div>
+
+          <h3 style="margin:24px 0 12px">Planning watchouts</h3>
+          <div class="grid-2">
+            <div class="info-card"><div class="emoji">💸</div><h3>Budget first</h3><p>Set a budget before comparing villa, hotel, transport and food tiers.</p></div>
+            <div class="info-card"><div class="emoji">🧳</div><h3>Luggage reality</h3><p>Check domestic Jeju baggage allowances before booking.</p></div>
+            <div class="info-card"><div class="emoji">📍</div><h3>Google Maps links</h3><p>Add confirmed places with official full Google Maps links.</p></div>
+            <div class="info-card"><div class="emoji">🛡️</div><h3>Admin buffer</h3><p>Recheck passport validity, arrival admin, insurance and entry rules 3 to 5 days before departure.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="sync" class="section">
+        <div class="panel pad">
+          <h2>Live sync setup</h2>
+          <p class="panel-sub">For proper group sync, connect the board to a backend and Notion database.</p>
+          <div class="sync-diagram">
+            <div class="sync-box"><div class="emoji">🎲</div><div class="sync-title">Front end board</div><div class="sync-copy">Everyone updates their own progress.</div></div>
+            <div class="sync-box"><div class="emoji">⚡</div><div class="sync-title">Tiny backend</div><div class="sync-copy">Backend receives updates and protects the Notion token.</div></div>
+            <div class="sync-box"><div class="emoji">🗂️</div><div class="sync-title">Notion database</div><div class="sync-copy">Progress, bookings and notes live in Notion.</div></div>
+          </div>
+          <h3 style="margin:24px 0 12px">Suggested Notion tables</h3>
+          <div class="grid-2">
+            <div class="info-card"><div class="emoji">👥</div><h3>Travellers</h3><ul><li>Name</li><li>Role</li><li>Passport details collected</li><li>Flight status</li><li>Progress stage</li></ul></div>
+            <div class="info-card"><div class="emoji">✅</div><h3>Tasks</h3><ul><li>Task name</li><li>Owner</li><li>Personal or group</li><li>Priority</li><li>Status</li></ul></div>
+            <div class="info-card"><div class="emoji">🧾</div><h3>Bookings</h3><ul><li>Flight</li><li>Accommodation</li><li>Vehicle</li><li>Restaurant</li><li>Confirmation screenshot</li></ul></div>
+            <div class="info-card"><div class="emoji">🗺️</div><h3>Places</h3><ul><li>City</li><li>Category</li><li>Beli score where relevant</li><li>Official Google Maps long URL</li><li>Reservation status</li></ul></div>
+          </div>
+          <h3 style="margin:24px 0 12px">Build sequence</h3>
+          <div class="timeline">
+            <div class="timeline-item"><div class="timeline-date">Step 1</div><div><div class="timeline-title">Create Notion databases</div><div class="timeline-body">Create Travellers, Tasks, Bookings and Places.</div></div></div>
+            <div class="timeline-item"><div class="timeline-date">Step 2</div><div><div class="timeline-title">Deploy a tiny API</div><div class="timeline-body">API reads and writes progress. Notion secret stays server side.</div></div></div>
+            <div class="timeline-item"><div class="timeline-date">Step 3</div><div><div class="timeline-title">Replace localStorage</div><div class="timeline-body">Board loads from API and pushes updates on toggle.</div></div></div>
+            <div class="timeline-item"><div class="timeline-date">Step 4</div><div><div class="timeline-title">Share with the boys</div><div class="timeline-body">Each person picks a token and updates their own tasks.</div></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="settings" class="section">
+        <div class="layout">
+          <div class="panel pad">
+            <h2>Roster settings</h2>
+            <p class="panel-sub">Rename placeholders once the group is confirmed.</p>
+            <div id="rosterEditor" class="task-list" style="margin-top:18px"></div>
+          </div>
+          <aside class="panel pad">
+            <h3>Export snapshot</h3>
+            <p class="panel-sub">Copy the current board state manually.</p>
+            <button class="btn small" id="exportBtn" style="margin-top:14px">Copy JSON snapshot</button>
+            <button class="btn small secondary" id="importBtn" style="margin-top:14px">Paste JSON snapshot</button>
+          </aside>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal" id="setupModal" role="dialog" aria-modal="true" aria-labelledby="setupTitle">
+    <div class="modal-card">
+      <div class="eyebrow">Choose your trip energy</div>
+      <h2 id="setupTitle">Choose your Korea mode</h2>
+      <p>Pick a board identity. You can change it later.</p>
+      <div class="personality-grid" id="personalityGrid"></div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; margin-top:18px">
+        <button class="btn secondary" id="skipSetup">Skip</button>
+        <button class="btn" id="saveSetup">Start</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const STORE_KEY = "koreaBoysTripQuestBoardV1";
+    // Paste your Google Apps Script Web App URL here after deployment.
+    // It should look like: https://script.google.com/macros/s/AKfycb.../exec
+    const REMOTE_API_URL = "https://script.google.com/macros/s/AKfycbxK5YZiKjHuebkuM1wwoMA-lzp_wM9szMjvwX88wsvcvhlg9n7M962c8GdehEIgiPF04w/exec";
+    let remoteSaveTimer = null;
+    let remoteLoadAttempted = false;
+
+    const checkpoints = [
+      { id: "spawn", title: "London check in", meta: "Start", icon: "✈️", type: "personal", x: 10.5, y: 82 },
+      { id: "squad", title: "Crew lock", meta: "P1", icon: "🎤", type: "personal", x: 22, y: 61 },
+      { id: "outbound", title: "Ticket drop", meta: "P1", icon: "🎟️", type: "personal", x: 26, y: 39 },
+      { id: "flightBoss", title: "Route lock", meta: "Boss", icon: "🛩️", type: "boss", x: 42, y: 22 },
+      { id: "seoul", title: "Seoul set", meta: "Plan", icon: "🎧", type: "group", x: 63, y: 31 },
+      { id: "jejuHop", title: "CJU hop", meta: "Book", icon: "💺", type: "personal", x: 74, y: 45 },
+      { id: "basecamp", title: "Stay lock", meta: "Boss", icon: "🏨", type: "boss", x: 84, y: 61 },
+      { id: "wheels", title: "Ride plan", meta: "Boss", icon: "🚘", type: "boss", x: 76, y: 75 },
+      { id: "entry", title: "Admin clear", meta: "Admin", icon: "🪪", type: "personal", x: 58, y: 77 },
+      { id: "final", title: "Show ready", meta: "Clear", icon: "✨", type: "personal", x: 42, y: 68 }
+    ];
+
+    const colours = ["#72f4ff", "#ff97ca", "#d7e6ff", "#8be8d4", "#8fa9ff", "#9ec9ff", "#f5f8ff"];
+    const roles = ["🎤 Frontman", "🍜 Food Scout", "📸 Visual Lead", "🧾 Money Manager", "🚘 Ride Lead", "🎬 Content Lead", "🪪 Admin Lead"];
+
+
+    const defaultIdeas = [
+      { id: "colourAnalysis", emoji: "🎨", title: "Colour analysis", city: "Seoul", desc: "Personal colour consult. Good for shopping and group content." },
+      { id: "skinAnalysis", emoji: "🧴", title: "Skin analysis", city: "Seoul", desc: "K-beauty skin check or clinic consult. Low effort Seoul option." },
+      { id: "hanokStay", emoji: "🏯", title: "Live in a traditional site", city: "Seoul or Jeju", desc: "Hanok or heritage style stay. Check comfort, bathrooms and location." },
+      { id: "jjimjilbang", emoji: "♨️", title: "Korean bathhouse / jjimjilbang", city: "Seoul or Jeju", desc: "Korean sauna, hot bath and chill zone. Treat this as the Korea version of the onsen idea, but check everyone is comfortable with the bathhouse setup." }
+    ];
+
+    const defaultState = {
+      selectedPlayer: 0,
+      personality: null,
+      ideas: structuredClone(defaultIdeas),
+      ideaVotes: {},
+      players: [
+        { name: "Jason", initials: "J", colour: colours[0], role: roles[0], progress: 2, completed: { squad: true, outbound: true } },
+        { name: "Traveller 2", initials: "T2", colour: colours[1], role: roles[1], progress: 0, completed: {} },
+        { name: "Traveller 3", initials: "T3", colour: colours[2], role: roles[2], progress: 0, completed: {} },
+        { name: "Traveller 4", initials: "T4", colour: colours[3], role: roles[3], progress: 0, completed: {} },
+        { name: "Traveller 5", initials: "T5", colour: colours[4], role: roles[4], progress: 0, completed: {} },
+        { name: "Traveller 6", initials: "T6", colour: colours[5], role: roles[5], progress: 0, completed: {} },
+        { name: "Traveller 7", initials: "T7", colour: colours[6], role: roles[6], progress: 0, completed: {} }
+      ],
+      groupDone: {
+        flightKraken: false,
+        budgetPact: false,
+        seoulJejuSplit: false,
+        accommodation: false,
+        vehicle: false,
+        activityShortlist: false,
+        itinerary: false,
+        foodBars: false,
+        offlinePack: false
+      }
+    };
+
+    const personalTasks = [
+      { id: "squad", icon: "🎤", title: "Confirm traveller details", desc: "Name, contact, passport name, passport expiry and yes or no status.", priority: "P1", checkpoint: 1 },
+      { id: "outbound", icon: "🎟️", title: "Outbound flight locked", desc: "Jason done. Others choose same route or their own outbound.", priority: "P1", checkpoint: 2 },
+      { id: "return", icon: "↩️", title: "Return flight locked", desc: "Return flight still TBC.", priority: "P1", checkpoint: 3 },
+      { id: "wishlistVote", icon: "⭐", title: "Vote on activity ideas", desc: "Vote on at least one idea.", priority: "P2", checkpoint: 4 },
+      { id: "jejuHop", icon: "💺", title: "Seoul to Jeju domestic leg locked", desc: "Book ICN or GMP to CJU after the Seoul and Jeju split is clear.", priority: "P1", checkpoint: 5 },
+      { id: "accomShare", icon: "🏨", title: "Accommodation share paid", desc: "Confirm share after villa or hotel is selected.", priority: "P2", checkpoint: 6 },
+      { id: "transportShare", icon: "🚘", title: "Transport share confirmed", desc: "Confirm driver, passenger or taxi role.", priority: "P2", checkpoint: 7 },
+      { id: "entry", icon: "🪪", title: "Entry admin ready", desc: "Passport, arrival admin, insurance and entry rules checked.", priority: "P1", checkpoint: 8 },
+      { id: "final", icon: "✨", title: "Packed and offline ready", desc: "Bookings, QR codes, maps and emergency info saved offline.", priority: "P2", checkpoint: 9 }
+    ];
+
+    const groupTasks = [
+      { id: "flightKraken", icon: "🛩️", title: "Lock the route", desc: "Confirm dates, outbound route, return route and arrivals.", priority: "P1" },
+      { id: "budgetPact", icon: "💳", title: "Set the budget", desc: "Agree per person budget.", priority: "P1" },
+      { id: "seoulJejuSplit", icon: "🌆", title: "Choose the Seoul and Jeju split", desc: "Decide Seoul before Jeju, after Jeju, or both.", priority: "P1" },
+      { id: "accommodation", icon: "🏨", title: "Pick the stay", desc: "Choose villa or split hotel rooms.", priority: "P2" },
+      { id: "vehicle", icon: "🚘", title: "Lock the ride plan", desc: "Choose van, two cars, transfers or taxis.", priority: "P2" },
+      { id: "activityShortlist", icon: "🎤", title: "Choose the activity shortlist", desc: "Pick the strongest Seoul and Jeju ideas.", priority: "P2" },
+      { id: "itinerary", icon: "📍", title: "Build the main itinerary", desc: "Lock Seoul, Jeju, rain backups and return plan.", priority: "P2" },
+      { id: "foodBars", icon: "🌙", title: "Food and nightlife shortlist", desc: "Build Seoul and Jeju shortlist with confirmed map links.", priority: "P2" },
+      { id: "offlinePack", icon: "📲", title: "Generate the offline pack", desc: "Tickets, accommodation, transport, insurance, maps and emergency contacts saved.", priority: "P3" }
+    ];
+
+    const personalities = [
+      { id: "chaotic", emoji: "⚡", name: "After Party", badge: "Trip vibe: chaotic" },
+      { id: "spontaneous", emoji: "🎧", name: "Night Run", badge: "Trip vibe: spontaneous" },
+      { id: "rigid", emoji: "🗓️", name: "Clean Plan", badge: "Trip vibe: structured" },
+      { id: "food", emoji: "🍜", name: "Food Hunt", badge: "Trip vibe: food led" },
+      { id: "chill", emoji: "🌊", name: "Easy Mode", badge: "Trip vibe: chill" }
+    ];
+
+    let state = loadState();
+    let selectedPersonality = state.personality;
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORE_KEY);
+        if (!raw) return structuredClone(defaultState);
+        const parsed = JSON.parse(raw);
+        return {
+          ...structuredClone(defaultState),
+          ...parsed,
+          players: parsed.players || structuredClone(defaultState.players),
+          groupDone: { ...defaultState.groupDone, ...(parsed.groupDone || {}) },
+          ideas: parsed.ideas || structuredClone(defaultIdeas),
+          ideaVotes: parsed.ideaVotes || {}
+        };
+      } catch (e) {
+        return structuredClone(defaultState);
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORE_KEY, JSON.stringify(state));
+      queueRemoteSave();
+    }
+
+    function hasRemoteSync() {
+      return REMOTE_API_URL && REMOTE_API_URL.startsWith("https://script.google.com/");
+    }
+
+    function mergeRemoteState(remote) {
+      if (!remote || typeof remote !== "object") return;
+      state = {
+        ...structuredClone(defaultState),
+        ...remote,
+        players: remote.players || structuredClone(defaultState.players),
+        groupDone: { ...defaultState.groupDone, ...(remote.groupDone || {}) },
+        ideas: remote.ideas || structuredClone(defaultIdeas),
+        ideaVotes: remote.ideaVotes || {}
+      };
+      localStorage.setItem(STORE_KEY, JSON.stringify(state));
+    }
+
+    function remoteLoad() {
+      if (!hasRemoteSync() || remoteLoadAttempted) return;
+      remoteLoadAttempted = true;
+      const callbackName = `koreaBoardSync_${Date.now()}_${Math.floor(Math.random() * 100000)}`;
+      const script = document.createElement("script");
+      const cleanup = () => {
+        try { delete window[callbackName]; } catch (e) { window[callbackName] = undefined; }
+        script.remove();
+      };
+      window[callbackName] = (response) => {
+        if (response && response.ok && response.state) {
+          mergeRemoteState(response.state);
+          renderAll();
+          toast("Synced from Google Sheet");
+        }
+        cleanup();
+      };
+      script.onerror = () => { cleanup(); toast("Could not load Google Sheet sync"); };
+      script.src = `${REMOTE_API_URL}?callback=${encodeURIComponent(callbackName)}&t=${Date.now()}`;
+      document.body.appendChild(script);
+      setTimeout(cleanup, 10000);
+    }
+
+    function queueRemoteSave() {
+      if (!hasRemoteSync()) return;
+      clearTimeout(remoteSaveTimer);
+      remoteSaveTimer = setTimeout(remoteSave, 450);
+    }
+
+    function remoteSave() {
+      if (!hasRemoteSync()) return;
+      const iframeId = "koreaBoardSyncFrame";
+      let iframe = document.getElementById(iframeId);
+      if (!iframe) {
+        iframe = document.createElement("iframe");
+        iframe.id = iframeId;
+        iframe.name = iframeId;
+        iframe.style.display = "none";
+        document.body.appendChild(iframe);
+      }
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = REMOTE_API_URL;
+      form.target = iframeId;
+      form.style.display = "none";
+
+      const input = document.createElement("textarea");
+      input.name = "payload";
+      input.value = JSON.stringify({ state, updatedAt: new Date().toISOString() });
+      form.appendChild(input);
+      document.body.appendChild(form);
+      form.submit();
+      setTimeout(() => form.remove(), 1000);
+    }
+
+    function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+    function selectedPlayer() { return state.players[state.selectedPlayer] || state.players[0]; }
+
+    function computePlayerProgress(player) {
+      const maxCheckpoint = Math.max(...personalTasks.filter(t => player.completed[t.id]).map(t => t.checkpoint), player.progress || 0);
+      return clamp(maxCheckpoint, 0, checkpoints.length - 1);
+    }
+
+    function renderNodes() {
+      const holder = document.getElementById("nodes");
+      holder.innerHTML = checkpoints.map(cp => `
+        <div class="node ${cp.type}" style="left:${cp.x}%; top:${cp.y}%" title="${cp.title}">
+          <div class="node-core">${cp.icon}</div>
+          <div class="node-title">${cp.title}</div>
+          <div class="node-meta">${cp.meta}</div>
+        </div>
+      `).join("");
+    }
+
+    function renderTokens() {
+      const holder = document.getElementById("tokens");
+      const used = {};
+      holder.innerHTML = state.players.map((p, idx) => {
+        const progress = computePlayerProgress(p);
+        p.progress = progress;
+        const cp = checkpoints[progress];
+        const key = progress;
+        used[key] = used[key] || 0;
+        const stackIndex = used[key]++;
+        const angle = (stackIndex / 7) * Math.PI * 2;
+        const radius = stackIndex === 0 ? 0 : 2.7 + Math.floor((stackIndex - 1) / 6) * 2;
+        const x = cp.x + Math.cos(angle) * radius;
+        const y = cp.y + Math.sin(angle) * radius;
+        return `<div class="token ${idx === state.selectedPlayer ? "active" : ""}" data-name="${escapeHtml(p.name)}" style="left:${x}%; top:${y}%; background:${p.colour}" onclick="void(0)">${escapeHtml(p.initials)}</div>`;
+      }).join("");
+    }
+
+    function renderPlayerSelect() {
+      const sel = document.getElementById("playerSelect");
+      sel.innerHTML = state.players.map((p, idx) => `<option value="${idx}" ${idx === state.selectedPlayer ? "selected" : ""}>${escapeHtml(p.name)}</option>`).join("");
+    }
+
+    function renderTravellerGrid() {
+      const holder = document.getElementById("travellerGrid");
+      holder.innerHTML = state.players.map((p, idx) => {
+        const progress = computePlayerProgress(p);
+        return `<div class="traveller-row" role="button" tabindex="0" data-player="${idx}">
+          <div class="avatar-dot" style="background:${p.colour}">${escapeHtml(p.initials)}</div>
+          <div><div class="traveller-name">${escapeHtml(p.name)}</div><div class="traveller-progress">${checkpoints[progress].title}</div></div>
+          <span class="pill ${idx === state.selectedPlayer ? "done" : ""}">${Math.round(progress / (checkpoints.length - 1) * 100)}%</span>
+        </div>`;
+      }).join("");
+      holder.querySelectorAll(".traveller-row").forEach(row => {
+        row.addEventListener("click", () => { state.selectedPlayer = Number(row.dataset.player); saveState(); renderAll(); });
+      });
+    }
+
+    function renderSelectedPanel() {
+      const p = selectedPlayer();
+      const progress = computePlayerProgress(p);
+      const percent = Math.round(progress / (checkpoints.length - 1) * 100);
+      document.getElementById("selectedName").textContent = p.name;
+      document.getElementById("selectedProgress").textContent = `${percent}%`;
+      document.getElementById("selectedProgressFill").style.width = `${percent}%`;
+      document.getElementById("selectedRole").textContent = p.role || "🧭 No role yet";
+      document.getElementById("selectedStage").textContent = checkpoints[progress].title;
+    }
+
+    function renderTasks() {
+      const p = selectedPlayer();
+      const personalHolder = document.getElementById("personalTasks");
+      personalHolder.innerHTML = personalTasks.map(task => {
+        const done = !!p.completed[task.id];
+        return `<label class="task-card ${done ? "completed" : ""}">
+          <div class="task-icon">${task.icon}</div>
+          <div><div class="task-title">${task.title}</div><div class="task-desc">${task.desc}</div><div class="task-tags"><span class="tag ${task.priority.toLowerCase()}">${task.priority}</span><span class="tag personal">${escapeHtml(p.name)} only</span></div></div>
+          <input class="toggle personal-toggle" type="checkbox" data-task="${task.id}" ${done ? "checked" : ""}/>
+        </label>`;
+      }).join("");
+      personalHolder.querySelectorAll(".personal-toggle").forEach(toggle => {
+        toggle.addEventListener("change", e => {
+          const taskId = e.target.dataset.task;
+          const player = selectedPlayer();
+          player.completed[taskId] = e.target.checked;
+          const progress = computePlayerProgress(player);
+          player.progress = progress;
+          saveState();
+          renderAll();
+          toast(e.target.checked ? `${player.name} cleared a checkpoint` : `${player.name} checkpoint unchecked`);
+        });
+      });
+
+      const groupHolder = document.getElementById("groupTasks");
+      groupHolder.innerHTML = groupTasks.map(task => {
+        const done = !!state.groupDone[task.id];
+        return `<label class="task-card ${done ? "group-done" : ""}">
+          <div class="task-icon">${task.icon}</div>
+          <div><div class="task-title">${task.title}</div><div class="task-desc">${task.desc}</div><div class="task-tags"><span class="tag ${task.priority.toLowerCase()}">${task.priority}</span><span class="tag">Group boss</span></div></div>
+          <input class="toggle group-toggle" type="checkbox" data-task="${task.id}" ${done ? "checked" : ""}/>
+        </label>`;
+      }).join("");
+      groupHolder.querySelectorAll(".group-toggle").forEach(toggle => {
+        toggle.addEventListener("change", e => {
+          state.groupDone[e.target.dataset.task] = e.target.checked;
+          saveState();
+          renderAll();
+          toast(e.target.checked ? "Group boss cleared" : "Group boss reopened");
+        });
+      });
+    }
+
+
+    function allIdeas() {
+      if (!state.ideas || !Array.isArray(state.ideas)) state.ideas = structuredClone(defaultIdeas);
+      return state.ideas;
+    }
+
+    function tallyIdea(ideaId) {
+      const votes = state.ideaVotes?.[ideaId] || {};
+      const tally = { keen: 0, maybe: 0, no: 0, total: 0 };
+      Object.values(votes).forEach(v => { if (tally[v] !== undefined) { tally[v] += 1; tally.total += 1; } });
+      tally.score = tally.keen * 2 + tally.maybe - tally.no * 2;
+      return tally;
+    }
+
+    function ideaStatus(tally) {
+      if (tally.keen >= 4 && tally.no <= 1) return { label: "Shortlist", cls: "hot" };
+      if (tally.no >= 2) return { label: "Discuss", cls: "cold" };
+      if (tally.total === 0) return { label: "Unvoted", cls: "" };
+      return { label: "Maybe", cls: "watch" };
+    }
+
+    function selectedPlayerVoteCount(playerIdx = state.selectedPlayer) {
+      return allIdeas().filter(idea => state.ideaVotes?.[idea.id]?.[playerIdx]).length;
+    }
+
+    function updateWishlistCheckpoint() {
+      const p = selectedPlayer();
+      p.completed.wishlistVote = selectedPlayerVoteCount(state.selectedPlayer) > 0;
+      if (p.completed.wishlistVote && (p.progress || 0) < 4) p.progress = 4;
+    }
+
+    function renderIdeas() {
+      const holder = document.getElementById("ideaGrid");
+      if (!holder) return;
+      const ideas = allIdeas();
+      holder.innerHTML = ideas.map(idea => {
+        const tally = tallyIdea(idea.id);
+        const status = ideaStatus(tally);
+        const selectedVote = state.ideaVotes?.[idea.id]?.[state.selectedPlayer] || "";
+        const denom = Math.max(tally.total, 1);
+        return `<article class="idea-card">
+          <div class="idea-top">
+            <div class="idea-emoji">${idea.emoji || "💡"}</div>
+            <div><div class="idea-title">${escapeHtml(idea.title)}</div><div class="idea-desc">${escapeHtml(idea.desc)}</div></div>
+            <span class="idea-status ${status.cls}">${status.label}</span>
+          </div>
+          <div class="pill-row" style="margin:0"><span class="pill idea-city">${escapeHtml(idea.city || "TBC")}</span><span class="pill">${tally.total}/7 voted</span><span class="pill">Score ${tally.score}</span></div>
+          <div class="vote-row" aria-label="Vote on ${escapeAttr(idea.title)}">
+            <button class="vote-btn keen ${selectedVote === "keen" ? "active" : ""}" data-idea="${idea.id}" data-vote="keen">✅ Keen</button>
+            <button class="vote-btn maybe ${selectedVote === "maybe" ? "active" : ""}" data-idea="${idea.id}" data-vote="maybe">🤷 Maybe</button>
+            <button class="vote-btn no ${selectedVote === "no" ? "active" : ""}" data-idea="${idea.id}" data-vote="no">❌ No</button>
+          </div>
+          <div class="vote-meter">
+            <div class="meter-track"><div class="meter-keen" style="width:${tally.keen / denom * 100}%"></div><div class="meter-maybe" style="width:${tally.maybe / denom * 100}%"></div><div class="meter-no" style="width:${tally.no / denom * 100}%"></div></div>
+            <div class="vote-counts"><span>✅ ${tally.keen} keen</span><span>🤷 ${tally.maybe} maybe</span><span>❌ ${tally.no} no</span></div>
+          </div>
+        </article>`;
+      }).join("");
+      holder.querySelectorAll(".vote-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const ideaId = btn.dataset.idea;
+          const vote = btn.dataset.vote;
+          state.ideaVotes[ideaId] = state.ideaVotes[ideaId] || {};
+          if (state.ideaVotes[ideaId][state.selectedPlayer] === vote) delete state.ideaVotes[ideaId][state.selectedPlayer];
+          else state.ideaVotes[ideaId][state.selectedPlayer] = vote;
+          updateWishlistCheckpoint();
+          saveState(); renderAll(); toast(`${selectedPlayer().name} voted on an idea`);
+        });
+      });
+      const tallies = ideas.map(i => tallyIdea(i.id));
+      const hot = tallies.filter(t => t.keen >= 4 && t.no <= 1).length;
+      const maybe = tallies.filter(t => t.total > 0 && !(t.keen >= 4 && t.no <= 1) && t.no < 2).length;
+      const blocked = tallies.filter(t => t.no >= 2).length;
+      const totalVotes = tallies.reduce((sum, t) => sum + t.total, 0);
+      document.getElementById("hotIdeaCount").textContent = hot;
+      document.getElementById("maybeIdeaCount").textContent = maybe;
+      document.getElementById("blockedIdeaCount").textContent = blocked;
+      document.getElementById("ideasHotBadge").textContent = `${hot} shortlist ideas`;
+      document.getElementById("ideasVotesBadge").textContent = `${totalVotes} votes cast`;
+      renderBoardIdeaPreview();
+    }
+
+    function renderBoardIdeaPreview() {
+      const holder = document.getElementById("boardIdeaPreview");
+      const status = document.getElementById("boardVoteStatus");
+      if (!holder || !status) return;
+      const ideas = allIdeas();
+      const totalVotes = ideas.reduce((sum, idea) => sum + tallyIdea(idea.id).total, 0);
+      const selectedVotes = selectedPlayerVoteCount(state.selectedPlayer);
+      status.textContent = `${totalVotes} votes cast · ${selectedVotes} by selected player`;
+      holder.innerHTML = ideas.slice(0, 4).map(idea => {
+        const tally = tallyIdea(idea.id);
+        const status = ideaStatus(tally);
+        return `<div class="mini-idea-row">
+          <span>${idea.emoji || "💡"}</span>
+          <div><div class="mini-idea-name">${escapeHtml(idea.title)}</div><div class="mini-idea-meta">${tally.keen} keen · ${tally.maybe} maybe · ${tally.no} no</div></div>
+          <span class="idea-status ${status.cls}">${status.label}</span>
+        </div>`;
+      }).join("");
+    }
+
+    function renderNextActions() {
+      const p = selectedPlayer();
+      const openPersonal = personalTasks.filter(t => !p.completed[t.id]).slice(0, 2);
+      const openGroup = groupTasks.filter(t => !state.groupDone[t.id]).slice(0, 1);
+      const actions = [...openPersonal, ...openGroup];
+      document.getElementById("nextActions").innerHTML = actions.map(t => `<div class="task-card" style="grid-template-columns:auto 1fr; padding:12px"><div class="task-icon">${t.icon}</div><div><div class="task-title">${t.title}</div><div class="task-desc">${t.desc}</div></div></div>`).join("") || `<div class="info-card"><div class="emoji">🏆</div><h3>All clear</h3><p>No open actions for the selected view.</p></div>`;
+    }
+
+    function renderBadges() {
+      const chosen = personalities.find(x => x.id === state.personality);
+      document.getElementById("personalityBadge").textContent = chosen ? `${chosen.emoji} ${chosen.badge}` : "Trip mode: unset";
+      const groupTotal = groupTasks.length;
+      const groupDone = Object.values(state.groupDone).filter(Boolean).length;
+      const percent = Math.round(groupDone / groupTotal * 100);
+      document.getElementById("groupProgressBadge").textContent = `Group bosses ${percent}%`;
+    }
+
+    function renderRosterEditor() {
+      const holder = document.getElementById("rosterEditor");
+      holder.innerHTML = state.players.map((p, idx) => `<div class="task-card" style="grid-template-columns:auto 1fr">
+        <div class="avatar-dot" style="background:${p.colour}; width:42px; height:42px">${escapeHtml(p.initials)}</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
+          <input type="text" value="${escapeAttr(p.name)}" data-field="name" data-idx="${idx}" aria-label="Name for traveller ${idx + 1}" />
+          <input type="text" value="${escapeAttr(p.role)}" data-field="role" data-idx="${idx}" aria-label="Role for traveller ${idx + 1}" />
+        </div>
+      </div>`).join("");
+      holder.querySelectorAll("input").forEach(input => {
+        input.addEventListener("input", e => {
+          const idx = Number(e.target.dataset.idx);
+          const field = e.target.dataset.field;
+          state.players[idx][field] = e.target.value;
+          if (field === "name") state.players[idx].initials = makeInitials(e.target.value, idx);
+          saveState();
+          renderPlayerSelect(); renderTravellerGrid(); renderTokens(); renderSelectedPanel(); renderNextActions();
+        });
+      });
+    }
+
+    function renderPersonalities() {
+      const holder = document.getElementById("personalityGrid");
+      holder.innerHTML = personalities.map(p => `<button class="personality ${selectedPersonality === p.id ? "selected" : ""}" data-personality="${p.id}"><div class="emoji">${p.emoji}</div><div class="name">${p.name}</div></button>`).join("");
+      holder.querySelectorAll(".personality").forEach(btn => {
+        btn.addEventListener("click", () => {
+          selectedPersonality = btn.dataset.personality;
+          renderPersonalities();
+        });
+      });
+    }
+
+    function makeInitials(name, idx) {
+      const clean = (name || "").trim();
+      if (!clean) return `T${idx + 1}`;
+      const parts = clean.split(/\s+/).slice(0, 2).map(x => x[0]).join("").toUpperCase();
+      return parts || `T${idx + 1}`;
+    }
+
+    function escapeHtml(str) { return String(str || "").replace(/[&<>"]/g, s => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[s])); }
+    function escapeAttr(str) { return escapeHtml(str).replace(/'/g, "&#039;"); }
+
+    function renderAll() {
+      renderNodes(); renderTokens(); renderPlayerSelect(); renderTravellerGrid(); renderSelectedPanel(); renderTasks(); renderIdeas(); renderBoardIdeaPreview(); renderNextActions(); renderBadges(); renderRosterEditor();
+    }
+
+    function toast(message) {
+      const t = document.getElementById("toast");
+      t.textContent = message;
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 1800);
+    }
+
+    document.querySelectorAll(".nav button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".nav button").forEach(x => x.classList.remove("active"));
+        document.querySelectorAll(".section").forEach(x => x.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById(btn.dataset.tab).classList.add("active");
+      });
+    });
+
+    document.querySelectorAll("[data-jump]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const target = btn.dataset.jump;
+        document.querySelector(`.nav button[data-tab='${target}']`).click();
+        document.getElementById(target).scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    document.getElementById("playerSelect").addEventListener("change", e => { state.selectedPlayer = Number(e.target.value); saveState(); renderAll(); });
+    document.getElementById("focusPlayerBtn").addEventListener("click", () => toast(`${selectedPlayer().name} is selected`));
+    document.getElementById("advanceBtn").addEventListener("click", () => { const p = selectedPlayer(); p.progress = clamp((p.progress || 0) + 1, 0, checkpoints.length - 1); saveState(); renderAll(); toast(`${p.name} moved forward`); });
+    document.getElementById("undoBtn").addEventListener("click", () => { const p = selectedPlayer(); p.progress = clamp((p.progress || 0) - 1, 0, checkpoints.length - 1); saveState(); renderAll(); toast(`${p.name} moved back`); });
+    document.getElementById("resetBtn").addEventListener("click", () => { if (confirm("Reset this browser's Korea board state?")) { localStorage.removeItem(STORE_KEY); state = loadState(); renderAll(); toast("Board reset"); } });
+    document.getElementById("markJasonFactsBtn").addEventListener("click", () => {
+      const jason = state.players[0];
+      jason.name = "Jason"; jason.initials = "J"; jason.completed.squad = true; jason.completed.outbound = true; jason.progress = 2;
+      state.selectedPlayer = 0;
+      saveState(); renderAll(); toast("Jason facts applied");
+    });
+
+    document.getElementById("addIdeaBtn").addEventListener("click", () => {
+      const title = document.getElementById("newIdeaTitle").value.trim();
+      const city = document.getElementById("newIdeaCity").value.trim() || "TBC";
+      const desc = document.getElementById("newIdeaDesc").value.trim() || "New group idea. Vote first, commit later.";
+      if (!title) { toast("Add an idea name first"); return; }
+      state.ideas = allIdeas();
+      state.ideas.push({ id: `custom_${Date.now()}`, emoji: "💡", title, city, desc });
+      document.getElementById("newIdeaTitle").value = "";
+      document.getElementById("newIdeaCity").value = "";
+      document.getElementById("newIdeaDesc").value = "";
+      saveState(); renderAll(); toast("Idea added");
+    });
+
+    document.getElementById("copyIdeasBtn").addEventListener("click", async () => {
+      const lines = [
+        "Korea Boys Trip Idea Votes",
+        `Selected traveller: ${selectedPlayer().name}`,
+        "",
+        ...allIdeas().map(idea => {
+          const t = tallyIdea(idea.id);
+          const status = ideaStatus(t).label;
+          return `• ${idea.title} (${idea.city}): ${status}, ${t.keen} keen, ${t.maybe} maybe, ${t.no} no`;
+        })
+      ];
+      await navigator.clipboard.writeText(lines.join("\n")); toast("Idea results copied");
+    });
+
+
+    document.getElementById("copySummaryBtn").addEventListener("click", async () => {
+      const groupDoneCount = Object.values(state.groupDone).filter(Boolean).length;
+      const lines = [
+        "Korea Boys Trip Quest Summary",
+        "Dates: 23 Oct to 2 Nov 2026",
+        "Route: London to Seoul to Jeju",
+        `Group boss progress: ${groupDoneCount}/${groupTasks.length}`,
+        "",
+        "Traveller progress:",
+        ...state.players.map(p => `• ${p.name}: ${checkpoints[computePlayerProgress(p)].title}`),
+        "",
+        "Shortlist ideas:",
+        ...allIdeas().filter(i => ideaStatus(tallyIdea(i.id)).label === "Shortlist").map(i => `• ${i.title} (${i.city})`),
+        "",
+        "Open group bosses:",
+        ...groupTasks.filter(t => !state.groupDone[t.id]).map(t => `• ${t.title}`)
+      ];
+      await navigator.clipboard.writeText(lines.join("\n")); toast("Summary copied");
+    });
+
+    document.getElementById("exportBtn").addEventListener("click", async () => { await navigator.clipboard.writeText(JSON.stringify(state, null, 2)); toast("JSON snapshot copied"); });
+    document.getElementById("importBtn").addEventListener("click", async () => {
+      const raw = prompt("Paste JSON snapshot");
+      if (!raw) return;
+      try { state = { ...structuredClone(defaultState), ...JSON.parse(raw) }; saveState(); renderAll(); toast("Snapshot imported"); } catch (e) { alert("Invalid JSON snapshot"); }
+    });
+
+    const modal = document.getElementById("setupModal");
+    document.getElementById("openSetup").addEventListener("click", () => { selectedPersonality = state.personality; renderPersonalities(); modal.classList.add("active"); });
+    document.getElementById("skipSetup").addEventListener("click", () => { modal.classList.remove("active"); });
+    document.getElementById("saveSetup").addEventListener("click", () => { state.personality = selectedPersonality; saveState(); renderAll(); modal.classList.remove("active"); toast("Trip personality saved"); });
+    modal.addEventListener("click", e => { if (e.target === modal) modal.classList.remove("active"); });
+
+    renderPersonalities();
+    renderAll();
+    remoteLoad();
+    if (!state.personality && !localStorage.getItem(STORE_KEY + "Seen")) {
+      localStorage.setItem(STORE_KEY + "Seen", "1");
+      modal.classList.add("active");
+    }
+  </script>
+</body>
+</html>
