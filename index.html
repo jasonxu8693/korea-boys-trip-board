@@ -290,7 +290,7 @@
 
 
 
-    .planning-hub { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; padding: 16px 20px 0; }
+    .planning-hub { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; padding: 16px 20px 0; }
     .hub-card { text-align: left; border: 1px solid rgba(255,255,255,0.13); border-radius: 22px; background: rgba(255,255,255,0.06); color: var(--ink); padding: 15px; min-height: 118px; display: grid; align-content: start; gap: 8px; transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease; }
     .hub-card:hover { transform: translateY(-3px); border-color: rgba(255,209,92,0.34); background: rgba(255,255,255,0.09); }
     .hub-card.primary { background: linear-gradient(135deg, rgba(114,244,255,0.16), rgba(255,151,202,0.10)); border-color: rgba(114,244,255,0.28); box-shadow: 0 16px 42px rgba(114,244,255,0.10); }
@@ -413,6 +413,56 @@
     .traveller-vibe { font-size: 13px; margin-left: 4px; }
     .countdown-card .big { background: linear-gradient(100deg, #ffd15c, #ff97ca 60%, #72f4ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
+    /* The Bookies tab — betting + prizes (added) */
+    .nav button.casino-tab { color: #ffd9a8; border: 1px solid rgba(255,151,202,0.26); background: rgba(255,151,202,0.08); }
+    .nav button.casino-tab.active { color: #2a0f1a; background: linear-gradient(90deg, #ffd15c, #ff97ca); }
+
+    .market-list { display: grid; gap: 14px; }
+    .bet-card { position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.14); border-radius: 24px; background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.045)); padding: 16px; display: grid; gap: 13px; box-shadow: 0 14px 34px rgba(24,7,49,0.12); }
+    .bet-card:before { content: ""; position: absolute; width: 150px; height: 150px; border-radius: 50%; right: -56px; top: -70px; background: rgba(255,209,92,0.10); pointer-events: none; }
+    .bet-card.is-settled { border-color: rgba(139,232,212,0.28); }
+    .bet-head { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: start; position: relative; }
+    .bet-emoji { width: 48px; height: 48px; border-radius: 18px; display: grid; place-items: center; font-size: 26px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.12); }
+    .bet-title { font-weight: 1000; letter-spacing: -0.03em; font-size: 17px; }
+    .bet-desc { color: var(--muted); font-size: 13px; line-height: 1.42; margin-top: 4px; }
+    .bet-tags { display: grid; gap: 6px; justify-items: end; align-content: start; }
+    .prize-tag { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 6px 10px; font-size: 11px; font-weight: 900; letter-spacing: 0.01em; background: linear-gradient(135deg, rgba(255,209,92,0.22), rgba(255,151,202,0.16)); color: #ffe7ae; border: 1px solid rgba(255,209,92,0.34); white-space: nowrap; max-width: 230px; overflow: hidden; text-overflow: ellipsis; }
+    .runner-grid { display: grid; gap: 8px; }
+    .runner-btn { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; width: 100%; text-align: left; border: 1px solid rgba(255,255,255,0.13); border-radius: 16px; background: rgba(0,0,0,0.2); color: var(--ink); padding: 10px 12px 14px; position: relative; transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease; }
+    .runner-btn:hover:not(:disabled) { transform: translateY(-2px); border-color: rgba(255,255,255,0.26); }
+    .runner-btn.mine { border-color: rgba(114,244,255,0.5); background: rgba(114,244,255,0.12); box-shadow: 0 8px 22px rgba(114,244,255,0.12); }
+    .runner-btn.win { border-color: rgba(139,232,212,0.55); background: rgba(139,232,212,0.16); }
+    .runner-btn.locked { cursor: default; }
+    .runner-dot { width: 30px; height: 30px; border-radius: 11px; display: grid; place-items: center; font-size: 15px; color: #061020; border: 1px solid rgba(255,255,255,0.55); }
+    .runner-name { font-weight: 850; font-size: 14px; }
+    .runner-odds { font-weight: 1000; font-size: 14px; color: #ffe7ae; letter-spacing: -0.02em; }
+    .runner-bar { position: absolute; left: 12px; right: 12px; bottom: 6px; height: 3px; border-radius: 999px; background: rgba(255,255,255,0.08); overflow: hidden; }
+    .runner-bar > span { display: block; height: 100%; border-radius: inherit; transition: width 0.35s ease; }
+    .bet-strip { border: 1px dashed rgba(255,255,255,0.16); border-radius: 16px; padding: 11px 13px; background: rgba(0,0,0,0.16); display: grid; gap: 10px; }
+    .bet-strip.settled-strip { border-style: solid; border-color: rgba(139,232,212,0.3); background: rgba(139,232,212,0.08); }
+    .bet-line { font-size: 13px; color: var(--ink); line-height: 1.4; }
+    .bet-line.muted-line { color: var(--muted); }
+    .stake-row { display: flex; flex-wrap: wrap; gap: 7px; }
+    .bet-foot { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .settle-wrap { display: grid; gap: 8px; }
+    .settle-pick { display: flex; flex-wrap: wrap; gap: 7px; }
+    .form-table { display: grid; gap: 8px; }
+    .ft-row { display: grid; grid-template-columns: auto auto 1fr auto; gap: 10px; align-items: center; padding: 9px 10px; border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; background: rgba(255,255,255,0.05); }
+    .ft-row.me { border-color: rgba(114,244,255,0.4); background: rgba(114,244,255,0.08); }
+    .ft-rank { font-weight: 1000; font-size: 13px; min-width: 26px; text-align: center; }
+    .ft-name { font-weight: 850; font-size: 13px; }
+    .ft-trophies { margin-left: 4px; font-size: 11px; }
+    .ft-bal { font-weight: 1000; font-size: 15px; text-align: right; letter-spacing: -0.02em; }
+    .ft-net { display: block; font-size: 10px; font-weight: 900; color: var(--subtle); }
+    .ft-net.up { color: #8be8d4; }
+    .ft-net.down { color: #ff9c9c; }
+    .prize-shelf { display: grid; gap: 8px; }
+    .prize-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
+    .prize-row.claimed { opacity: 0.72; }
+    .prize-meta { color: var(--subtle); font-size: 11px; font-weight: 800; text-align: right; }
+    .add-market-form { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+    .add-market-form #newMkTitle, .add-market-form #newMkRunnersWrap, .add-market-form #addMarketBtn { grid-column: 1 / -1; }
+
     @media (max-width: 980px) {
       .hero-content { grid-template-columns: 1fr; align-items: end; }
       .layout { grid-template-columns: 1fr; }
@@ -436,6 +486,9 @@
       .token { width: 32px; height: 32px; border-radius: 13px 13px 13px 5px; font-size: 13px; }
       .timeline-item { grid-template-columns: 1fr; }
       .nav { top: 6px; border-radius: 22px; }
+      .add-market-form { grid-template-columns: 1fr; }
+      .bet-head { grid-template-columns: auto 1fr; }
+      .bet-tags { grid-column: 1 / -1; justify-items: start; }
     }
   </style>
 </head>
@@ -459,6 +512,7 @@
             <button class="btn" data-jump="board">Open board</button>
             <button class="btn secondary" data-jump="tasks">Boss tasks</button>
             <button class="btn ghost" data-jump="ideas">Activity Market</button>
+            <button class="btn ghost" data-jump="bookie">🎲 The Bookies</button>
             <button class="btn ghost" data-jump="settings">Set your vibe</button>
           </div>
         </div>
@@ -486,6 +540,7 @@
       <button class="active" data-tab="board">🗺️ Board</button>
       <button data-tab="tasks">🎬 Group tasks</button>
       <button class="market-tab" data-tab="ideas">🎯 Activity Market</button>
+      <button class="casino-tab" data-tab="bookie">🎲 The Bookies</button>
       <button data-tab="intel">📍 Trip intel</button>
       <button data-tab="settings">⚙️ Roster &amp; vibes</button>
       <button class="sync-chip" id="syncChip" title="Tap to pull the latest from the group">
@@ -525,6 +580,12 @@
                 <span class="hub-title">Roster</span>
                 <span class="hub-copy">Names, roles and tokens.</span>
                 <span class="hub-status">Edit roster</span>
+              </button>
+              <button class="hub-card" data-jump="bookie">
+                <span class="hub-icon">🎲</span>
+                <span class="hub-title">The Bookies</span>
+                <span class="hub-copy">Bet on the boys. Win perks and forfeits.</span>
+                <span class="hub-status" id="boardBookieStatus">0 open markets</span>
               </button>
             </div>
             <div class="board-shell">
@@ -719,6 +780,70 @@
         </div>
       </section>
 
+      <section id="bookie" class="section">
+        <div class="layout">
+          <div class="panel pad">
+            <div class="panel-head" style="padding:0 0 18px; border-bottom:0">
+              <div>
+                <h2>The Bookies 🎲</h2>
+                <p class="panel-sub">Back the boys, win bragging rights and real trip perks. Chips only — no real money.</p>
+              </div>
+              <div class="pill-row" style="margin:0">
+                <span class="pill done" id="prizesBadge">0 prizes up for grabs</span>
+                <span class="pill warn" id="openMarketsBadge">0 open markets</span>
+                <span class="pill hot" id="myChipBal">1,000 chips</span>
+              </div>
+            </div>
+            <div class="idea-help" style="margin-bottom:14px">How the odds work: everyone piles chips onto a runner, and the price is just the whole pot divided by what's riding on that runner — so backing the underdog early gets you the best odds. When a bet is settled, the pot is split between everyone who backed the winner. Pick yourself with the player dropdown on the Board tab first.</div>
+            <div class="market-list" id="marketList"></div>
+
+            <h3 style="margin:26px 0 4px">Start your own bet</h3>
+            <p class="panel-sub">Make up a challenge, attach a prize or forfeit, and let the group back it.</p>
+            <div class="add-market-form">
+              <input type="text" id="newMkTitle" placeholder="What's the bet? e.g. First to lose their voice at karaoke" />
+              <input type="text" id="newMkDesc" placeholder="One line of detail (optional)" />
+              <input type="text" id="newMkPrize" list="prizeOptions" placeholder="Prize or forfeit for the winner (optional)" />
+              <datalist id="prizeOptions">
+                <option value="🛏️ First pick of bedrooms at the Jeju villa"></option>
+                <option value="🍖 Picks the first group dinner out"></option>
+                <option value="🚗 Shotgun the front seat on the Jeju road trip"></option>
+                <option value="🎶 Controls the aux for a full day"></option>
+                <option value="🍶 Forfeit: buys the first round of soju"></option>
+                <option value="📸 Forfeit: on group photographer duty all day"></option>
+                <option value="🧾 Skips one bill-split admin round"></option>
+                <option value="♨️ Picks jjimjilbang vs spa"></option>
+              </datalist>
+              <select id="newMkType" aria-label="Bet type">
+                <option value="field">Runner: pick from the boys</option>
+                <option value="yesno">Yes / No prop bet</option>
+                <option value="custom">Custom options</option>
+              </select>
+              <div id="newMkRunnersWrap" hidden><input type="text" id="newMkRunners" placeholder="Custom options, comma separated — e.g. Seoul, Jeju, Busan" /></div>
+              <button class="btn small" id="addMarketBtn">Add bet</button>
+            </div>
+          </div>
+
+          <aside class="side-stack">
+            <div class="panel pad">
+              <div class="label">Form table</div>
+              <p class="panel-sub" style="margin-top:4px">Who's up, who's down. 👑 leads the pack.</p>
+              <div class="form-table" id="formTable" style="margin-top:12px"></div>
+            </div>
+            <div class="panel pad">
+              <div class="label">Prize shelf</div>
+              <p class="panel-sub" style="margin-top:4px">The perks and forfeits riding on these bets.</p>
+              <div class="prize-shelf" id="prizeShelf" style="margin-top:12px"></div>
+              <button class="btn small ghost" id="restoreMarketsBtn" style="margin-top:14px">Restore starter bets</button>
+            </div>
+            <div class="info-card">
+              <div class="emoji">🤝</div>
+              <h3>House rules</h3>
+              <p>It's all in good fun. Settle each bet honestly the morning after, and the loser owes the forfeit. No actual cash changes hands unless you lot decide otherwise.</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
       <section id="intel" class="section">
         <div class="panel pad">
           <div class="panel-head" style="padding:0 0 18px; border-bottom:0">
@@ -821,6 +946,20 @@
       { id: "jjimjilbang", emoji: "♨️", title: "Korean bathhouse / jjimjilbang", city: "Seoul or Jeju", desc: "Korean sauna, hot bath and chill zone. Treat this as the Korea version of the onsen idea, but check everyone is comfortable with the bathhouse setup." }
     ];
 
+    // The Bookies — fun pari-mutuel betting with virtual chips + real trip perks.
+    const defaultBookie = {
+      startingChips: 1000,
+      markets: [
+        { id: "mk_return", emoji: "✈️", title: "First to lock their return flight", desc: "Books and pays for the return leg first.", type: "field", prize: "🛏️ First pick of bedrooms at the Jeju villa", status: "open", winner: null, bets: {} },
+        { id: "mk_accomLast", emoji: "💸", title: "Last to pay their accom share", desc: "Wooden spoon for the slowest payer.", type: "field", prize: "🍶 Forfeit: buys the first round of soju", status: "open", winner: null, bets: {} },
+        { id: "mk_breakfast", emoji: "🥇", title: "First one down for breakfast (most days)", desc: "The reliable early riser of the trip.", type: "field", prize: "🚗 Shotgun the front seat on the Jeju road trip", status: "open", winner: null, bets: {} },
+        { id: "mk_noraebang", emoji: "🎤", title: "Best noraebang (karaoke) performance", desc: "Group vote after karaoke night.", type: "field", prize: "🎶 Controls the aux for a full day", status: "open", winner: null, bets: {} },
+        { id: "mk_spice", emoji: "🌶️", title: "First to tap out at the spicy BBQ", desc: "Who caves to the buldak / spicy stew first.", type: "field", prize: "📸 Forfeit: on group photographer duty all next day", status: "open", winner: null, bets: {} },
+        { id: "mk_hongdae", emoji: "🌙", title: "Do we lose someone in Hongdae on night one?", desc: "Yes or no. Settle the morning after.", type: "yesno", prize: "", status: "open", winner: null, bets: {} },
+        { id: "mk_hallasan", emoji: "⛰️", title: "Does everyone make the early Hallasan start?", desc: "All present at the trailhead on time.", type: "yesno", prize: "", status: "open", winner: null, bets: {} }
+      ]
+    };
+
     const defaultState = {
       selectedPlayer: 0,
       ideas: structuredClone(defaultIdeas),
@@ -844,7 +983,8 @@
         itinerary: false,
         foodBars: false,
         offlinePack: false
-      }
+      },
+      bookie: structuredClone(defaultBookie)
     };
 
     const personalTasks = [
@@ -884,7 +1024,8 @@
           players: parsed.players || structuredClone(defaultState.players),
           groupDone: { ...defaultState.groupDone, ...(parsed.groupDone || {}) },
           ideas: parsed.ideas || structuredClone(defaultIdeas),
-          ideaVotes: parsed.ideaVotes || {}
+          ideaVotes: parsed.ideaVotes || {},
+          bookie: parsed.bookie || structuredClone(defaultBookie)
         };
       } catch (e) {
         return structuredClone(defaultState);
@@ -910,7 +1051,8 @@
         players: remote.players || structuredClone(defaultState.players),
         groupDone: { ...defaultState.groupDone, ...(remote.groupDone || {}) },
         ideas: remote.ideas || structuredClone(defaultIdeas),
-        ideaVotes: remote.ideaVotes || {}
+        ideaVotes: remote.ideaVotes || {},
+        bookie: remote.bookie || structuredClone(defaultBookie)
       };
       if (typeof localSelected === "number" && state.players[localSelected]) {
         state.selectedPlayer = localSelected;
@@ -1381,8 +1523,239 @@
     function escapeHtml(str) { return String(str || "").replace(/[&<>"]/g, s => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[s])); }
     function escapeAttr(str) { return escapeHtml(str).replace(/'/g, "&#039;"); }
 
+    // ---- The Bookies: betting + prizes (no real money, chips only) ----
+    const DEFAULT_MARKET_IDS = defaultBookie.markets.map(m => m.id);
+
+    function ensureBookie() {
+      if (!state.bookie || typeof state.bookie !== "object") state.bookie = structuredClone(defaultBookie);
+      if (!Array.isArray(state.bookie.markets)) state.bookie.markets = structuredClone(defaultBookie.markets);
+      if (typeof state.bookie.startingChips !== "number") state.bookie.startingChips = 1000;
+      state.bookie.markets.forEach(m => { if (!m.bets || typeof m.bets !== "object") m.bets = {}; });
+    }
+    function market(id) { ensureBookie(); return state.bookie.markets.find(m => m.id === id); }
+    function marketRunners(m) {
+      if (m.type === "yesno") return [
+        { id: "yes", label: "Yes", emoji: "✅", colour: "#8be8d4" },
+        { id: "no", label: "No", emoji: "❌", colour: "#ff7575" }
+      ];
+      if (m.type === "custom" && Array.isArray(m.runners)) return m.runners.map((r, i) => ({ id: String(r.id != null ? r.id : i), label: r.label, emoji: r.emoji || "🎯", colour: colours[i % colours.length] }));
+      return state.players.map((p, i) => ({ id: String(i), label: p.name, emoji: (vibeById(p.vibe) || {}).emoji || "🙂", colour: p.colour }));
+    }
+    function runnerById(m, id) { return marketRunners(m).find(r => r.id === String(id)) || null; }
+    function marketPool(m) { return Object.values(m.bets).reduce((s, b) => s + (b.stake || 0), 0); }
+    function runnerPool(m, id) { return Object.values(m.bets).reduce((s, b) => s + (String(b.runner) === String(id) ? (b.stake || 0) : 0), 0); }
+    function runnerOdds(m, id) { const pool = marketPool(m); const rp = runnerPool(m, id); if (rp <= 0) return null; return Math.max(1, pool / rp); }
+    function marketPayout(m, stake) {
+      const pool = marketPool(m); const wp = runnerPool(m, m.winner);
+      if (wp <= 0) return stake;
+      return stake * (pool / wp);
+    }
+    function playerBalance(idx) {
+      ensureBookie();
+      let bal = state.bookie.startingChips;
+      state.bookie.markets.forEach(m => {
+        const bet = m.bets[idx];
+        if (!bet || !bet.stake) return;
+        bal -= bet.stake;
+        if (m.status === "settled" && m.winner != null && String(bet.runner) === String(m.winner)) bal += marketPayout(m, bet.stake);
+      });
+      return Math.round(bal);
+    }
+    function prizesWon(idx) {
+      ensureBookie();
+      return state.bookie.markets.filter(m => m.status === "settled" && m.type !== "yesno" && m.prize && String(m.winner) === String(idx));
+    }
+
+    function pickRunner(marketId, runnerId) {
+      const m = market(marketId); if (!m || m.status === "settled") return;
+      const idx = state.selectedPlayer;
+      const existing = m.bets[idx];
+      const free = playerBalance(idx) + (existing ? existing.stake : 0);
+      const stake = existing && existing.stake ? existing.stake : Math.min(50, free);
+      if (stake <= 0) { toast("You're out of chips"); return; }
+      m.bets[idx] = { runner: String(runnerId), stake };
+      saveState(); renderAll();
+      const r = runnerById(m, runnerId);
+      toast(`${selectedPlayer().name} backed ${r ? r.label : "a runner"}`);
+    }
+    function setBetStake(marketId, stake) {
+      const m = market(marketId); if (!m || m.status === "settled") return;
+      const idx = state.selectedPlayer;
+      const existing = m.bets[idx];
+      if (!existing) { toast("Pick who you're backing first"); return; }
+      const free = playerBalance(idx) + existing.stake;
+      stake = Math.round(stake);
+      if (stake > free) { stake = free; toast("That's your lot — all in"); }
+      if (stake <= 0) { delete m.bets[idx]; toast("Bet cleared"); }
+      else { existing.stake = stake; }
+      saveState(); renderAll();
+    }
+    function adjustBet(marketId, delta) {
+      const m = market(marketId); const idx = state.selectedPlayer;
+      const existing = m && m.bets[idx];
+      setBetStake(marketId, (existing ? existing.stake : 0) + delta);
+    }
+    function maxBet(marketId) {
+      const m = market(marketId); const idx = state.selectedPlayer;
+      const existing = m && m.bets[idx];
+      setBetStake(marketId, playerBalance(idx) + (existing ? existing.stake : 0));
+    }
+    function settleMarket(marketId, runnerId) {
+      const m = market(marketId); if (!m) return;
+      m.status = "settled"; m.winner = String(runnerId);
+      saveState(); renderAll(); celebrate();
+      const r = runnerById(m, runnerId);
+      toast(`Settled: ${r ? r.label : "result in"}`);
+    }
+    function reopenMarket(marketId) {
+      const m = market(marketId); if (!m) return;
+      m.status = "open"; m.winner = null;
+      saveState(); renderAll(); toast("Market reopened");
+    }
+    function removeMarket(marketId) {
+      ensureBookie();
+      state.bookie.markets = state.bookie.markets.filter(m => m.id !== marketId);
+      saveState(); renderAll(); toast("Bet removed");
+    }
+    function restoreStarterMarkets() {
+      ensureBookie();
+      const have = new Set(state.bookie.markets.map(m => m.id));
+      let added = 0;
+      defaultBookie.markets.forEach(dm => { if (!have.has(dm.id)) { state.bookie.markets.push(structuredClone(dm)); added++; } });
+      saveState(); renderAll();
+      toast(added ? `Restored ${added} starter bet${added > 1 ? "s" : ""}` : "Starter bets already here");
+    }
+
+    function renderBookie() {
+      ensureBookie();
+      const idx = state.selectedPlayer;
+      const startChips = state.bookie.startingChips;
+
+      // Form table (leaderboard)
+      const ftHolder = document.getElementById("formTable");
+      if (ftHolder) {
+        const table = state.players.map((p, i) => ({ i, p, bal: playerBalance(i), trophies: prizesWon(i).length }))
+          .sort((a, b) => b.bal - a.bal || b.trophies - a.trophies);
+        ftHolder.innerHTML = table.map((row, rank) => {
+          const v = vibeById(row.p.vibe);
+          const net = row.bal - startChips;
+          const netCls = net > 0 ? "up" : net < 0 ? "down" : "";
+          return `<div class="ft-row ${row.i === idx ? "me" : ""}">
+            <span class="ft-rank">${rank === 0 ? "👑" : "#" + (rank + 1)}</span>
+            <span class="avatar-dot" style="background:${row.p.colour}">${escapeHtml(row.p.initials)}</span>
+            <div class="ft-name">${escapeHtml(row.p.name)}${v ? `<span class="traveller-vibe">${v.emoji}</span>` : ""}${row.trophies ? `<span class="ft-trophies">${"🏆".repeat(Math.min(row.trophies, 4))}</span>` : ""}</div>
+            <div class="ft-bal">${row.bal.toLocaleString()}<span class="ft-net ${netCls}">${net > 0 ? "+" : ""}${net.toLocaleString()}</span></div>
+          </div>`;
+        }).join("");
+      }
+      const myBalEl = document.getElementById("myChipBal");
+      if (myBalEl) myBalEl.textContent = `${playerBalance(idx).toLocaleString()} chips`;
+
+      // Prize shelf
+      const upForGrabs = state.bookie.markets.filter(m => m.status !== "settled" && m.type !== "yesno" && m.prize);
+      const claimed = state.bookie.markets.filter(m => m.status === "settled" && m.type !== "yesno" && m.prize);
+      const shelf = document.getElementById("prizeShelf");
+      if (shelf) {
+        const grabs = upForGrabs.map(m => `<div class="prize-row"><span class="prize-tag">${escapeHtml(m.prize)}</span><span class="prize-meta">${escapeHtml(m.title)}</span></div>`).join("");
+        const won = claimed.map(m => { const r = runnerById(m, m.winner); return `<div class="prize-row claimed"><span class="prize-tag">${escapeHtml(m.prize)}</span><span class="prize-meta">🏆 ${r ? escapeHtml(r.label) : "winner"}</span></div>`; }).join("");
+        shelf.innerHTML = (grabs || won) ? (grabs + won) : `<div class="micro">No prizes attached yet. Add a bet with a prize below.</div>`;
+      }
+
+      // Markets
+      const holder = document.getElementById("marketList");
+      if (holder) {
+        holder.innerHTML = state.bookie.markets.map(m => {
+          const runners = marketRunners(m);
+          const pool = marketPool(m);
+          const myBet = m.bets[idx];
+          const settled = m.status === "settled";
+          const runnerHtml = runners.map(r => {
+            const rp = runnerPool(m, r.id);
+            const odds = runnerOdds(m, r.id);
+            const pct = pool > 0 ? Math.round(rp / pool * 100) : 0;
+            const mine = myBet && String(myBet.runner) === r.id;
+            const win = settled && String(m.winner) === r.id;
+            return `<button class="runner-btn ${mine ? "mine" : ""} ${win ? "win" : ""} ${settled ? "locked" : ""}" data-mk="${m.id}" data-runner="${r.id}" ${settled ? "disabled" : ""}>
+              <span class="runner-dot" style="background:${r.colour}">${r.emoji}</span>
+              <span class="runner-name">${escapeHtml(r.label)}</span>
+              <span class="runner-odds">${odds ? odds.toFixed(2) + "×" : "open"}</span>
+              <span class="runner-bar"><span style="width:${pct}%; background:${r.colour}"></span></span>
+            </button>`;
+          }).join("");
+
+          let betPanel = "";
+          if (!settled) {
+            if (myBet) {
+              const odds = runnerOdds(m, myBet.runner);
+              const r = runnerById(m, myBet.runner);
+              const toWin = odds ? Math.round(myBet.stake * odds) : myBet.stake;
+              betPanel = `<div class="bet-strip">
+                <div class="bet-line">Backing <strong>${r ? escapeHtml(r.label) : "—"}</strong> · <strong>${myBet.stake}</strong> chips · to win <strong>${toWin}</strong></div>
+                <div class="stake-row">
+                  <button class="btn small ghost" data-act="dec" data-mk="${m.id}">−25</button>
+                  <button class="btn small ghost" data-act="inc" data-mk="${m.id}">+25</button>
+                  <button class="btn small ghost" data-act="inc100" data-mk="${m.id}">+100</button>
+                  <button class="btn small secondary" data-act="max" data-mk="${m.id}">Max</button>
+                  <button class="btn small danger" data-act="clear" data-mk="${m.id}">Clear</button>
+                </div>
+              </div>`;
+            } else {
+              betPanel = `<div class="bet-strip"><div class="bet-line muted-line">Tap who you're backing — opens with 50 chips, then nudge the stake up or down.</div></div>`;
+            }
+          } else {
+            const r = runnerById(m, m.winner);
+            const mineWon = myBet && String(myBet.runner) === String(m.winner);
+            const myLine = myBet ? (mineWon ? ` · you won <strong>${Math.round(marketPayout(m, myBet.stake))}</strong>` : ` · you lost <strong>${myBet.stake}</strong>`) : "";
+            betPanel = `<div class="bet-strip settled-strip"><div class="bet-line">🏁 Result: <strong>${r ? escapeHtml(r.label) : "—"}</strong>${m.type !== "yesno" && m.prize ? ` wins ${escapeHtml(m.prize)}` : ""}${myLine}</div></div>`;
+          }
+
+          const settleHtml = settled
+            ? `<button class="btn small ghost" data-act="reopen" data-mk="${m.id}">Reopen</button>`
+            : `<div class="settle-wrap"><button class="btn small secondary" data-act="settletoggle" data-mk="${m.id}">⚖️ Settle</button><div class="settle-pick" id="settle_${m.id}" hidden>${runners.map(r => `<button class="btn small" data-act="settle" data-mk="${m.id}" data-runner="${r.id}">${r.emoji} ${escapeHtml(r.label)}</button>`).join("")}</div></div>`;
+
+          const removable = !DEFAULT_MARKET_IDS.includes(m.id);
+          return `<article class="bet-card ${settled ? "is-settled" : ""}">
+            <div class="bet-head">
+              <div class="bet-emoji">${m.emoji || "🎲"}</div>
+              <div class="bet-titlewrap"><div class="bet-title">${escapeHtml(m.title)}</div><div class="bet-desc">${escapeHtml(m.desc || "")}</div></div>
+              <div class="bet-tags">${m.prize && m.type !== "yesno" ? `<span class="prize-tag">${escapeHtml(m.prize)}</span>` : ""}<span class="pill">${pool} in pot</span><span class="idea-status ${settled ? "" : "hot"}">${settled ? "Settled" : "Open"}</span></div>
+            </div>
+            <div class="runner-grid">${runnerHtml}</div>
+            ${betPanel}
+            <div class="bet-foot">${settleHtml}${removable ? `<button class="btn small danger" data-act="remove" data-mk="${m.id}">🗑️ Remove</button>` : ""}</div>
+          </article>`;
+        }).join("");
+
+        holder.querySelectorAll(".runner-btn").forEach(btn => btn.addEventListener("click", () => pickRunner(btn.dataset.mk, btn.dataset.runner)));
+        holder.querySelectorAll("[data-act]").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const id = btn.dataset.mk; const act = btn.dataset.act;
+            if (act === "dec") adjustBet(id, -25);
+            else if (act === "inc") adjustBet(id, 25);
+            else if (act === "inc100") adjustBet(id, 100);
+            else if (act === "max") maxBet(id);
+            else if (act === "clear") setBetStake(id, 0);
+            else if (act === "reopen") reopenMarket(id);
+            else if (act === "remove") { if (confirm("Remove this bet for everyone?")) removeMarket(id); }
+            else if (act === "settletoggle") { const el = document.getElementById("settle_" + id); if (el) el.hidden = !el.hidden; }
+            else if (act === "settle") { if (confirm("Settle this bet? This pays out everyone's chips.")) settleMarket(id, btn.dataset.runner); }
+          });
+        });
+      }
+
+      // Badges
+      const openCount = state.bookie.markets.filter(m => m.status !== "settled").length;
+      const ob = document.getElementById("openMarketsBadge");
+      if (ob) ob.textContent = `${openCount} open market${openCount === 1 ? "" : "s"}`;
+      const pb = document.getElementById("prizesBadge");
+      if (pb) pb.textContent = `${upForGrabs.length} prize${upForGrabs.length === 1 ? "" : "s"} up for grabs`;
+      const bbs = document.getElementById("boardBookieStatus");
+      if (bbs) bbs.textContent = `${openCount} open market${openCount === 1 ? "" : "s"}`;
+    }
+
     function renderAll() {
-      renderNodes(); renderTokens(); renderPlayerSelect(); renderTravellerGrid(); renderSelectedPanel(); renderVibePicker(); renderTasks(); renderIdeas(); renderBoardIdeaPreview(); renderNextActions(); renderBadges(); renderRosterEditor(); renderHero();
+      ensureBookie();
+      renderNodes(); renderTokens(); renderPlayerSelect(); renderTravellerGrid(); renderSelectedPanel(); renderVibePicker(); renderTasks(); renderIdeas(); renderBoardIdeaPreview(); renderNextActions(); renderBadges(); renderRosterEditor(); renderHero(); renderBookie();
     }
 
     function toast(message) {
@@ -1483,7 +1856,13 @@
         ...allIdeas().filter(i => ideaStatus(tallyIdea(i.id)).label === "Shortlist").map(i => `• ${i.title} (${i.city})`),
         "",
         "Open group bosses:",
-        ...groupTasks.filter(t => !state.groupDone[t.id]).map(t => `• ${t.title}`)
+        ...groupTasks.filter(t => !state.groupDone[t.id]).map(t => `• ${t.title}`),
+        "",
+        "The Bookies — form table:",
+        ...state.players.map((p, i) => ({ name: p.name, bal: playerBalance(i) })).sort((a, b) => b.bal - a.bal).map((r, n) => `${n + 1}. ${r.name}: ${r.bal.toLocaleString()} chips`),
+        "",
+        "Prizes up for grabs:",
+        ...state.bookie.markets.filter(m => m.status !== "settled" && m.type !== "yesno" && m.prize).map(m => `• ${m.prize} — ${m.title}`)
       ];
       await navigator.clipboard.writeText(lines.join("\n")); toast("Summary copied");
     });
@@ -1494,6 +1873,29 @@
       if (!raw) return;
       try { state = { ...structuredClone(defaultState), ...JSON.parse(raw) }; saveState(); renderAll(); toast("Snapshot imported"); } catch (e) { alert("Invalid JSON snapshot"); }
     });
+
+    const mkTypeSel = document.getElementById("newMkType");
+    function syncMkRunnersVisibility() { const wrap = document.getElementById("newMkRunnersWrap"); if (wrap) wrap.hidden = mkTypeSel.value !== "custom"; }
+    if (mkTypeSel) { mkTypeSel.addEventListener("change", syncMkRunnersVisibility); syncMkRunnersVisibility(); }
+    const addMarketBtn = document.getElementById("addMarketBtn");
+    if (addMarketBtn) addMarketBtn.addEventListener("click", () => {
+      const title = document.getElementById("newMkTitle").value.trim();
+      if (!title) { toast("Give the bet a title"); return; }
+      const desc = document.getElementById("newMkDesc").value.trim();
+      const prize = document.getElementById("newMkPrize").value.trim();
+      const type = mkTypeSel.value;
+      const m = { id: `mk_${Date.now()}`, emoji: "🎲", title, desc, type, prize: type === "yesno" ? "" : prize, status: "open", winner: null, bets: {} };
+      if (type === "custom") {
+        const raw = document.getElementById("newMkRunners").value.split(",").map(s => s.trim()).filter(Boolean);
+        if (raw.length < 2) { toast("Add at least two options, comma separated"); return; }
+        m.runners = raw.map((label, i) => ({ id: String(i), label, emoji: "🎯" }));
+      }
+      ensureBookie(); state.bookie.markets.push(m);
+      ["newMkTitle", "newMkDesc", "newMkPrize", "newMkRunners"].forEach(id => { const el = document.getElementById(id); if (el) el.value = ""; });
+      saveState(); renderAll(); toast("Bet added");
+    });
+    const restoreMarketsBtn = document.getElementById("restoreMarketsBtn");
+    if (restoreMarketsBtn) restoreMarketsBtn.addEventListener("click", restoreStarterMarkets);
 
     document.getElementById("syncChip").addEventListener("click", () => remotePull({ manual: true }));
     const syncRefreshBtn = document.getElementById("syncRefreshBtn");
