@@ -354,6 +354,30 @@
     .source-note { color: var(--subtle); font-size: 12px; line-height: 1.5; padding: 16px 20px 20px; border-top: 1px solid var(--line); }
     .source-note a { color: #bdefff; text-decoration: underline; text-underline-offset: 3px; }
 
+    /* Live sync chip + confetti (added) */
+    .nav .sync-chip { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; border: 1px solid rgba(255,255,255,0.16); background: rgba(0,0,0,0.24); color: var(--muted); border-radius: 999px; padding: 9px 13px; font-weight: 800; font-size: 12px; transition: background 0.2s ease, border-color 0.2s ease; }
+    .nav .sync-chip:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.26); }
+    .nav .sync-chip .dot { width: 8px; height: 8px; border-radius: 50%; background: #8be8d4; box-shadow: 0 0 10px rgba(139,232,212,0.85); flex: none; }
+    .nav .sync-chip .ico { display: inline-block; font-size: 12px; }
+    .nav .sync-chip.syncing { color: #ffe7ae; border-color: rgba(255,209,92,0.34); }
+    .nav .sync-chip.syncing .dot { background: #ffd15c; animation: syncPulse 0.9s ease-in-out infinite; }
+    .nav .sync-chip.syncing .ico { animation: spin 0.8s linear infinite; }
+    .nav .sync-chip.offline { color: #ffd8d8; border-color: rgba(255,100,100,0.34); }
+    .nav .sync-chip.offline .dot { background: #ff7575; box-shadow: 0 0 10px rgba(255,117,117,0.7); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes syncPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+    .sync-live-banner { display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center; border: 1px solid rgba(139,232,212,0.3); border-radius: var(--radius-lg); background: linear-gradient(135deg, rgba(139,232,212,0.12), rgba(114,244,255,0.06)); padding: 18px; margin-top: 6px; }
+    .sync-live-banner .pulse { width: 46px; height: 46px; border-radius: 16px; display: grid; place-items: center; font-size: 24px; background: rgba(139,232,212,0.16); border: 1px solid rgba(139,232,212,0.3); }
+    .sync-live-banner .s-title { font-weight: 1000; letter-spacing: -0.03em; font-size: 18px; }
+    .sync-live-banner .s-sub { color: var(--muted); font-size: 13px; line-height: 1.45; margin-top: 3px; }
+    .sync-stamp { color: var(--subtle); font-size: 12px; font-weight: 800; margin-top: 6px; }
+    @media (max-width: 620px) { .sync-live-banner { grid-template-columns: auto 1fr; } .sync-live-banner .btn { grid-column: 1 / -1; } }
+
+    .confetti-wrap { position: fixed; inset: 0; pointer-events: none; z-index: 90; overflow: hidden; }
+    .confetti { position: absolute; top: -14px; width: 9px; height: 14px; border-radius: 2px; opacity: 0.95; will-change: transform, opacity; animation: confettiFall linear forwards; }
+    @keyframes confettiFall { 0% { transform: translateY(-10px) rotate(0deg); opacity: 1; } 100% { transform: translateY(102vh) rotate(640deg); opacity: 0.9; } }
+
     @media (max-width: 980px) {
       .hero-content { grid-template-columns: 1fr; align-items: end; }
       .layout { grid-template-columns: 1fr; }
@@ -430,6 +454,9 @@
       <button data-tab="intel">📍 Trip intel</button>
       <button data-tab="sync">🔄 Sync</button>
       <button data-tab="settings">⚙️ Roster</button>
+      <button class="sync-chip" id="syncChip" title="Tap to pull the latest from the group">
+        <span class="dot"></span><span class="ico">↻</span><span id="syncChipText">Live</span>
+      </button>
     </nav>
 
     <main>
@@ -483,7 +510,7 @@
               <button class="btn small ghost" id="copySummaryBtn">Copy summary</button>
               <button class="btn small danger" id="resetBtn">Reset board</button>
             </div>
-            <div class="source-note">Saved in this browser only. Use Export if sharing manually.</div>
+            <div class="source-note">Live group sync is on — your changes save to the shared Google Sheet automatically. Tap the <strong>Live</strong> chip at the top to pull in what the others have done. Everyone should use the same GitHub Pages link.</div>
           </div>
 
           <aside class="side-stack">
@@ -654,26 +681,31 @@
 
       <section id="sync" class="section">
         <div class="panel pad">
-          <h2>Live sync setup</h2>
-          <p class="panel-sub">For proper group sync, connect the board to a backend and Notion database.</p>
+          <h2>Live group sync</h2>
+          <p class="panel-sub">This board is connected to a shared Google Sheet. Everyone's votes and progress save to the same place.</p>
+
+          <div class="sync-live-banner">
+            <div class="pulse">🟢</div>
+            <div>
+              <div class="s-title">Sync is live</div>
+              <div class="s-sub">Changes you make are saved to the group sheet automatically. To see what other people have done since you opened the page, pull the latest.</div>
+              <div class="sync-stamp" id="syncTabStamp">Checking…</div>
+            </div>
+            <button class="btn small" id="syncRefreshBtn">↻ Refresh now</button>
+          </div>
+
           <div class="sync-diagram">
-            <div class="sync-box"><div class="emoji">🎲</div><div class="sync-title">Front end board</div><div class="sync-copy">Everyone updates their own progress.</div></div>
-            <div class="sync-box"><div class="emoji">⚡</div><div class="sync-title">Tiny backend</div><div class="sync-copy">Backend receives updates and protects the Notion token.</div></div>
-            <div class="sync-box"><div class="emoji">🗂️</div><div class="sync-title">Notion database</div><div class="sync-copy">Progress, bookings and notes live in Notion.</div></div>
+            <div class="sync-box"><div class="emoji">📱</div><div class="sync-title">Your board</div><div class="sync-copy">You vote and tick things off on your own phone or laptop.</div></div>
+            <div class="sync-box"><div class="emoji">⚡</div><div class="sync-title">Google Apps Script</div><div class="sync-copy">A tiny script catches the update and writes it to the sheet.</div></div>
+            <div class="sync-box"><div class="emoji">🗂️</div><div class="sync-title">Shared Google Sheet</div><div class="sync-copy">The whole board lives in one sheet that everyone shares.</div></div>
           </div>
-          <h3 style="margin:24px 0 12px">Suggested Notion tables</h3>
+
+          <h3 style="margin:24px 0 12px">Good to know</h3>
           <div class="grid-2">
-            <div class="info-card"><div class="emoji">👥</div><h3>Travellers</h3><ul><li>Name</li><li>Role</li><li>Passport details collected</li><li>Flight status</li><li>Progress stage</li></ul></div>
-            <div class="info-card"><div class="emoji">✅</div><h3>Tasks</h3><ul><li>Task name</li><li>Owner</li><li>Personal or group</li><li>Priority</li><li>Status</li></ul></div>
-            <div class="info-card"><div class="emoji">🧾</div><h3>Bookings</h3><ul><li>Flight</li><li>Accommodation</li><li>Vehicle</li><li>Restaurant</li><li>Confirmation screenshot</li></ul></div>
-            <div class="info-card"><div class="emoji">🗺️</div><h3>Places</h3><ul><li>City</li><li>Category</li><li>Beli score where relevant</li><li>Official Google Maps long URL</li><li>Reservation status</li></ul></div>
-          </div>
-          <h3 style="margin:24px 0 12px">Build sequence</h3>
-          <div class="timeline">
-            <div class="timeline-item"><div class="timeline-date">Step 1</div><div><div class="timeline-title">Create Notion databases</div><div class="timeline-body">Create Travellers, Tasks, Bookings and Places.</div></div></div>
-            <div class="timeline-item"><div class="timeline-date">Step 2</div><div><div class="timeline-title">Deploy a tiny API</div><div class="timeline-body">API reads and writes progress. Notion secret stays server side.</div></div></div>
-            <div class="timeline-item"><div class="timeline-date">Step 3</div><div><div class="timeline-title">Replace localStorage</div><div class="timeline-body">Board loads from API and pushes updates on toggle.</div></div></div>
-            <div class="timeline-item"><div class="timeline-date">Step 4</div><div><div class="timeline-title">Share with the boys</div><div class="timeline-body">Each person picks a token and updates their own tasks.</div></div></div>
+            <div class="info-card"><div class="emoji">🔄</div><h3>Refresh to see others</h3><p>Your own changes save instantly. To pull in what other people changed, tap the <strong>Live</strong> chip at the top or the Refresh button above. The board also checks for updates by itself every 25 seconds.</p></div>
+            <div class="info-card"><div class="emoji">✍️</div><h3>Last save wins</h3><p>If two people tap at the exact same second, the most recent save is the one that sticks. Totally fine for a seven person trip.</p></div>
+            <div class="info-card"><div class="emoji">🙋</div><h3>Pick yourself first</h3><p>Use the player dropdown to choose who you are before voting. The board remembers your pick on your own device, even after a sync.</p></div>
+            <div class="info-card"><div class="emoji">🔐</div><h3>Keep the link private</h3><p>Anyone with the page can edit the board, so share the link only with the boys.</p></div>
           </div>
         </div>
       </section>
@@ -718,6 +750,10 @@
     const REMOTE_API_URL = "https://script.google.com/macros/s/AKfycbxK5YZiKjHuebkuM1wwoMA-lzp_wM9szMjvwX88wsvcvhlg9n7M962c8GdehEIgiPF04w/exec";
     let remoteSaveTimer = null;
     let remoteLoadAttempted = false;
+    let lastSeenUpdatedAt = null;
+    let lastSyncedAt = null;
+    let pendingSave = false;
+    let lastLocalSaveAt = 0;
 
     const checkpoints = [
       { id: "spawn", title: "London check in", meta: "Start", icon: "✈️", type: "personal", x: 10.5, y: 82 },
@@ -834,6 +870,8 @@
 
     function mergeRemoteState(remote) {
       if (!remote || typeof remote !== "object") return;
+      // "Who am I" is a per-device choice — never let a remote sync change it.
+      const localSelected = state.selectedPlayer;
       state = {
         ...structuredClone(defaultState),
         ...remote,
@@ -842,34 +880,113 @@
         ideas: remote.ideas || structuredClone(defaultIdeas),
         ideaVotes: remote.ideaVotes || {}
       };
+      if (typeof localSelected === "number" && state.players[localSelected]) {
+        state.selectedPlayer = localSelected;
+      }
       localStorage.setItem(STORE_KEY, JSON.stringify(state));
     }
 
-    function remoteLoad() {
-      if (!hasRemoteSync() || remoteLoadAttempted) return;
-      remoteLoadAttempted = true;
+    function relTime(ts) {
+      const s = Math.round((Date.now() - ts) / 1000);
+      if (s < 10) return "just now";
+      if (s < 60) return `${s}s ago`;
+      const m = Math.round(s / 60);
+      if (m < 60) return `${m}m ago`;
+      const h = Math.round(m / 60);
+      return `${h}h ago`;
+    }
+
+    function setSyncChip(kind) {
+      const chip = document.getElementById("syncChip");
+      const textEl = document.getElementById("syncChipText");
+      const stamp = document.getElementById("syncTabStamp");
+      if (chip) chip.classList.remove("syncing", "offline");
+      if (kind === "disabled") {
+        if (chip) chip.classList.add("offline");
+        if (textEl) textEl.textContent = "Local only";
+        if (stamp) stamp.textContent = "Live sync is not configured on this copy of the board.";
+        return;
+      }
+      if (kind === "syncing") {
+        if (chip) chip.classList.add("syncing");
+        if (textEl) textEl.textContent = "Syncing…";
+        if (stamp) stamp.textContent = "Checking the group sheet…";
+        return;
+      }
+      if (kind === "offline") {
+        if (chip) chip.classList.add("offline");
+        if (textEl) textEl.textContent = "Offline";
+        if (stamp) stamp.textContent = "Could not reach the sheet. Your changes are still saved on this device.";
+        return;
+      }
+      const rel = lastSyncedAt ? relTime(lastSyncedAt) : null;
+      if (textEl) textEl.textContent = rel ? `Live · ${rel}` : "Live";
+      if (stamp) stamp.textContent = rel ? `Last synced ${rel}.` : "Connected to the group sheet.";
+    }
+
+    function remotePull(opts) {
+      opts = opts || {};
+      if (!hasRemoteSync()) { setSyncChip("disabled"); return; }
+      if (!opts.poll) setSyncChip("syncing");
       const callbackName = `koreaBoardSync_${Date.now()}_${Math.floor(Math.random() * 100000)}`;
       const script = document.createElement("script");
+      let done = false;
       const cleanup = () => {
+        if (done) return;
+        done = true;
         try { delete window[callbackName]; } catch (e) { window[callbackName] = undefined; }
         script.remove();
       };
       window[callbackName] = (response) => {
-        if (response && response.ok && response.state) {
-          mergeRemoteState(response.state);
-          renderAll();
-          toast("Synced from Google Sheet");
+        if (response && response.ok) {
+          const remoteStamp = response.updatedAt || null;
+          const changed = remoteStamp && remoteStamp !== lastSeenUpdatedAt;
+          // Don't overwrite local edits that haven't finished saving yet.
+          const safe = !pendingSave && (Date.now() - lastLocalSaveAt > 4000);
+          const allowMerge = opts.manual || opts.initial || (changed && safe);
+          if (response.state && allowMerge) {
+            mergeRemoteState(response.state);
+            renderAll();
+            if (opts.manual) toast("Pulled the latest from the group");
+            else if (changed && !opts.initial) toast("Synced a group update");
+          }
+          lastSeenUpdatedAt = remoteStamp || lastSeenUpdatedAt;
+          lastSyncedAt = Date.now();
+          remoteLoadAttempted = true;
+          setSyncChip("live");
+        } else {
+          setSyncChip(lastSyncedAt ? "live" : "offline");
+          if (opts.manual) toast("Could not read the group sheet");
         }
         cleanup();
       };
-      script.onerror = () => { cleanup(); toast("Could not load Google Sheet sync"); };
+      script.onerror = () => {
+        setSyncChip(lastSyncedAt ? "live" : "offline");
+        if (opts.manual) toast("Could not reach the group sheet");
+        cleanup();
+      };
       script.src = `${REMOTE_API_URL}?callback=${encodeURIComponent(callbackName)}&t=${Date.now()}`;
       document.body.appendChild(script);
-      setTimeout(cleanup, 10000);
+      setTimeout(() => { if (!done) { setSyncChip(lastSyncedAt ? "live" : "offline"); cleanup(); } }, 10000);
+    }
+
+    function startSyncLoops() {
+      if (!hasRemoteSync()) { setSyncChip("disabled"); return; }
+      // Quietly check for group updates in the background.
+      setInterval(() => remotePull({ poll: true }), 25000);
+      // Keep the "synced 2m ago" label fresh.
+      setInterval(() => {
+        const chip = document.getElementById("syncChip");
+        if (chip && lastSyncedAt && !chip.classList.contains("syncing") && !chip.classList.contains("offline")) {
+          setSyncChip("live");
+        }
+      }, 20000);
     }
 
     function queueRemoteSave() {
       if (!hasRemoteSync()) return;
+      pendingSave = true;
+      setSyncChip("syncing");
       clearTimeout(remoteSaveTimer);
       remoteSaveTimer = setTimeout(remoteSave, 450);
     }
@@ -897,7 +1014,13 @@
       form.appendChild(input);
       document.body.appendChild(form);
       form.submit();
+      lastLocalSaveAt = Date.now();
       setTimeout(() => form.remove(), 1000);
+      setTimeout(() => {
+        pendingSave = false;
+        lastSyncedAt = Date.now();
+        setSyncChip("live");
+      }, 1300);
     }
 
     function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
@@ -1006,6 +1129,7 @@
           state.groupDone[e.target.dataset.task] = e.target.checked;
           saveState();
           renderAll();
+          if (e.target.checked) celebrate();
           toast(e.target.checked ? "Group boss cleared" : "Group boss reopened");
         });
       });
@@ -1182,6 +1306,24 @@
       setTimeout(() => t.classList.remove("show"), 1800);
     }
 
+    function celebrate() {
+      const wrap = document.createElement("div");
+      wrap.className = "confetti-wrap";
+      const cols = ["#72f4ff", "#ff97ca", "#8be8d4", "#ffd15c", "#8fa9ff", "#f7fbff"];
+      for (let i = 0; i < 26; i++) {
+        const p = document.createElement("span");
+        p.className = "confetti";
+        p.style.left = `${Math.random() * 100}vw`;
+        p.style.background = cols[i % cols.length];
+        p.style.animationDuration = `${1.1 + Math.random() * 0.9}s`;
+        p.style.animationDelay = `${Math.random() * 0.18}s`;
+        p.style.transform = `rotate(${Math.random() * 360}deg)`;
+        wrap.appendChild(p);
+      }
+      document.body.appendChild(wrap);
+      setTimeout(() => wrap.remove(), 2600);
+    }
+
     document.querySelectorAll(".nav button").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".nav button").forEach(x => x.classList.remove("active"));
@@ -1272,9 +1414,15 @@
     document.getElementById("saveSetup").addEventListener("click", () => { state.personality = selectedPersonality; saveState(); renderAll(); modal.classList.remove("active"); toast("Trip personality saved"); });
     modal.addEventListener("click", e => { if (e.target === modal) modal.classList.remove("active"); });
 
+    document.getElementById("syncChip").addEventListener("click", () => remotePull({ manual: true }));
+    const syncRefreshBtn = document.getElementById("syncRefreshBtn");
+    if (syncRefreshBtn) syncRefreshBtn.addEventListener("click", () => remotePull({ manual: true }));
+
     renderPersonalities();
     renderAll();
-    remoteLoad();
+    setSyncChip(hasRemoteSync() ? "syncing" : "disabled");
+    remotePull({ initial: true });
+    startSyncLoops();
     if (!state.personality && !localStorage.getItem(STORE_KEY + "Seen")) {
       localStorage.setItem(STORE_KEY + "Seen", "1");
       modal.classList.add("active");
