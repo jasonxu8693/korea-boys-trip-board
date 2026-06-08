@@ -1,0 +1,2314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Korea Boys Trip Board</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #f5f8ff;
+      --muted: rgba(245, 248, 255, 0.76);
+      --subtle: rgba(245, 248, 255, 0.58);
+      --panel: rgba(19, 24, 36, 0.70);
+      --panel-strong: rgba(13, 18, 28, 0.90);
+      --line: rgba(255, 255, 255, 0.16);
+      --gold: #d7e6ff;
+      --sun: #7de6ff;
+      --neon: #72f4ff;
+      --pink: #ff97ca;
+      --green: #8be8d4;
+      --purple: #8fa9ff;
+      --danger: #ff7575;
+      --shadow: 0 24px 80px rgba(5, 9, 18, 0.42);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 14% 14%, rgba(255, 151, 202, 0.22), transparent 22%),
+        radial-gradient(circle at 84% 16%, rgba(114, 244, 255, 0.24), transparent 24%),
+        radial-gradient(circle at 50% 84%, rgba(215, 230, 255, 0.15), transparent 28%),
+        linear-gradient(145deg, #070b13 0%, #0d1420 34%, #111c2a 68%, #0a1019 100%);
+      overflow-x: hidden;
+    }
+
+    body:before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.14) 0 2px, transparent 2.5px),
+        radial-gradient(circle at 70% 24%, rgba(114,244,255,0.16) 0 1.6px, transparent 2px),
+        radial-gradient(circle at 45% 70%, rgba(255,151,202,0.14) 0 1.8px, transparent 2.2px),
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 240px 240px, 280px 280px, 320px 320px, 48px 48px, 48px 48px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.95), transparent 88%);
+      z-index: -1;
+    }
+
+    body:after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 16% 18%, rgba(255,255,255,0.08), transparent 10%),
+        radial-gradient(circle at 86% 26%, rgba(255,255,255,0.08), transparent 10%),
+        radial-gradient(circle at 28% 80%, rgba(255,255,255,0.08), transparent 10%);
+      mix-blend-mode: screen;
+      z-index: -1;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+
+    .app { width: min(1280px, calc(100% - 28px)); margin: 0 auto; padding: 18px 0 52px; }
+
+    .hero {
+      position: relative;
+      min-height: 420px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(8, 12, 20, 0.28), rgba(8, 12, 20, 0.90)),
+        radial-gradient(circle at 14% 18%, rgba(255, 151, 202, 0.22), transparent 22%),
+        radial-gradient(circle at 82% 18%, rgba(114, 244, 255, 0.24), transparent 26%),
+        linear-gradient(135deg, rgba(22, 29, 42, 0.95), rgba(10, 16, 25, 0.92));
+      box-shadow: var(--shadow);
+      isolation: isolate;
+    }
+
+    .hero-art {
+      position: absolute;
+      inset: 0;
+      opacity: 0.95;
+      z-index: -1;
+    }
+
+    .skyline { position: absolute; left: 0; right: 0; bottom: 0; height: 54%; }
+    .building { position: absolute; bottom: 0; width: 6%; border-radius: 18px 18px 0 0; background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)); border: 1px solid rgba(255,255,255,0.10); box-shadow: inset 0 0 30px rgba(114,244,255,0.08), 0 0 20px rgba(0,0,0,0.10); }
+    .building:before, .building:after { content: ""; position: absolute; left: 18%; width: 16%; height: 8px; background: rgba(114,244,255,0.72); border-radius: 8px; box-shadow: 22px 0 rgba(255,151,202,0.42), 44px 0 rgba(215,230,255,0.52); }
+    .building:before { top: 22px; }
+    .building:after { top: 58px; }
+    .b1 { left: 3%; height: 38%; }
+    .b2 { left: 11%; height: 48%; width: 7%; }
+    .b3 { left: 20%; height: 31%; }
+    .b4 { right: 22%; height: 42%; }
+    .b5 { right: 12%; height: 55%; width: 8%; }
+    .b6 { right: 3%; height: 34%; }
+
+    .mountain { position: absolute; bottom: -2%; clip-path: polygon(50% 0%, 100% 100%, 0 100%); background: linear-gradient(180deg, rgba(63,78,102,0.72), rgba(21,28,42,0.92)); filter: drop-shadow(0 12px 28px rgba(5,9,18,0.32)); }
+    .m1 { left: 42%; width: 30%; height: 46%; }
+    .m2 { left: 31%; width: 26%; height: 36%; opacity: 0.84; }
+    .m3 { right: 18%; width: 30%; height: 34%; opacity: 0.78; }
+    .moon { position: absolute; right: 9%; top: 9%; width: 106px; height: 106px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.96), rgba(215,230,255,0.96) 38%, rgba(114,244,255,0.88) 68%, rgba(114,244,255,0.30) 100%); box-shadow: 0 0 80px rgba(114,244,255,0.28); overflow: hidden; }
+    .moon:before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(45deg, rgba(255,255,255,0.32) 0 8px, rgba(255,255,255,0.08) 8px 16px); mix-blend-mode: screen; }
+    .dragon { display: none; }
+    .dragon span { position: absolute; display: block; border-radius: 999px; background: linear-gradient(90deg, #ff5cc8, #ffd15c); box-shadow: 0 8px 24px rgba(255,92,200,0.3); }
+    .dragon .body { left: 12px; top: 28px; width: 78px; height: 18px; transform: rotate(-8deg); }
+    .dragon .head { right: 12px; top: 18px; width: 30px; height: 28px; }
+    .dragon .wing { left: 34px; top: 0; width: 40px; height: 34px; border-radius: 60% 10% 60% 10%; background: rgba(95,230,255,0.8); transform: rotate(28deg); }
+    .dragon .tail { left: 0; top: 33px; width: 26px; height: 9px; background: #ff8b3d; transform: rotate(18deg); }
+    @keyframes floatDragon { 0%,100% { transform: translateY(0) translateX(0); } 50% { transform: translateY(-15px) translateX(9px); } }
+    .hero:after { content: ""; position: absolute; inset: auto -8% 8% -8%; height: 160px; background:
+      radial-gradient(circle at 20% 0%, rgba(255,255,255,0.16), transparent 28%),
+      radial-gradient(circle at 50% 0%, rgba(114,244,255,0.24), transparent 30%),
+      radial-gradient(circle at 80% 0%, rgba(255,151,202,0.16), transparent 28%);
+      pointer-events: none; filter: blur(18px); opacity: 0.9; }
+
+    .hero-content { position: relative; z-index: 1; padding: 28px; display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 28px; min-height: 420px; align-items: end; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; width: fit-content; padding: 8px 12px; border: 1px solid rgba(255,255,255,0.16); border-radius: 999px; background: rgba(255,255,255,0.08); backdrop-filter: blur(14px); color: var(--muted); font-size: 13px; letter-spacing: 0.02em; }
+    .hero h1 { margin: 18px 0 12px; font-size: clamp(40px, 7vw, 82px); line-height: 0.92; letter-spacing: -0.07em; max-width: 760px; }
+    .hero h1 .shine { display: block; background: linear-gradient(100deg, #fff6d1, #5fe6ff 44%, #ff5cc8 72%, #ffd15c); -webkit-background-clip: text; color: transparent; }
+    .hero p { max-width: 720px; color: var(--muted); font-size: 17px; line-height: 1.55; margin: 0; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
+    .btn { border: 0; border-radius: 999px; padding: 13px 17px; color: #0c1520; background: linear-gradient(135deg, #f7fbff, #8defff); font-weight: 800; box-shadow: 0 12px 30px rgba(114, 244, 255, 0.20); transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease; }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 18px 40px rgba(114, 244, 255, 0.28); }
+    .btn.secondary { color: var(--ink); background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); box-shadow: none; }
+    .btn.ghost { color: var(--ink); background: transparent; border: 1px solid rgba(255,255,255,0.18); box-shadow: none; }
+    .btn.small { padding: 9px 12px; font-size: 13px; }
+    .btn.danger { background: rgba(255,100,100,0.18); color: #ffdada; border: 1px solid rgba(255,100,100,0.32); box-shadow: none; }
+
+    .stat-card { align-self: stretch; display: grid; gap: 14px; align-content: end; }
+    .glass { border: 1px solid rgba(255,255,255,0.16); border-radius: var(--radius-lg); background: linear-gradient(180deg, rgba(255,255,255,0.11), rgba(255,255,255,0.06)); backdrop-filter: blur(18px); padding: 18px; }
+    .flight-card { position: relative; overflow: hidden; }
+    .flight-card:before { content: ""; position: absolute; inset: -60% auto auto -20%; width: 170px; height: 170px; background: radial-gradient(circle, rgba(95,230,255,0.26), transparent 62%); }
+    .label { color: var(--subtle); font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 800; }
+    .big { font-size: 30px; font-weight: 900; letter-spacing: -0.05em; margin-top: 6px; }
+    .micro { color: var(--muted); font-size: 13px; line-height: 1.45; }
+    .pill-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .pill { display: inline-flex; align-items: center; gap: 6px; border: 1px solid rgba(255,255,255,0.14); background: rgba(0,0,0,0.18); color: var(--muted); border-radius: 999px; padding: 7px 10px; font-size: 12px; font-weight: 700; }
+    .pill.done { color: #c8ffdc; border-color: rgba(119,240,168,0.28); background: rgba(119,240,168,0.12); }
+    .pill.warn { color: #ffe7ae; border-color: rgba(255,209,92,0.3); background: rgba(255,209,92,0.12); }
+    .pill.hot { color: #ffd7f1; border-color: rgba(255,92,200,0.3); background: rgba(255,92,200,0.12); }
+
+    .nav { position: sticky; top: 10px; z-index: 20; margin: 18px 0; display: flex; gap: 10px; padding: 8px; border: 1px solid var(--line); border-radius: 999px; background: rgba(15, 19, 29, 0.76); backdrop-filter: blur(18px); overflow-x: auto; box-shadow: 0 12px 38px rgba(5,9,18,0.22); }
+    .nav button { white-space: nowrap; border: 0; border-radius: 999px; color: var(--muted); background: transparent; padding: 11px 14px; font-weight: 800; font-size: 13px; }
+    .nav button.active { color: #0d1621; background: linear-gradient(135deg, rgba(247,251,255,0.98), rgba(189,245,255,0.96)); }
+
+    .section { display: none; animation: fadeIn 0.25s ease both; }
+    .section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    .layout { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(330px, 0.55fr); gap: 18px; align-items: start; }
+    .panel { border: 1px solid var(--line); border-radius: var(--radius-xl); background: linear-gradient(180deg, rgba(24, 30, 44, 0.72), rgba(12, 17, 27, 0.78)); box-shadow: 0 18px 60px rgba(5,9,18,0.24); backdrop-filter: blur(18px); overflow: hidden; }
+    .panel.pad { padding: 20px; }
+    .panel-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 20px; border-bottom: 1px solid var(--line); }
+    .panel h2, .panel h3 { margin: 0; letter-spacing: -0.035em; }
+    .panel h2 { font-size: 26px; }
+    .panel h3 { font-size: 18px; }
+    .panel-sub { color: var(--muted); margin: 6px 0 0; line-height: 1.45; font-size: 14px; }
+
+    .board-shell { position: relative; padding: 16px; }
+    .board {
+      position: relative;
+      min-height: 660px;
+      border-radius: 30px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.14);
+      background:
+        radial-gradient(circle at 80% 14%, rgba(255,179,120,0.20), transparent 26%),
+        radial-gradient(circle at 20% 18%, rgba(255,151,202,0.16), transparent 24%),
+        radial-gradient(circle at 52% 88%, rgba(120,170,255,0.12), transparent 26%),
+        linear-gradient(180deg, #131a30 0%, #281f3e 42%, #45283f 74%, #59333f 100%);
+      box-shadow: inset 0 0 110px rgba(255,255,255,0.05);
+    }
+    .board:before { content: ""; position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg width='180' height='180' viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.07)' stroke-width='1'%3E%3Cpath d='M0 92 C26 70, 44 104, 70 84 S122 70, 180 98'/%3E%3Cpath d='M14 132 C42 112, 63 150, 98 128 S142 120, 170 144'/%3E%3C/g%3E%3C/svg%3E"); opacity: 0.7; }
+    .sea { position: absolute; left: -5%; right: -5%; bottom: -10%; height: 36%; background: linear-gradient(180deg, rgba(114,244,255,0.16), rgba(21, 63, 92, 0.60)); border-radius: 50% 50% 0 0; filter: blur(0.2px); }
+    .island { position: absolute; width: 240px; height: 150px; right: 8%; bottom: 8%; background: linear-gradient(180deg, rgba(63,87,110,0.52), rgba(24, 38, 50, 0.92)); border-radius: 54% 46% 42% 58%; box-shadow: 0 18px 44px rgba(5,9,18,0.24); border: 1px solid rgba(255,255,255,0.14); }
+    .volcano { position: absolute; right: 15%; bottom: 17%; width: 150px; height: 140px; clip-path: polygon(50% 0%, 90% 100%, 10% 100%); background: linear-gradient(180deg, #7e93ae, #2f3a4b); filter: drop-shadow(0 14px 22px rgba(5,9,18,0.28)); }
+    .lava { position: absolute; right: 19.5%; bottom: 27%; width: 56px; height: 86px; clip-path: polygon(50% 0, 64% 28%, 55% 54%, 72% 100%, 35% 100%, 45% 52%, 34% 28%); background: linear-gradient(180deg, #f8fdff, #72f4ff 58%, #ff97ca); opacity: 0.78; animation: lavaPulse 2.2s ease-in-out infinite; }
+    @keyframes lavaPulse { 0%,100% { opacity: 0.45; } 50% { opacity: 0.86; } }
+    .cloud { position: absolute; width: 150px; height: 50px; border-radius: 999px; background: rgba(255,255,255,0.12); filter: blur(0.3px); }
+    .cloud:before, .cloud:after { content: ""; position: absolute; border-radius: 50%; background: inherit; }
+    .cloud:before { width: 70px; height: 70px; left: 25px; top: -36px; }
+    .cloud:after { width: 58px; height: 58px; right: 24px; top: -26px; }
+    .c1 { left: 16%; top: 16%; animation: drift 14s linear infinite; }
+    .c2 { right: 20%; top: 12%; transform: scale(0.7); opacity: 0.7; animation: drift2 17s linear infinite; }
+    @keyframes drift { 50% { transform: translateX(26px); } }
+    @keyframes drift2 { 50% { transform: translateX(-22px) scale(0.7); } }
+
+    .route-svg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+    .route-line { fill: none; stroke: rgba(215, 230, 255, 0.72); stroke-width: 8; stroke-linecap: round; stroke-dasharray: 2 18; filter: drop-shadow(0 0 8px rgba(114,244,255,0.34)); }
+    .route-shadow { fill: none; stroke: rgba(0, 0, 0, 0.28); stroke-width: 14; stroke-linecap: round; stroke-dasharray: 2 18; }
+
+    .node { position: absolute; z-index: 5; width: 118px; min-height: 112px; transform: translate(-50%, -50%); display: grid; justify-items: center; gap: 7px; text-align: center; }
+    .node-core { width: 62px; height: 62px; border-radius: 22px; display: grid; place-items: center; font-size: 30px; color: #071226; background: var(--ink); border: 2px solid rgba(255,255,255,0.4); box-shadow: 0 18px 36px rgba(0,0,0,0.3), 0 0 0 6px rgba(255,255,255,0.08); transition: transform 0.2s ease; }
+    .node:hover .node-core { transform: translateY(-4px) rotate(-3deg); }
+    .node-title { font-size: 12px; line-height: 1.15; font-weight: 900; text-shadow: 0 2px 6px rgba(0,0,0,0.6); }
+    .node-meta { font-size: 10px; color: var(--muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; }
+    .node.group .node-core { background: linear-gradient(135deg, #eef6ff, #8defff); }
+    .node.boss .node-core { background: linear-gradient(135deg, #1c2434, #4e6480); color: white; animation: bossPulse 3s ease-in-out infinite; }
+    .node.personal .node-core { background: linear-gradient(135deg, #f7fbff, #d1e6ff); }
+    @keyframes bossPulse { 0%,100% { box-shadow: 0 18px 36px rgba(0,0,0,0.3), 0 0 0 6px rgba(114,244,255,0.08); } 50% { box-shadow: 0 18px 36px rgba(0,0,0,0.3), 0 0 0 12px rgba(114,244,255,0.16); } }
+
+    .token-layer { position: absolute; inset: 0; z-index: 8; pointer-events: none; }
+    .token { position: absolute; width: 38px; height: 38px; border-radius: 16px 16px 16px 6px; transform: translate(-50%, -50%) rotate(-6deg); display: grid; place-items: center; font-weight: 1000; font-size: 15px; color: #061020; border: 2px solid rgba(255,255,255,0.72); box-shadow: 0 14px 28px rgba(0,0,0,0.35); transition: left 0.45s cubic-bezier(.2,.8,.2,1), top 0.45s cubic-bezier(.2,.8,.2,1), transform 0.2s ease; }
+    .token.active { z-index: 10; transform: translate(-50%, -50%) rotate(4deg) scale(1.1); box-shadow: 0 16px 34px rgba(0,0,0,0.42), 0 0 0 7px rgba(255,255,255,0.13); }
+    .token:after { content: attr(data-name); position: absolute; top: 42px; left: 50%; transform: translateX(-50%); white-space: nowrap; color: var(--ink); background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.12); border-radius: 999px; padding: 4px 8px; font-size: 10px; opacity: 0; transition: opacity 0.2s ease; }
+    .token.active:after, .token:hover:after { opacity: 1; }
+
+    .side-stack { display: grid; gap: 18px; }
+    .player-card { padding: 18px; }
+    .select-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; margin: 14px 0; }
+    select, input[type="text"] { width: 100%; border: 1px solid rgba(255,255,255,0.14); border-radius: 14px; background: rgba(0,0,0,0.2); color: var(--ink); padding: 12px 13px; outline: none; }
+    select option { color: #111; }
+    .progress-wrap { margin-top: 14px; }
+    .progress-head { display: flex; justify-content: space-between; color: var(--muted); font-weight: 800; font-size: 12px; margin-bottom: 8px; }
+    .progress-bar { height: 12px; background: rgba(255,255,255,0.09); border-radius: 999px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); }
+    .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #5fe6ff, #77f0a8, #ffd15c); border-radius: inherit; transition: width 0.35s ease; }
+
+    .traveller-grid { display: grid; grid-template-columns: 1fr; gap: 9px; margin-top: 14px; }
+    .traveller-row { display: grid; grid-template-columns: auto 1fr auto; gap: 9px; align-items: center; padding: 10px; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; background: rgba(255,255,255,0.05); }
+    .avatar-dot { width: 26px; height: 26px; border-radius: 10px; display: grid; place-items: center; color: #061020; font-weight: 1000; font-size: 12px; border: 1px solid rgba(255,255,255,0.55); }
+    .traveller-name { font-weight: 850; font-size: 13px; }
+    .traveller-progress { color: var(--subtle); font-size: 11px; }
+
+    .task-list { display: grid; gap: 10px; }
+    .task-card { border: 1px solid rgba(255,255,255,0.12); border-radius: 18px; background: rgba(255,255,255,0.06); padding: 14px; display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: start; transition: transform 0.16s ease, border-color 0.16s ease; }
+    .task-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.22); }
+    .task-card.completed { background: rgba(119, 240, 168, 0.1); border-color: rgba(119, 240, 168, 0.32); }
+    .task-card.group-done { background: rgba(255, 209, 92, 0.1); border-color: rgba(255, 209, 92, 0.28); }
+    .task-icon { width: 40px; height: 40px; border-radius: 15px; display: grid; place-items: center; background: rgba(255,255,255,0.12); font-size: 22px; }
+    .task-title { font-weight: 950; letter-spacing: -0.02em; }
+    .task-desc { color: var(--muted); font-size: 13px; line-height: 1.45; margin-top: 4px; }
+    .task-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .tag { font-size: 10px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 7px; border-radius: 999px; background: rgba(255,255,255,0.08); color: var(--muted); }
+    .tag.p1 { background: rgba(255,100,100,0.14); color: #ffd8d8; }
+    .tag.p2 { background: rgba(255,209,92,0.14); color: #ffe7ae; }
+    .tag.personal { background: rgba(95,230,255,0.14); color: #d4f9ff; }
+    .toggle { appearance: none; width: 50px; height: 30px; border-radius: 999px; background: rgba(255,255,255,0.13); border: 1px solid rgba(255,255,255,0.15); position: relative; transition: background 0.2s ease; margin: 3px 0 0; }
+    .toggle:before { content: ""; width: 22px; height: 22px; position: absolute; left: 3px; top: 3px; border-radius: 50%; background: white; transition: transform 0.2s ease; }
+    .toggle:checked { background: rgba(119,240,168,0.8); }
+    .toggle:checked:before { transform: translateX(20px); }
+
+
+    .idea-toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .idea-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .idea-card { position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.14); border-radius: 24px; background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05)); padding: 16px; display: grid; gap: 13px; box-shadow: 0 14px 34px rgba(24,7,49,0.12); }
+    .idea-card:before { content: ""; position: absolute; width: 160px; height: 160px; border-radius: 50%; right: -60px; top: -78px; background: rgba(255,209,92,0.10); pointer-events: none; }
+    .idea-top { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: start; position: relative; }
+    .idea-emoji { width: 48px; height: 48px; border-radius: 18px; display: grid; place-items: center; font-size: 26px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.12); }
+    .idea-title { font-weight: 1000; letter-spacing: -0.03em; font-size: 17px; }
+    .idea-desc { color: var(--muted); font-size: 13px; line-height: 1.45; margin-top: 4px; }
+    .idea-city { align-self: start; white-space: nowrap; }
+    .vote-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; position: relative; }
+    .vote-btn { border: 1px solid rgba(255,255,255,0.13); border-radius: 14px; background: rgba(0,0,0,0.18); color: var(--muted); padding: 10px 8px; font-weight: 950; font-size: 12px; transition: transform 0.16s ease, background 0.16s ease, border-color 0.16s ease; }
+    .vote-btn:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.24); }
+    .vote-btn.active.keen { background: rgba(119,240,168,0.18); color: #c8ffdc; border-color: rgba(119,240,168,0.38); }
+    .vote-btn.active.maybe { background: rgba(255,209,92,0.18); color: #ffe7ae; border-color: rgba(255,209,92,0.38); }
+    .vote-btn.active.no { background: rgba(255,100,100,0.18); color: #ffdada; border-color: rgba(255,100,100,0.38); }
+    .vote-meter { display: grid; gap: 8px; position: relative; }
+    .meter-track { height: 11px; display: flex; overflow: hidden; border-radius: 999px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.08); }
+    .meter-keen { background: rgba(119,240,168,0.85); }
+    .meter-maybe { background: rgba(255,209,92,0.85); }
+    .meter-no { background: rgba(255,100,100,0.85); }
+    .vote-counts { display: flex; flex-wrap: wrap; gap: 6px; color: var(--subtle); font-size: 11px; font-weight: 850; }
+    .idea-status { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; padding: 7px 10px; font-size: 11px; font-weight: 1000; letter-spacing: 0.05em; text-transform: uppercase; background: rgba(255,255,255,0.08); color: var(--muted); border: 1px solid rgba(255,255,255,0.12); }
+    .idea-status.hot { background: rgba(119,240,168,0.14); color: #c8ffdc; border-color: rgba(119,240,168,0.32); }
+    .idea-status.watch { background: rgba(255,209,92,0.14); color: #ffe7ae; border-color: rgba(255,209,92,0.32); }
+    .idea-status.cold { background: rgba(255,100,100,0.14); color: #ffdada; border-color: rgba(255,100,100,0.32); }
+    .idea-summary-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
+    .mini-score { border: 1px solid rgba(255,255,255,0.1); border-radius: 18px; padding: 12px; background: rgba(255,255,255,0.05); }
+    .mini-score .num { font-size: 26px; font-weight: 1000; letter-spacing: -0.05em; }
+    .mini-score .txt { color: var(--muted); font-size: 12px; line-height: 1.35; }
+    .add-idea-form { display: grid; grid-template-columns: 0.9fr 0.8fr 1.4fr auto; gap: 10px; margin-top: 16px; }
+    .idea-help { color: var(--muted); font-size: 13px; line-height: 1.5; }
+
+
+
+    .planning-hub { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; padding: 16px 20px 0; }
+    .hub-card { text-align: left; border: 1px solid rgba(255,255,255,0.13); border-radius: 22px; background: rgba(255,255,255,0.06); color: var(--ink); padding: 15px; min-height: 118px; display: grid; align-content: start; gap: 8px; transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease; }
+    .hub-card:hover { transform: translateY(-3px); border-color: rgba(255,209,92,0.34); background: rgba(255,255,255,0.09); }
+    .hub-card.primary { background: linear-gradient(135deg, rgba(114,244,255,0.16), rgba(255,151,202,0.10)); border-color: rgba(114,244,255,0.28); box-shadow: 0 16px 42px rgba(114,244,255,0.10); }
+    .hub-icon { font-size: 26px; }
+    .hub-title { font-weight: 1000; letter-spacing: -0.03em; font-size: 16px; }
+    .hub-copy { color: var(--muted); font-size: 12px; line-height: 1.42; }
+    .hub-status { width: fit-content; border-radius: 999px; padding: 6px 9px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.12); color: var(--muted); font-size: 11px; font-weight: 900; }
+
+    .nav button.market-tab { color: #fff3c3; border: 1px solid rgba(255,209,92,0.22); background: rgba(255,209,92,0.08); }
+    .nav button.market-tab.active { color: #071226; background: linear-gradient(90deg, #ffd15c, #ff8b3d); }
+
+    .activity-spotlight { border-color: rgba(114,244,255,0.24); background: linear-gradient(180deg, rgba(114,244,255,0.10), rgba(255,255,255,0.04)); }
+    .activity-spotlight h3 { font-size: 21px; margin: 8px 0 6px; letter-spacing: -0.04em; }
+    .activity-spotlight p { color: var(--muted); font-size: 13px; line-height: 1.5; margin: 0; }
+    .mini-idea-list { display: grid; gap: 8px; margin: 14px 0; }
+    .mini-idea-row { display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: center; padding: 9px 10px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.15); }
+    .mini-idea-name { font-weight: 900; font-size: 12px; }
+    .mini-idea-meta { color: var(--subtle); font-size: 11px; }
+
+    .flow-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 16px 0 18px; }
+    .flow-step { border: 1px solid rgba(255,255,255,0.11); border-radius: 18px; background: rgba(255,255,255,0.05); padding: 12px; }
+    .flow-step strong { display: block; font-size: 13px; margin-bottom: 5px; }
+    .flow-step span { display: block; color: var(--muted); font-size: 12px; line-height: 1.35; }
+
+    .quest-controls { display: flex; flex-wrap: wrap; gap: 10px; padding: 16px 20px 20px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .info-card { border: 1px solid rgba(255,255,255,0.12); border-radius: var(--radius-lg); background: rgba(255,255,255,0.06); padding: 16px; min-height: 140px; position: relative; overflow: hidden; }
+    .info-card:before { content: ""; position: absolute; width: 110px; height: 110px; border-radius: 50%; background: rgba(95,230,255,0.12); right: -32px; top: -34px; }
+    .info-card .emoji { font-size: 34px; margin-bottom: 10px; }
+    .info-card h3 { font-size: 17px; margin: 0 0 8px; }
+    .info-card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.48; }
+    .info-card ul { margin: 10px 0 0 18px; padding: 0; color: var(--muted); line-height: 1.5; font-size: 13px; }
+
+    .timeline { display: grid; gap: 10px; }
+    .timeline-item { display: grid; grid-template-columns: 92px 1fr; gap: 12px; padding: 14px; border-radius: 18px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); }
+    .timeline-date { color: var(--gold); font-weight: 1000; font-size: 13px; }
+    .timeline-title { font-weight: 950; }
+    .timeline-body { color: var(--muted); font-size: 13px; margin-top: 4px; line-height: 1.45; }
+
+    .sync-diagram { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 16px; }
+    .sync-box { border: 1px solid rgba(255,255,255,0.12); border-radius: 22px; padding: 18px; background: rgba(255,255,255,0.06); text-align: center; min-height: 180px; display: grid; align-content: center; gap: 8px; }
+    .sync-box .emoji { font-size: 42px; }
+    .sync-title { font-weight: 1000; }
+    .sync-copy { color: var(--muted); line-height: 1.45; font-size: 13px; }
+
+    .modal { position: fixed; inset: 0; display: none; place-items: center; padding: 18px; background: rgba(2, 8, 18, 0.76); backdrop-filter: blur(14px); z-index: 80; }
+    .modal.active { display: grid; }
+    .modal-card { width: min(780px, 100%); border: 1px solid rgba(255,255,255,0.18); border-radius: 34px; background: linear-gradient(180deg, rgba(24, 30, 44, 0.98), rgba(12, 17, 27, 0.98)); box-shadow: var(--shadow); padding: 24px; }
+    .modal-card h2 { margin: 0 0 8px; font-size: clamp(28px, 6vw, 50px); letter-spacing: -0.06em; }
+    .modal-card p { color: var(--muted); line-height: 1.55; }
+    .personality-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin: 18px 0; }
+    .personality { border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; background: rgba(255,255,255,0.06); color: var(--ink); padding: 14px 10px; text-align: center; transition: transform 0.18s ease, background 0.18s ease; }
+    .personality:hover, .personality.selected { transform: translateY(-3px); background: rgba(255,209,92,0.18); border-color: rgba(255,209,92,0.36); }
+    .personality .emoji { font-size: 28px; }
+    .personality .name { font-weight: 1000; font-size: 12px; margin-top: 8px; line-height: 1.15; }
+
+    .toast { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%) translateY(20px); opacity: 0; pointer-events: none; z-index: 100; background: rgba(7,18,38,0.94); color: var(--ink); border: 1px solid rgba(255,255,255,0.14); border-radius: 999px; padding: 11px 15px; box-shadow: 0 12px 36px rgba(0,0,0,0.32); transition: opacity 0.2s ease, transform 0.2s ease; font-weight: 800; font-size: 13px; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    .source-note { color: var(--subtle); font-size: 12px; line-height: 1.5; padding: 16px 20px 20px; border-top: 1px solid var(--line); }
+    .source-note a { color: #bdefff; text-decoration: underline; text-underline-offset: 3px; }
+
+    /* Live sync chip + confetti (added) */
+    .nav .sync-chip { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; border: 1px solid rgba(255,255,255,0.16); background: rgba(0,0,0,0.24); color: var(--muted); border-radius: 999px; padding: 9px 13px; font-weight: 800; font-size: 12px; transition: background 0.2s ease, border-color 0.2s ease; }
+    .nav .sync-chip:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.26); }
+    .nav .sync-chip .dot { width: 8px; height: 8px; border-radius: 50%; background: #8be8d4; box-shadow: 0 0 10px rgba(139,232,212,0.85); flex: none; }
+    .nav .sync-chip .ico { display: inline-block; font-size: 12px; }
+    .nav .sync-chip.syncing { color: #ffe7ae; border-color: rgba(255,209,92,0.34); }
+    .nav .sync-chip.syncing .dot { background: #ffd15c; animation: syncPulse 0.9s ease-in-out infinite; }
+    .nav .sync-chip.syncing .ico { animation: spin 0.8s linear infinite; }
+    .nav .sync-chip.offline { color: #ffd8d8; border-color: rgba(255,100,100,0.34); }
+    .nav .sync-chip.offline .dot { background: #ff7575; box-shadow: 0 0 10px rgba(255,117,117,0.7); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes syncPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+    .sync-live-banner { display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center; border: 1px solid rgba(139,232,212,0.3); border-radius: var(--radius-lg); background: linear-gradient(135deg, rgba(139,232,212,0.12), rgba(114,244,255,0.06)); padding: 18px; margin-top: 6px; }
+    .sync-live-banner .pulse { width: 46px; height: 46px; border-radius: 16px; display: grid; place-items: center; font-size: 24px; background: rgba(139,232,212,0.16); border: 1px solid rgba(139,232,212,0.3); }
+    .sync-live-banner .s-title { font-weight: 1000; letter-spacing: -0.03em; font-size: 18px; }
+    .sync-live-banner .s-sub { color: var(--muted); font-size: 13px; line-height: 1.45; margin-top: 3px; }
+    .sync-stamp { color: var(--subtle); font-size: 12px; font-weight: 800; margin-top: 6px; }
+    @media (max-width: 620px) { .sync-live-banner { grid-template-columns: auto 1fr; } .sync-live-banner .btn { grid-column: 1 / -1; } }
+
+    .confetti-wrap { position: fixed; inset: 0; pointer-events: none; z-index: 90; overflow: hidden; }
+    .confetti { position: absolute; top: -14px; width: 9px; height: 14px; border-radius: 2px; opacity: 0.95; will-change: transform, opacity; animation: confettiFall linear forwards; }
+    @keyframes confettiFall { 0% { transform: translateY(-10px) rotate(0deg); opacity: 1; } 100% { transform: translateY(102vh) rotate(640deg); opacity: 0.9; } }
+
+    /* Korean board scene + per-player vibes + countdown (added) */
+    .k-scene { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
+    .taegeuk { position: absolute; top: 11%; right: 10%; width: 84px; height: 84px; border-radius: 50%; background: linear-gradient(to right, #cd2e3a 50%, #0047a0 50%); box-shadow: 0 0 42px rgba(205,46,58,0.30), 0 0 54px rgba(0,71,160,0.24); animation: spin 28s linear infinite; z-index: 1; }
+    .taegeuk:before, .taegeuk:after { content: ""; position: absolute; left: 21px; width: 42px; height: 42px; border-radius: 50%; }
+    .taegeuk:before { top: 0; background: #cd2e3a; }
+    .taegeuk:after { top: 42px; background: #0047a0; }
+    .lantern { position: absolute; width: 26px; height: 35px; border-radius: 13px 13px 14px 14px; background: linear-gradient(180deg, #ff7a7a, #cd2e3a); box-shadow: 0 0 20px rgba(205,46,58,0.65); transform-origin: top center; animation: sway 4.5s ease-in-out infinite; z-index: 2; }
+    .lantern:before { content: ""; position: absolute; top: -9px; left: 50%; transform: translateX(-50%); width: 2px; height: 9px; background: rgba(255,255,255,0.45); }
+    .lantern:after { content: ""; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%); width: 8px; height: 6px; background: #ffd15c; border-radius: 0 0 3px 3px; box-shadow: 0 0 12px rgba(255,209,92,0.85); }
+    .lantern.l1 { left: 26%; top: 13%; }
+    .lantern.l2 { left: 49%; top: 11%; background: linear-gradient(180deg, #7db8ff, #0047a0); box-shadow: 0 0 20px rgba(0,71,160,0.6); animation-delay: 0.8s; }
+    .lantern.l3 { left: 62%; top: 15%; animation-delay: 1.6s; }
+    @keyframes sway { 0%,100% { transform: rotate(-7deg); } 50% { transform: rotate(7deg); } }
+    .leaves { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 3; }
+    .leaf { position: absolute; top: -26px; opacity: 0; animation: leafFall linear infinite; will-change: transform, opacity; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.25)); }
+    @keyframes leafFall { 0% { transform: translateY(-30px) translateX(0) rotate(0deg); opacity: 0; } 12% { opacity: 0.95; } 88% { opacity: 0.85; } 100% { transform: translateY(900px) translateX(46px) rotate(360deg); opacity: 0; } }
+
+    .vibe-block { margin-top: 16px; }
+    .vibe-picker { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 9px; }
+    .vibe-chip { display: grid; justify-items: center; gap: 4px; padding: 10px 6px; border: 1px solid rgba(255,255,255,0.13); border-radius: 15px; background: rgba(0,0,0,0.2); color: var(--muted); transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease; }
+    .vibe-chip:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.26); }
+    .vibe-chip.active { background: rgba(255,209,92,0.18); border-color: rgba(255,209,92,0.42); color: #ffe7ae; box-shadow: 0 8px 22px rgba(255,209,92,0.12); }
+    .vibe-chip .vibe-emoji { font-size: 21px; line-height: 1; }
+    .vibe-chip .vibe-name { font-size: 10px; font-weight: 900; letter-spacing: 0.02em; }
+
+    .roster-row { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; padding: 12px; border: 1px solid rgba(255,255,255,0.12); border-radius: 18px; background: rgba(255,255,255,0.05); }
+    .roster-fields { display: grid; grid-template-columns: 1.1fr 1fr 1fr; gap: 10px; }
+    .roster-fields select { width: 100%; border: 1px solid rgba(255,255,255,0.14); border-radius: 14px; background: rgba(0,0,0,0.2); color: var(--ink); padding: 11px 12px; outline: none; }
+    .roster-fields select option { color: #111; }
+    @media (max-width: 620px) { .roster-fields { grid-template-columns: 1fr; } }
+
+    .token-vibe { position: absolute; top: -11px; right: -11px; width: 20px; height: 20px; border-radius: 50%; background: rgba(7,18,38,0.94); border: 1px solid rgba(255,255,255,0.5); display: grid; place-items: center; font-size: 11px; line-height: 1; box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
+    .traveller-vibe { font-size: 13px; margin-left: 4px; }
+    .countdown-card .big { background: linear-gradient(100deg, #ffd15c, #ff97ca 60%, #72f4ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+    /* The Bookies tab — betting + prizes (added) */
+    .nav button.casino-tab { color: #ffd9a8; border: 1px solid rgba(255,151,202,0.26); background: rgba(255,151,202,0.08); }
+    .nav button.casino-tab.active { color: #2a0f1a; background: linear-gradient(90deg, #ffd15c, #ff97ca); }
+
+    .market-list { display: grid; gap: 14px; }
+    .bet-card { position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.14); border-radius: 24px; background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.045)); padding: 16px; display: grid; gap: 13px; box-shadow: 0 14px 34px rgba(24,7,49,0.12); }
+    .bet-card:before { content: ""; position: absolute; width: 150px; height: 150px; border-radius: 50%; right: -56px; top: -70px; background: rgba(255,209,92,0.10); pointer-events: none; }
+    .bet-card.is-settled { border-color: rgba(139,232,212,0.28); }
+    .bet-head { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: start; position: relative; }
+    .bet-emoji { width: 48px; height: 48px; border-radius: 18px; display: grid; place-items: center; font-size: 26px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.12); }
+    .bet-title { font-weight: 1000; letter-spacing: -0.03em; font-size: 17px; }
+    .bet-desc { color: var(--muted); font-size: 13px; line-height: 1.42; margin-top: 4px; }
+    .bet-tags { display: grid; gap: 6px; justify-items: end; align-content: start; }
+    .prize-tag { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 6px 10px; font-size: 11px; font-weight: 900; letter-spacing: 0.01em; background: linear-gradient(135deg, rgba(255,209,92,0.22), rgba(255,151,202,0.16)); color: #ffe7ae; border: 1px solid rgba(255,209,92,0.34); white-space: nowrap; max-width: 230px; overflow: hidden; text-overflow: ellipsis; }
+    .runner-grid { display: grid; gap: 8px; }
+    .runner-btn { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; width: 100%; text-align: left; border: 1px solid rgba(255,255,255,0.13); border-radius: 16px; background: rgba(0,0,0,0.2); color: var(--ink); padding: 10px 12px 14px; position: relative; transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease; }
+    .runner-btn:hover:not(:disabled) { transform: translateY(-2px); border-color: rgba(255,255,255,0.26); }
+    .runner-btn.mine { border-color: rgba(114,244,255,0.5); background: rgba(114,244,255,0.12); box-shadow: 0 8px 22px rgba(114,244,255,0.12); }
+    .runner-btn.win { border-color: rgba(139,232,212,0.55); background: rgba(139,232,212,0.16); }
+    .runner-btn.locked { cursor: default; }
+    .runner-dot { width: 30px; height: 30px; border-radius: 11px; display: grid; place-items: center; font-size: 15px; color: #061020; border: 1px solid rgba(255,255,255,0.55); }
+    .runner-name { font-weight: 850; font-size: 14px; }
+    .runner-odds { font-weight: 1000; font-size: 14px; color: #ffe7ae; letter-spacing: -0.02em; }
+    .runner-bar { position: absolute; left: 12px; right: 12px; bottom: 6px; height: 3px; border-radius: 999px; background: rgba(255,255,255,0.08); overflow: hidden; }
+    .runner-bar > span { display: block; height: 100%; border-radius: inherit; transition: width 0.35s ease; }
+    .bet-strip { border: 1px dashed rgba(255,255,255,0.16); border-radius: 16px; padding: 11px 13px; background: rgba(0,0,0,0.16); display: grid; gap: 10px; }
+    .bet-strip.settled-strip { border-style: solid; border-color: rgba(139,232,212,0.3); background: rgba(139,232,212,0.08); }
+    .bet-line { font-size: 13px; color: var(--ink); line-height: 1.4; }
+    .bet-line.muted-line { color: var(--muted); }
+    .stake-row { display: flex; flex-wrap: wrap; gap: 7px; }
+    .bet-foot { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .settle-wrap { display: grid; gap: 8px; }
+    .settle-pick { display: flex; flex-wrap: wrap; gap: 7px; }
+    .form-table { display: grid; gap: 8px; }
+    .ft-row { display: grid; grid-template-columns: auto auto 1fr auto; gap: 10px; align-items: center; padding: 9px 10px; border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; background: rgba(255,255,255,0.05); }
+    .ft-row.me { border-color: rgba(114,244,255,0.4); background: rgba(114,244,255,0.08); }
+    .ft-rank { font-weight: 1000; font-size: 13px; min-width: 26px; text-align: center; }
+    .ft-name { font-weight: 850; font-size: 13px; }
+    .ft-trophies { margin-left: 4px; font-size: 11px; }
+    .ft-bal { font-weight: 1000; font-size: 15px; text-align: right; letter-spacing: -0.02em; }
+    .ft-net { display: block; font-size: 10px; font-weight: 900; color: var(--subtle); }
+    .ft-net.up { color: #8be8d4; }
+    .ft-net.down { color: #ff9c9c; }
+    .prize-shelf { display: grid; gap: 8px; }
+    .prize-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
+    .prize-row.claimed { opacity: 0.72; }
+    .prize-meta { color: var(--subtle); font-size: 11px; font-weight: 800; text-align: right; }
+    .add-market-form { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+    .add-market-form #newMkTitle, .add-market-form #newMkRunnersWrap, .add-market-form #addMarketBtn { grid-column: 1 / -1; }
+
+    @media (max-width: 980px) {
+      .hero-content { grid-template-columns: 1fr; align-items: end; }
+      .layout { grid-template-columns: 1fr; }
+      .grid-3, .grid-2, .sync-diagram, .idea-grid, .idea-summary-grid, .add-idea-form, .planning-hub, .flow-steps { grid-template-columns: 1fr; }
+      .board { min-height: 720px; }
+      .personality-grid { grid-template-columns: repeat(2, 1fr); }
+      .node { width: 94px; }
+      .node-core { width: 54px; height: 54px; border-radius: 19px; font-size: 26px; }
+    }
+
+    @media (max-width: 620px) {
+      .app { width: min(100% - 16px, 1280px); padding-top: 8px; }
+      .hero { min-height: 520px; border-radius: 24px; }
+      .hero-content { padding: 20px; min-height: 520px; }
+      .panel, .board { border-radius: 24px; }
+      .panel-head { display: grid; }
+      .board-shell { padding: 8px; }
+      .board { min-height: 780px; }
+      .node-title { font-size: 10px; }
+      .node-meta { display: none; }
+      .token { width: 32px; height: 32px; border-radius: 13px 13px 13px 5px; font-size: 13px; }
+      .timeline-item { grid-template-columns: 1fr; }
+      .nav { top: 6px; border-radius: 22px; }
+      .add-market-form { grid-template-columns: 1fr; }
+      .bet-head { grid-template-columns: auto 1fr; }
+      .bet-tags { grid-column: 1 / -1; justify-items: start; }
+    }
+
+    /* Seoul Idol Quest art direction: animated tour-poster energy, clean game UI, Korean city/night cues. */
+    :root {
+      --ink: #fff8fb;
+      --muted: rgba(255, 248, 251, 0.78);
+      --subtle: rgba(255, 248, 251, 0.58);
+      --panel: rgba(32, 24, 54, 0.78);
+      --panel-strong: rgba(21, 16, 39, 0.94);
+      --line: rgba(255, 255, 255, 0.18);
+      --gold: #ffe071;
+      --sun: #ff6f9f;
+      --neon: #5df4ff;
+      --pink: #ff4fa3;
+      --green: #61f2b1;
+      --purple: #9a76ff;
+      --danger: #ff6868;
+      --shadow: 0 30px 90px rgba(10, 5, 28, 0.48);
+      --radius-xl: 26px;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
+        radial-gradient(circle at 18% 10%, rgba(255, 79, 163, 0.24), transparent 24%),
+        radial-gradient(circle at 84% 8%, rgba(93, 244, 255, 0.18), transparent 25%),
+        radial-gradient(circle at 52% 96%, rgba(255, 224, 113, 0.15), transparent 30%),
+        linear-gradient(140deg, #120819 0%, #24123d 36%, #15172e 68%, #070914 100%);
+      background-size: 56px 56px, 56px 56px, auto, auto, auto, auto;
+    }
+
+    body:before {
+      background-image:
+        radial-gradient(circle at 22% 20%, rgba(255,255,255,0.22) 0 1.8px, transparent 2.4px),
+        radial-gradient(circle at 78% 18%, rgba(93,244,255,0.20) 0 1.5px, transparent 2.2px),
+        linear-gradient(115deg, transparent 0 18%, rgba(255,255,255,0.055) 18.2% 18.8%, transparent 19% 100%);
+      background-size: 220px 220px, 260px 260px, 190px 190px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.96), transparent 76%);
+    }
+
+    body:after {
+      background:
+        linear-gradient(90deg, transparent 0 8%, rgba(255,79,163,0.12) 8.2% 8.5%, transparent 8.8% 33%, rgba(93,244,255,0.11) 33.2% 33.5%, transparent 33.8% 70%, rgba(255,224,113,0.10) 70.2% 70.5%, transparent 70.8% 100%);
+      mix-blend-mode: screen;
+      opacity: 0.65;
+    }
+
+    .app { width: min(1240px, calc(100% - 28px)); padding-top: 16px; }
+
+    .hero {
+      min-height: 500px;
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,0.22);
+      background:
+        linear-gradient(180deg, rgba(14,8,28,0.02), rgba(14,8,28,0.78) 73%, rgba(8,7,18,0.98)),
+        conic-gradient(from 210deg at 70% 36%, rgba(255,79,163,0.28), rgba(93,244,255,0.18), rgba(255,224,113,0.18), rgba(255,79,163,0.28)),
+        linear-gradient(135deg, #2c1445 0%, #121c3c 54%, #090a17 100%);
+      box-shadow: 0 28px 90px rgba(0,0,0,0.45), inset 0 1px rgba(255,255,255,0.22);
+    }
+
+    .hero:before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(100deg, transparent 0 21%, rgba(255,255,255,0.09) 21.4% 22%, transparent 22.5% 44%, rgba(93,244,255,0.10) 44.4% 45%, transparent 45.4% 72%, rgba(255,79,163,0.12) 72.4% 73%, transparent 73.4% 100%),
+        repeating-linear-gradient(0deg, transparent 0 11px, rgba(255,255,255,0.035) 12px, transparent 13px);
+      opacity: 0.78;
+      pointer-events: none;
+    }
+
+    .hero:after {
+      inset: auto -8% 0 -8%;
+      height: 230px;
+      background:
+        radial-gradient(ellipse at 50% 100%, rgba(255,224,113,0.28), transparent 56%),
+        linear-gradient(180deg, transparent, rgba(255,79,163,0.20) 50%, rgba(5,6,16,0.92));
+      filter: none;
+      opacity: 1;
+    }
+
+    .hero-content { min-height: 500px; align-items: center; padding: 34px; grid-template-columns: 1.08fr 0.92fr; }
+    .hero h1,
+    .panel h2,
+    .panel h3,
+    .big,
+    .hub-title,
+    .bet-title,
+    .task-title { font-family: "Bricolage Grotesque", Inter, sans-serif; }
+
+    .hero h1 {
+      margin-top: 16px;
+      max-width: 760px;
+      font-size: clamp(48px, 7.2vw, 92px);
+      line-height: 0.88;
+      letter-spacing: 0;
+      text-wrap: balance;
+      text-shadow: 0 20px 42px rgba(0,0,0,0.36);
+    }
+
+    .hero h1 .shine {
+      color: transparent;
+      background: linear-gradient(105deg, #fff7bc 0%, #ff61ad 33%, #5df4ff 64%, #fff8fb 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      filter: drop-shadow(0 0 20px rgba(255,79,163,0.18));
+    }
+
+    .hero p { max-width: 570px; font-size: 18px; color: rgba(255,248,251,0.82); }
+    .eyebrow,
+    .label { border-radius: 999px; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 900; }
+
+    .eyebrow {
+      color: #160c28;
+      background: linear-gradient(135deg, #fff8fb, #ffe071);
+      border-color: rgba(255,255,255,0.36);
+      box-shadow: 0 14px 38px rgba(255,79,163,0.20);
+    }
+
+    .hero-art:before,
+    .hero-art:after {
+      content: "";
+      position: absolute;
+      bottom: 64px;
+      width: 180px;
+      height: 300px;
+      border-radius: 48% 48% 18% 18%;
+      background:
+        radial-gradient(circle at 50% 16%, #fff8fb 0 26px, transparent 27px),
+        linear-gradient(150deg, transparent 0 43%, rgba(255,255,255,0.72) 43.5% 46%, transparent 46.5% 100%),
+        linear-gradient(180deg, rgba(255,79,163,0.78), rgba(35,20,65,0.86) 58%, rgba(6,7,17,0.94));
+      clip-path: polygon(44% 0, 56% 0, 63% 21%, 84% 28%, 74% 42%, 64% 36%, 70% 100%, 30% 100%, 36% 36%, 26% 42%, 16% 28%, 37% 21%);
+      filter: drop-shadow(0 26px 42px rgba(0,0,0,0.38));
+      opacity: 0.72;
+    }
+
+    .hero-art:before { right: 21%; transform: rotate(-4deg); }
+    .hero-art:after {
+      right: 7%;
+      transform: rotate(5deg) scale(0.9);
+      background:
+        radial-gradient(circle at 50% 16%, #fff8fb 0 26px, transparent 27px),
+        linear-gradient(150deg, transparent 0 43%, rgba(255,255,255,0.72) 43.5% 46%, transparent 46.5% 100%),
+        linear-gradient(180deg, rgba(93,244,255,0.72), rgba(50,28,90,0.88) 58%, rgba(6,7,17,0.94));
+    }
+
+    .moon {
+      right: 9%;
+      top: 9%;
+      width: 118px;
+      height: 118px;
+      background:
+        radial-gradient(circle at 35% 35%, #fff 0 18%, #ffe071 19% 42%, #ff6f9f 43% 56%, #5df4ff 57% 75%, transparent 76%),
+        #fff8fb;
+      box-shadow: 0 0 70px rgba(255,224,113,0.22), 0 0 120px rgba(255,79,163,0.18);
+    }
+
+    .moon:before {
+      background: conic-gradient(from 20deg, #ff4fa3, #ff4fa3 25%, #15172e 25% 50%, #5df4ff 50% 75%, #15172e 75% 100%);
+      mix-blend-mode: normal;
+      opacity: 0.72;
+      mask-image: radial-gradient(circle at 50% 50%, #000 0 58%, transparent 59%);
+    }
+
+    .skyline { height: 58%; opacity: 0.72; }
+    .building {
+      border-radius: 6px 6px 0 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.11), rgba(255,79,163,0.05));
+      border-color: rgba(255,255,255,0.14);
+      box-shadow: inset 0 0 22px rgba(93,244,255,0.10);
+    }
+
+    .building:before,
+    .building:after {
+      background: rgba(255,224,113,0.72);
+      box-shadow: 22px 0 rgba(93,244,255,0.58), 44px 0 rgba(255,79,163,0.50);
+    }
+
+    .mountain {
+      background: linear-gradient(180deg, rgba(87,63,130,0.62), rgba(12,12,30,0.90));
+      opacity: 0.78;
+    }
+
+    .glass,
+    .panel {
+      border-color: rgba(255,255,255,0.18);
+      background: linear-gradient(180deg, rgba(37,27,63,0.78), rgba(17,15,35,0.86));
+      box-shadow: 0 20px 60px rgba(0,0,0,0.30), inset 0 1px rgba(255,255,255,0.13);
+      backdrop-filter: blur(20px);
+    }
+
+    .stat-card .glass { border-radius: 18px; }
+    .big { letter-spacing: 0; font-weight: 800; }
+
+    .btn {
+      min-height: 44px;
+      border-radius: 999px;
+      color: #140b24;
+      background: linear-gradient(135deg, #fff8fb 0%, #ffe071 47%, #ff88bd 100%);
+      box-shadow: 0 16px 34px rgba(255,79,163,0.24), inset 0 1px rgba(255,255,255,0.75);
+      font-weight: 900;
+    }
+
+    .btn:hover { box-shadow: 0 20px 44px rgba(255,79,163,0.34), inset 0 1px rgba(255,255,255,0.75); }
+    .btn.secondary { color: #0d1020; background: linear-gradient(135deg, #dfffff, #5df4ff); border-color: rgba(255,255,255,0.40); }
+    .btn.ghost { color: var(--ink); background: rgba(255,255,255,0.075); border-color: rgba(255,255,255,0.19); box-shadow: inset 0 1px rgba(255,255,255,0.08); }
+    .btn.danger { color: #ffe6e6; background: rgba(255,104,104,0.16); border-color: rgba(255,104,104,0.35); box-shadow: none; }
+
+    .nav {
+      top: 12px;
+      border-radius: 18px;
+      padding: 7px;
+      background: rgba(13, 10, 28, 0.82);
+      border-color: rgba(255,255,255,0.16);
+    }
+
+    .nav button { border-radius: 12px; color: rgba(255,248,251,0.74); min-height: 42px; }
+    .nav button.active {
+      color: #130b22;
+      background: linear-gradient(135deg, #fff8fb, #ffde73 55%, #ff7ab6);
+      box-shadow: 0 10px 28px rgba(255,79,163,0.22);
+    }
+
+    .sync-chip .dot { background: #61f2b1; box-shadow: 0 0 0 6px rgba(97,242,177,0.14); }
+    .panel-head { background: linear-gradient(90deg, rgba(255,255,255,0.055), rgba(255,79,163,0.06), rgba(93,244,255,0.045)); }
+    .panel h2 { font-size: clamp(24px, 2.4vw, 34px); }
+    .panel h3 { letter-spacing: 0; }
+    .panel-sub { color: rgba(255,248,251,0.70); }
+
+    .planning-hub { background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.01)); border-bottom-color: rgba(255,255,255,0.13); }
+
+    .hub-card,
+    .task-card,
+    .idea-card,
+    .bet-card,
+    .traveller-row,
+    .mini-idea,
+    .timeline-item,
+    .intel-card {
+      border-radius: 14px;
+      border-color: rgba(255,255,255,0.14);
+      background: linear-gradient(180deg, rgba(255,255,255,0.075), rgba(255,255,255,0.032));
+      box-shadow: inset 0 1px rgba(255,255,255,0.08);
+    }
+
+    .hub-card.primary {
+      background:
+        linear-gradient(135deg, rgba(255,79,163,0.18), rgba(93,244,255,0.10)),
+        rgba(255,255,255,0.06);
+      border-color: rgba(255,224,113,0.35);
+    }
+
+    .hub-icon,
+    .task-icon,
+    .bet-emoji {
+      border-radius: 12px;
+      background: linear-gradient(135deg, #fff8fb, #ffe071 50%, #ff7ab6);
+      color: #130b22;
+      box-shadow: 0 12px 26px rgba(255,79,163,0.18);
+    }
+
+    .board-shell { padding: 14px; }
+    .board {
+      min-height: 680px;
+      border-radius: 22px;
+      border-color: rgba(255,255,255,0.20);
+      background:
+        radial-gradient(circle at 19% 18%, rgba(255,79,163,0.28), transparent 24%),
+        radial-gradient(circle at 83% 15%, rgba(93,244,255,0.22), transparent 26%),
+        linear-gradient(180deg, #271149 0%, #1c1f45 38%, #262045 64%, #0b1022 100%);
+      box-shadow: inset 0 0 110px rgba(255,255,255,0.06), 0 22px 60px rgba(0,0,0,0.30);
+    }
+
+    .board:before {
+      background-image:
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.10) 0 1.5px, transparent 2px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 72px 72px, 42px 42px, 42px 42px;
+      opacity: 0.46;
+    }
+
+    .k-scene path[fill="url(#mtnBack)"] { fill: #4e285f; opacity: 0.82; }
+    .k-scene path[fill="url(#mtnFront)"] { fill: #202b55; opacity: 0.96; }
+    .k-scene g[fill="url(#hanok)"] { filter: drop-shadow(0 14px 24px rgba(0,0,0,0.26)); }
+    .taegeuk { width: 136px; height: 136px; right: 7%; top: 9%; opacity: 0.20; filter: blur(0.2px); }
+    .sea { height: 31%; background: linear-gradient(180deg, rgba(93,244,255,0.18), rgba(20,86,120,0.58)); border-radius: 48% 48% 0 0; }
+
+    .lantern {
+      width: 42px;
+      height: 58px;
+      border-radius: 18px 18px 22px 22px;
+      background: linear-gradient(180deg, #ffe071, #ff4fa3 72%, #761c61);
+      box-shadow: 0 0 28px rgba(255,79,163,0.32);
+      opacity: 0.84;
+    }
+
+    .lantern:before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: -36px;
+      width: 1px;
+      height: 36px;
+      background: rgba(255,255,255,0.32);
+    }
+
+    .l1 { left: 11%; top: 9%; }
+    .l2 { left: 71%; top: 20%; transform: scale(0.78); }
+    .l3 { right: 14%; top: 34%; transform: scale(0.62); }
+    .cloud { background: rgba(255,255,255,0.14); box-shadow: 0 0 36px rgba(93,244,255,0.10); }
+
+    .route-line { stroke: rgba(255, 224, 113, 0.88); stroke-width: 7; stroke-dasharray: 1 17; filter: drop-shadow(0 0 10px rgba(255,224,113,0.42)); }
+    .route-shadow { stroke: rgba(255,79,163,0.24); stroke-width: 18; }
+    .node { width: 126px; }
+    .node-core {
+      border-radius: 18px;
+      background: linear-gradient(135deg, #fff8fb, #ffe071);
+      box-shadow: 0 18px 34px rgba(0,0,0,0.35), 0 0 0 7px rgba(255,255,255,0.08), 0 0 28px rgba(255,224,113,0.20);
+    }
+
+    .node.group .node-core { background: linear-gradient(135deg, #dfffff, #5df4ff); }
+    .node.boss .node-core { background: linear-gradient(135deg, #ff4fa3, #8f55ff); color: #fff8fb; }
+    .node.personal .node-core { background: linear-gradient(135deg, #fff8fb, #ffb7d7); }
+    .node-title { font-family: "Bricolage Grotesque", Inter, sans-serif; font-size: 13px; letter-spacing: 0; }
+    .node-meta { color: rgba(255,248,251,0.72); }
+
+    .token {
+      border-radius: 50% 50% 50% 18%;
+      border-color: rgba(255,255,255,0.88);
+      box-shadow: 0 14px 28px rgba(0,0,0,0.34), 0 0 0 4px rgba(255,255,255,0.08);
+    }
+
+    .progress-bar { height: 11px; background: rgba(255,255,255,0.10); border-color: rgba(255,255,255,0.10); }
+    .progress-fill { background: linear-gradient(90deg, #ff4fa3, #ffe071, #5df4ff, #61f2b1); }
+    .pill { border-radius: 999px; border-color: rgba(255,255,255,0.16); background: rgba(255,255,255,0.075); color: rgba(255,248,251,0.78); }
+    .pill.hot { color: #ffd9ea; border-color: rgba(255,79,163,0.34); background: rgba(255,79,163,0.14); }
+    .pill.warn { color: #fff0b0; border-color: rgba(255,224,113,0.32); background: rgba(255,224,113,0.12); }
+    .pill.done { color: #c8ffe3; border-color: rgba(97,242,177,0.32); background: rgba(97,242,177,0.12); }
+
+    select,
+    input[type="text"] {
+      border-radius: 12px;
+      background: rgba(7,8,19,0.40);
+      border-color: rgba(255,255,255,0.17);
+    }
+
+    .tag.p1,
+    .idea-status.hot,
+    .ft-net.up { color: #c8ffe3; }
+    .idea-status { border-radius: 999px; }
+    .vote-btn { border-radius: 12px; }
+    .vote-btn.keen { background: rgba(97,242,177,0.12); border-color: rgba(97,242,177,0.28); }
+    .vote-btn.maybe { background: rgba(255,224,113,0.12); border-color: rgba(255,224,113,0.28); }
+    .vote-btn.no { background: rgba(255,104,104,0.12); border-color: rgba(255,104,104,0.26); }
+
+    .runner-btn { border-radius: 14px; background: rgba(255,255,255,0.055); border-color: rgba(255,255,255,0.14); }
+    .runner-btn.mine,
+    .runner-btn.win { border-color: rgba(255,224,113,0.48); box-shadow: 0 0 0 2px rgba(255,224,113,0.10); }
+    .source-note,
+    .toast { border-radius: 14px; background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); }
+
+    @media (max-width: 900px) {
+      .hero-content { grid-template-columns: 1fr; align-items: end; }
+      .hero-art:before { right: 24%; opacity: 0.42; }
+      .hero-art:after { right: 2%; opacity: 0.36; }
+      .moon { right: 7%; top: 7%; width: 94px; height: 94px; }
+    }
+
+    @media (max-width: 620px) {
+      .app { width: min(100% - 18px, 1280px); }
+      .hero { min-height: 590px; border-radius: 20px; }
+      .hero-content { min-height: 590px; padding: 18px; }
+      .hero h1 { font-size: 48px; line-height: 0.92; }
+      .hero p { font-size: 15px; }
+      .hero-art:before,
+      .hero-art:after { bottom: 112px; transform: scale(0.72); opacity: 0.26; }
+      .stat-card .glass { padding: 14px; }
+      .board { min-height: 760px; border-radius: 18px; }
+      .node { width: 104px; }
+      .node-title { font-size: 11px; }
+      .nav { border-radius: 16px; }
+      .nav button { border-radius: 11px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *:before,
+      *:after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="hero">
+      <div class="hero-art" aria-hidden="true">
+        <div class="moon"></div>
+        <div class="dragon"><span class="wing"></span><span class="tail"></span><span class="body"></span><span class="head"></span></div>
+        <div class="skyline">
+          <div class="building b1"></div><div class="building b2"></div><div class="building b3"></div><div class="building b4"></div><div class="building b5"></div><div class="building b6"></div>
+          <div class="mountain m1"></div><div class="mountain m2"></div><div class="mountain m3"></div>
+        </div>
+      </div>
+      <div class="hero-content">
+        <div>
+          <div class="eyebrow">Seoul + Jeju idol quest · 23 Oct to 2 Nov 2026</div>
+          <h1><span>Korea boys trip</span><span class="shine">idol quest</span></h1>
+          <p>A shared planning board with votes, bookings, missions and group progress.</p>
+          <div class="hero-actions">
+            <button class="btn" data-jump="board">Open board</button>
+            <button class="btn secondary" data-jump="tasks">Boss tasks</button>
+            <button class="btn ghost" data-jump="ideas">Activity Market</button>
+            <button class="btn ghost" data-jump="bookie">🎲 The Bookies</button>
+            <button class="btn ghost" data-jump="settings">Set your vibe</button>
+          </div>
+        </div>
+        <aside class="stat-card">
+          <div class="glass countdown-card">
+            <div class="label">Countdown to Seoul</div>
+            <div class="big"><span id="countdownDays">—</span></div>
+            <div class="micro" id="countdownSub">Seoul + Jeju · 23 Oct to 2 Nov 2026</div>
+            <div class="pill-row">
+              <span class="pill hot">🍁 Autumn in Korea</span>
+              <span class="pill" id="travellerCountPill">7 travellers</span>
+            </div>
+          </div>
+          <div class="glass">
+            <div class="label">Group progress</div>
+            <div class="big"><span id="heroProgressPct">0%</span></div>
+            <div class="progress-bar" style="margin-top:12px"><div class="progress-fill" id="heroProgressFill"></div></div>
+            <div class="micro" id="heroProgressSub" style="margin-top:10px">Group bosses cleared together.</div>
+          </div>
+        </aside>
+      </div>
+    </header>
+
+    <nav class="nav" aria-label="App sections">
+      <button class="active" data-tab="board">🗺️ Board</button>
+      <button data-tab="tasks">🎬 Group tasks</button>
+      <button class="market-tab" data-tab="ideas">🎯 Activity Market</button>
+      <button class="casino-tab" data-tab="bookie">🎲 The Bookies</button>
+      <button data-tab="intel">📍 Trip intel</button>
+      <button data-tab="settings">⚙️ Roster &amp; vibes</button>
+      <button class="sync-chip" id="syncChip" title="Tap to pull the latest from the group">
+        <span class="dot"></span><span class="ico">↻</span><span id="syncChipText">Live</span>
+      </button>
+    </nav>
+
+    <main>
+      <section id="board" class="section active">
+        <div class="layout">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>Quest board</h2>
+                <p class="panel-sub">Track progress, votes and group decisions across Seoul and Jeju.</p>
+              </div>
+              <div class="pill-row" style="margin:0">
+                <span class="pill hot" id="vibeSummaryBadge">0/7 vibes set</span>
+                <span class="pill warn" id="groupProgressBadge">Group bosses 0%</span>
+              </div>
+            </div>
+            <div class="planning-hub" aria-label="Planning shortcuts">
+              <button class="hub-card primary" data-jump="ideas">
+                <span class="hub-icon">🎯</span>
+                <span class="hub-title">Activity Market</span>
+                <span class="hub-copy">Vote on Seoul and Jeju ideas.</span>
+                <span class="hub-status" id="boardVoteStatus">0 votes cast</span>
+              </button>
+              <button class="hub-card" data-jump="tasks">
+                <span class="hub-icon">🐉</span>
+                <span class="hub-title">Group tasks</span>
+                <span class="hub-copy">Flights, budget, accommodation, transport and itinerary.</span>
+                <span class="hub-status">Shared progress</span>
+              </button>
+              <button class="hub-card" data-jump="settings">
+                <span class="hub-icon">👥</span>
+                <span class="hub-title">Roster</span>
+                <span class="hub-copy">Names, roles and tokens.</span>
+                <span class="hub-status">Edit roster</span>
+              </button>
+              <button class="hub-card" data-jump="bookie">
+                <span class="hub-icon">🎲</span>
+                <span class="hub-title">The Bookies</span>
+                <span class="hub-copy">Bet on the boys. Win perks and forfeits.</span>
+                <span class="hub-status" id="boardBookieStatus">0 open markets</span>
+              </button>
+            </div>
+            <div class="board-shell">
+              <div class="board" id="questBoard">
+                <svg class="k-scene" viewBox="0 0 1000 660" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="mtnBack" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6b3f5e"/><stop offset="1" stop-color="#2c1f3c"/></linearGradient>
+                    <linearGradient id="mtnFront" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4670"/><stop offset="1" stop-color="#171f36"/></linearGradient>
+                    <linearGradient id="hanok" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a3550"/><stop offset="1" stop-color="#0f1626"/></linearGradient>
+                    <linearGradient id="volc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a4a5e"/><stop offset="1" stop-color="#241a2c"/></linearGradient>
+                  </defs>
+                  <path fill="url(#mtnBack)" opacity="0.9" d="M0 360 L120 250 L230 330 L330 238 L430 330 L520 268 L620 350 L740 246 L860 332 L1000 268 L1000 660 L0 660 Z"/>
+                  <path fill="url(#mtnFront)" d="M0 444 Q160 360 320 432 T640 432 T1000 420 L1000 660 L0 660 Z"/>
+                  <g transform="translate(150 312)" opacity="0.92">
+                    <rect x="-3" y="-150" width="6" height="150" fill="#cfd9ff" opacity="0.45"/>
+                    <ellipse cx="0" cy="-150" rx="15" ry="8" fill="#9fb4e6"/>
+                    <rect x="-2" y="-188" width="4" height="38" fill="#cfd9ff" opacity="0.7"/>
+                    <circle cx="0" cy="-191" r="3.4" fill="#ffd15c"><animate attributeName="opacity" values="0.5;1;0.5" dur="3s" repeatCount="indefinite"/></circle>
+                  </g>
+                  <g fill="url(#hanok)" stroke="rgba(255,255,255,0.12)" stroke-width="1">
+                    <path d="M250 500 C268 470 300 463 318 465 C350 469 392 474 416 500 C392 493 366 491 333 491 C300 491 276 493 250 500 Z"/>
+                    <path d="M300 472 C320 432 360 422 380 424 C420 428 470 434 500 472 C470 464 440 462 400 462 C360 462 330 464 300 472 Z"/>
+                    <path d="M420 488 C440 452 480 444 500 446 C540 450 590 456 620 488 C590 480 560 478 520 478 C480 478 450 480 420 488 Z"/>
+                  </g>
+                  <g fill="#ffce6b"><rect x="352" y="474" width="9" height="9" rx="2" opacity="0.85"/><rect x="476" y="490" width="9" height="9" rx="2" opacity="0.8"/><rect x="318" y="497" width="9" height="9" rx="2" opacity="0.7"/></g>
+                  <path fill="url(#volc)" d="M690 480 L772 318 Q790 298 810 318 L892 480 Z"/>
+                  <path fill="#0f1626" opacity="0.55" d="M772 320 Q790 300 810 320 Q794 334 791 334 Q788 334 772 320 Z"/>
+                  <g transform="translate(905 548)">
+                    <ellipse cx="0" cy="22" rx="20" ry="9" fill="#241a2c" opacity="0.6"/>
+                    <path d="M-15 22 Q-18 -8 0 -14 Q18 -8 15 22 Z" fill="#6f6e7e"/>
+                    <path d="M-16 -7 Q0 -23 16 -7 Q0 -15 -16 -7 Z" fill="#54535f"/>
+                    <circle cx="-6" cy="2" r="3" fill="#241a2c"/><circle cx="6" cy="2" r="3" fill="#241a2c"/>
+                    <path d="M-5 11 Q0 15 5 11" stroke="#241a2c" stroke-width="2" fill="none"/>
+                  </g>
+                </svg>
+                <div class="taegeuk" aria-hidden="true"></div>
+                <div class="cloud c1"></div><div class="cloud c2"></div>
+                <div class="lantern l1"></div><div class="lantern l2"></div><div class="lantern l3"></div>
+                <div class="sea"></div>
+                <div class="leaves" id="leaves" aria-hidden="true"></div>
+                <svg class="route-svg" viewBox="0 0 1000 660" preserveAspectRatio="none" aria-hidden="true">
+                  <path class="route-shadow" d="M105 540 C145 410 255 455 255 342 C255 230 385 248 420 150 C460 42 640 98 655 220 C672 356 765 298 835 390 C900 475 850 560 745 555" />
+                  <path class="route-line" d="M105 540 C145 410 255 455 255 342 C255 230 385 248 420 150 C460 42 640 98 655 220 C672 356 765 298 835 390 C900 475 850 560 745 555" />
+                </svg>
+                <div id="nodes"></div>
+                <div class="token-layer" id="tokens"></div>
+              </div>
+            </div>
+            <div class="quest-controls">
+              <button class="btn small" id="advanceBtn">Move player forward</button>
+              <button class="btn small secondary" id="undoBtn">Move player back</button>
+              <button class="btn small ghost" id="copySummaryBtn">Copy summary</button>
+              <button class="btn small danger" id="resetBtn">Reset board</button>
+            </div>
+            <div class="source-note">Live group sync is on — your changes save to the shared Google Sheet automatically. Tap the <strong>Live</strong> chip at the top to pull in what the others have done. Everyone should use the same GitHub Pages link.</div>
+          </div>
+
+          <aside class="side-stack">
+            <div class="panel player-card">
+              <div class="label">Selected player</div>
+              <div class="select-row">
+                <select id="playerSelect" aria-label="Selected traveller"></select>
+                <button class="btn small secondary" id="focusPlayerBtn">Focus</button>
+              </div>
+              <div class="progress-wrap">
+                <div class="progress-head"><span id="selectedName">Jason</span><span id="selectedProgress">0%</span></div>
+                <div class="progress-bar"><div class="progress-fill" id="selectedProgressFill"></div></div>
+              </div>
+              <div class="pill-row">
+                <span class="pill" id="selectedRole">🧭 No role yet</span>
+                <span class="pill" id="selectedStage">Spawn point</span>
+              </div>
+              <div class="vibe-block">
+                <div class="label">Their vibe</div>
+                <div class="vibe-picker" id="vibePicker"></div>
+              </div>
+            </div>
+
+            <div class="panel pad">
+              <div class="label">Roster</div>
+              <div class="traveller-grid" id="travellerGrid"></div>
+            </div>
+
+            <div class="panel pad activity-spotlight">
+              <div class="label">Next thing</div>
+              <h3>Vote first. Lock it later.</h3>
+              <p>Keep the good ideas alive until the group picks a shortlist.</p>
+              <div class="mini-idea-list" id="boardIdeaPreview"></div>
+              <button class="btn small" data-jump="ideas">Activity Market</button>
+            </div>
+
+            <div class="panel pad">
+              <div class="label">Next three actions</div>
+              <div id="nextActions" class="task-list" style="margin-top:12px"></div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="tasks" class="section">
+        <div class="layout">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>Group tasks</h2>
+                <p class="panel-sub">Personal tasks move one player. Group tasks move everyone.</p>
+              </div>
+              <button class="btn small secondary" id="markJasonFactsBtn">Apply Jason facts</button>
+            </div>
+            <div style="padding:20px">
+              <h3 style="margin-bottom:12px">Personal checkpoints</h3>
+              <div class="task-list" id="personalTasks"></div>
+              <h3 style="margin:24px 0 12px">Group tasks</h3>
+              <div class="task-list" id="groupTasks"></div>
+            </div>
+          </div>
+          <aside class="side-stack">
+            <div class="panel pad">
+              <div class="label">Why these matter</div>
+              <div class="info-card" style="margin-top:12px">
+                <div class="emoji">🐉</div>
+                <h3>Route lock</h3>
+                <p>Lock dates and Jeju flight logic before accommodation.</p>
+              </div>
+              <div class="info-card" style="margin-top:12px">
+                <div class="emoji">🚐</div>
+                <h3>Ride plan</h3>
+                <p>Decide early: van, two cars, transfers or taxis.</p>
+              </div>
+              <div class="info-card" style="margin-top:12px">
+                <div class="emoji">🛂</div>
+                <h3>Entry check</h3>
+                <p>K-ETA exemption currently runs to 31 Dec 2026. Recheck passports and entry rules before departure.</p>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+
+      <section id="ideas" class="section">
+        <div class="layout">
+          <div class="panel pad">
+            <div class="panel-head" style="padding:0 0 18px; border-bottom:0">
+              <div>
+                <h2>Activity Market</h2>
+                <p class="panel-sub">Vote on ideas before they become itinerary items.</p>
+              </div>
+              <div class="pill-row" style="margin:0">
+                <span class="pill done" id="ideasHotBadge">0 shortlist ideas</span>
+                <span class="pill warn" id="ideasVotesBadge">0 votes cast</span>
+              </div>
+            </div>
+            <div class="flow-steps">
+              <div class="flow-step"><strong>1. Pick yourself</strong><span>Use the player dropdown.</span></div>
+              <div class="flow-step"><strong>2. Vote lightly</strong><span>Keen, maybe or no.</span></div>
+              <div class="flow-step"><strong>3. Shortlist later</strong><span>Shortlist the strongest ideas later.</span></div>
+            </div>
+            <div class="idea-toolbar">
+              <div class="idea-help">Rule of thumb: 4+ keen = shortlist · 2+ no = discuss · mostly maybe = optional.</div>
+              <button class="btn small secondary" id="copyIdeasBtn">Copy vote summary</button>
+            </div>
+            <div class="idea-grid" id="ideaGrid"></div>
+            <h3 style="margin:24px 0 8px">Add a new idea</h3>
+            <div class="add-idea-form">
+              <input type="text" id="newIdeaTitle" placeholder="Idea name" />
+              <input type="text" id="newIdeaCity" placeholder="Seoul, Jeju, or both" />
+              <input type="text" id="newIdeaDesc" placeholder="Why it could be good" />
+              <button class="btn small" id="addIdeaBtn">Add idea</button>
+            </div>
+          </div>
+          <aside class="side-stack">
+            <div class="panel pad">
+              <div class="label">Decision logic</div>
+              <div class="idea-summary-grid">
+                <div class="mini-score"><div class="num" id="hotIdeaCount">0</div><div class="txt">Strong shortlist ideas</div></div>
+                <div class="mini-score"><div class="num" id="maybeIdeaCount">0</div><div class="txt">Maybe list</div></div>
+                <div class="mini-score"><div class="num" id="blockedIdeaCount">0</div><div class="txt">Needs discussion</div></div>
+              </div>
+              <div class="info-card" style="margin-top:14px">
+                <div class="emoji">💡</div>
+                <h3>Wishlist checkpoint</h3>
+                <p>Vote on one idea to clear your wishlist checkpoint.</p>
+              </div>
+              <div class="info-card" style="margin-top:12px">
+                <div class="emoji">♨️</div>
+                <h3>Korean spa note</h3>
+                <p>Likely jjimjilbang or Korean bathhouse. Keep optional until the group is comfortable.</p>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="bookie" class="section">
+        <div class="layout">
+          <div class="panel pad">
+            <div class="panel-head" style="padding:0 0 18px; border-bottom:0">
+              <div>
+                <h2>The Bookies 🎲</h2>
+                <p class="panel-sub">Back the boys, win bragging rights and real trip perks. Chips only — no real money.</p>
+              </div>
+              <div class="pill-row" style="margin:0">
+                <span class="pill done" id="prizesBadge">0 prizes up for grabs</span>
+                <span class="pill warn" id="openMarketsBadge">0 open markets</span>
+                <span class="pill hot" id="myChipBal">1,000 chips</span>
+              </div>
+            </div>
+            <div class="idea-help" style="margin-bottom:14px">How the odds work: everyone piles chips onto a runner, and the price is just the whole pot divided by what's riding on that runner — so backing the underdog early gets you the best odds. When a bet is settled, the pot is split between everyone who backed the winner. Pick yourself with the player dropdown on the Board tab first.</div>
+            <div class="market-list" id="marketList"></div>
+
+            <h3 style="margin:26px 0 4px">Start your own bet</h3>
+            <p class="panel-sub">Make up a challenge, attach a prize or forfeit, and let the group back it.</p>
+            <div class="add-market-form">
+              <input type="text" id="newMkTitle" placeholder="What's the bet? e.g. First to lose their voice at karaoke" />
+              <input type="text" id="newMkDesc" placeholder="One line of detail (optional)" />
+              <input type="text" id="newMkPrize" list="prizeOptions" placeholder="Prize or forfeit for the winner (optional)" />
+              <datalist id="prizeOptions">
+                <option value="🛏️ First pick of bedrooms at the Jeju villa"></option>
+                <option value="🍖 Picks the first group dinner out"></option>
+                <option value="🚗 Shotgun the front seat on the Jeju road trip"></option>
+                <option value="🎶 Controls the aux for a full day"></option>
+                <option value="🍶 Forfeit: buys the first round of soju"></option>
+                <option value="📸 Forfeit: on group photographer duty all day"></option>
+                <option value="🧾 Skips one bill-split admin round"></option>
+                <option value="♨️ Picks jjimjilbang vs spa"></option>
+              </datalist>
+              <select id="newMkType" aria-label="Bet type">
+                <option value="field">Runner: pick from the boys</option>
+                <option value="yesno">Yes / No prop bet</option>
+                <option value="custom">Custom options</option>
+              </select>
+              <div id="newMkRunnersWrap" hidden><input type="text" id="newMkRunners" placeholder="Custom options, comma separated — e.g. Seoul, Jeju, Busan" /></div>
+              <button class="btn small" id="addMarketBtn">Add bet</button>
+            </div>
+          </div>
+
+          <aside class="side-stack">
+            <div class="panel pad">
+              <div class="label">Form table</div>
+              <p class="panel-sub" style="margin-top:4px">Who's up, who's down. 👑 leads the pack.</p>
+              <div class="form-table" id="formTable" style="margin-top:12px"></div>
+            </div>
+            <div class="panel pad">
+              <div class="label">Prize shelf</div>
+              <p class="panel-sub" style="margin-top:4px">The perks and forfeits riding on these bets.</p>
+              <div class="prize-shelf" id="prizeShelf" style="margin-top:12px"></div>
+              <button class="btn small ghost" id="restoreMarketsBtn" style="margin-top:14px">Restore starter bets</button>
+            </div>
+            <div class="info-card">
+              <div class="emoji">🤝</div>
+              <h3>House rules</h3>
+              <p>It's all in good fun. Settle each bet honestly the morning after, and the loser owes the forfeit. No actual cash changes hands unless you lot decide otherwise.</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="intel" class="section">
+        <div class="panel pad">
+          <div class="panel-head" style="padding:0 0 18px; border-bottom:0">
+            <div>
+              <h2>Trip facts</h2>
+              <p class="panel-sub">Locked details and planning assumptions.</p>
+            </div>
+          </div>
+          <div class="grid-3">
+            <div class="info-card"><div class="emoji">📅</div><h3>Dates</h3><p>Fri 23 Oct to Mon 2 Nov 2026. Seoul and Jeju split TBC.</p></div>
+            <div class="info-card"><div class="emoji">✈️</div><h3>Route</h3><p>Likely London → Seoul → Jeju via ICN or GMP to CJU.</p></div>
+            <div class="info-card"><div class="emoji">🏝️</div><h3>Why Jeju</h3><p>Volcanic island, scenic drives, hiking, seafood, golf and Jeju City bars.</p></div>
+          </div>
+
+          <h3 style="margin:24px 0 12px">Draft rhythm</h3>
+          <div class="timeline">
+            <div class="timeline-item"><div class="timeline-date">23 Oct</div><div><div class="timeline-title">Jason departs London</div><div class="timeline-body">LHR T3 · QW901 · 22:05 departure · e-ticket and PNR pending.</div></div></div>
+            <div class="timeline-item"><div class="timeline-date">24 Oct</div><div><div class="timeline-title">Arrive Seoul late</div><div class="timeline-body">ICN T1 · 21:35 arrival · light arrival night.</div></div></div>
+            <div class="timeline-item"><div class="timeline-date">25 to 27 Oct</div><div><div class="timeline-title">Seoul opening arc</div><div class="timeline-body">Food, nightlife, shopping, recovery and group arrivals.</div></div></div>
+            <div class="timeline-item"><div class="timeline-date">27 to 31 Oct</div><div><div class="timeline-title">Jeju main quest</div><div class="timeline-body">Island base, scenic drives, Hallasan or viewpoints, seafood and group adventure day.</div></div></div>
+            <div class="timeline-item"><div class="timeline-date">1 to 2 Nov</div><div><div class="timeline-title">Return arc</div><div class="timeline-body">Return via Seoul or connect CJU → Seoul → London if timings work.</div></div></div>
+          </div>
+
+          <h3 style="margin:24px 0 12px">Planning watchouts</h3>
+          <div class="grid-2">
+            <div class="info-card"><div class="emoji">💸</div><h3>Budget first</h3><p>Set a budget before comparing villa, hotel, transport and food tiers.</p></div>
+            <div class="info-card"><div class="emoji">🧳</div><h3>Luggage reality</h3><p>Check domestic Jeju baggage allowances before booking.</p></div>
+            <div class="info-card"><div class="emoji">📍</div><h3>Google Maps links</h3><p>Add confirmed places with official full Google Maps links.</p></div>
+            <div class="info-card"><div class="emoji">🛡️</div><h3>Admin buffer</h3><p>Recheck passport validity, arrival admin, insurance and entry rules 3 to 5 days before departure.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="settings" class="section">
+        <div class="layout">
+          <div class="panel pad">
+            <h2>Roster settings</h2>
+            <p class="panel-sub">Rename placeholders once the group is confirmed.</p>
+            <div id="rosterEditor" class="task-list" style="margin-top:18px"></div>
+          </div>
+          <aside class="panel pad">
+            <h3>Export snapshot</h3>
+            <p class="panel-sub">Copy the current board state manually.</p>
+            <button class="btn small" id="exportBtn" style="margin-top:14px">Copy JSON snapshot</button>
+            <button class="btn small secondary" id="importBtn" style="margin-top:14px">Paste JSON snapshot</button>
+          </aside>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const STORE_KEY = "koreaBoysTripQuestBoardV1";
+    // Paste your Google Apps Script Web App URL here after deployment.
+    // It should look like: https://script.google.com/macros/s/AKfycb.../exec
+    const REMOTE_API_URL = "https://script.google.com/macros/s/AKfycbxK5YZiKjHuebkuM1wwoMA-lzp_wM9szMjvwX88wsvcvhlg9n7M962c8GdehEIgiPF04w/exec";
+    let remoteSaveTimer = null;
+    let remoteLoadAttempted = false;
+    let lastSeenUpdatedAt = null;
+    let lastSyncedAt = null;
+    let pendingSave = false;
+    let lastLocalSaveAt = 0;
+
+    const checkpoints = [
+      { id: "spawn", title: "London check in", meta: "Start", icon: "✈️", type: "personal", x: 10.5, y: 82 },
+      { id: "squad", title: "Crew lock", meta: "P1", icon: "🎤", type: "personal", x: 22, y: 61 },
+      { id: "outbound", title: "Ticket drop", meta: "P1", icon: "🎟️", type: "personal", x: 26, y: 39 },
+      { id: "flightBoss", title: "Route lock", meta: "Boss", icon: "🛩️", type: "boss", x: 42, y: 22 },
+      { id: "seoul", title: "Seoul set", meta: "Plan", icon: "🎧", type: "group", x: 63, y: 31 },
+      { id: "jejuHop", title: "CJU hop", meta: "Book", icon: "💺", type: "personal", x: 74, y: 45 },
+      { id: "basecamp", title: "Stay lock", meta: "Boss", icon: "🏨", type: "boss", x: 84, y: 61 },
+      { id: "wheels", title: "Ride plan", meta: "Boss", icon: "🚘", type: "boss", x: 76, y: 75 },
+      { id: "entry", title: "Admin clear", meta: "Admin", icon: "🪪", type: "personal", x: 58, y: 77 },
+      { id: "final", title: "Show ready", meta: "Clear", icon: "✨", type: "personal", x: 42, y: 68 }
+    ];
+
+    const colours = ["#72f4ff", "#ff97ca", "#d7e6ff", "#8be8d4", "#8fa9ff", "#9ec9ff", "#f5f8ff"];
+    const roles = ["🎤 Frontman", "🍜 Food Scout", "📸 Visual Lead", "🧾 Money Manager", "🚘 Ride Lead", "🎬 Content Lead", "🪪 Admin Lead"];
+
+    // Each traveller picks their own vibe — shown on their token and roster card.
+    const vibes = [
+      { id: "foodie", emoji: "🍜", name: "Foodie", tag: "Here for the food" },
+      { id: "spontaneous", emoji: "🎧", name: "Spontaneous", tag: "Go with the flow" },
+      { id: "planner", emoji: "🗓️", name: "Planner", tag: "Loves a plan" },
+      { id: "party", emoji: "🍻", name: "Party", tag: "Last one standing" },
+      { id: "culture", emoji: "🏯", name: "Culture", tag: "Temples and history" },
+      { id: "chill", emoji: "🌊", name: "Chill", tag: "Easy does it" }
+    ];
+    function vibeById(id) { return vibes.find(v => v.id === id) || null; }
+
+    const TRIP_START = new Date(2026, 9, 23); // 23 Oct 2026 (month is 0-indexed)
+
+
+    const defaultIdeas = [
+      { id: "colourAnalysis", emoji: "🎨", title: "Colour analysis", city: "Seoul", desc: "Personal colour consult. Good for shopping and group content." },
+      { id: "skinAnalysis", emoji: "🧴", title: "Skin analysis", city: "Seoul", desc: "K-beauty skin check or clinic consult. Low effort Seoul option." },
+      { id: "hanokStay", emoji: "🏯", title: "Live in a traditional site", city: "Seoul or Jeju", desc: "Hanok or heritage style stay. Check comfort, bathrooms and location." },
+      { id: "jjimjilbang", emoji: "♨️", title: "Korean bathhouse / jjimjilbang", city: "Seoul or Jeju", desc: "Korean sauna, hot bath and chill zone. Treat this as the Korea version of the onsen idea, but check everyone is comfortable with the bathhouse setup." }
+    ];
+
+    // The Bookies — fun pari-mutuel betting with virtual chips + real trip perks.
+    const defaultBookie = {
+      startingChips: 1000,
+      markets: [
+        { id: "mk_return", emoji: "✈️", title: "First to lock their return flight", desc: "Books and pays for the return leg first.", type: "field", prize: "🛏️ First pick of bedrooms at the Jeju villa", status: "open", winner: null, bets: {} },
+        { id: "mk_accomLast", emoji: "💸", title: "Last to pay their accom share", desc: "Wooden spoon for the slowest payer.", type: "field", prize: "🍶 Forfeit: buys the first round of soju", status: "open", winner: null, bets: {} },
+        { id: "mk_breakfast", emoji: "🥇", title: "First one down for breakfast (most days)", desc: "The reliable early riser of the trip.", type: "field", prize: "🚗 Shotgun the front seat on the Jeju road trip", status: "open", winner: null, bets: {} },
+        { id: "mk_noraebang", emoji: "🎤", title: "Best noraebang (karaoke) performance", desc: "Group vote after karaoke night.", type: "field", prize: "🎶 Controls the aux for a full day", status: "open", winner: null, bets: {} },
+        { id: "mk_spice", emoji: "🌶️", title: "First to tap out at the spicy BBQ", desc: "Who caves to the buldak / spicy stew first.", type: "field", prize: "📸 Forfeit: on group photographer duty all next day", status: "open", winner: null, bets: {} },
+        { id: "mk_hongdae", emoji: "🌙", title: "Do we lose someone in Hongdae on night one?", desc: "Yes or no. Settle the morning after.", type: "yesno", prize: "", status: "open", winner: null, bets: {} },
+        { id: "mk_hallasan", emoji: "⛰️", title: "Does everyone make the early Hallasan start?", desc: "All present at the trailhead on time.", type: "yesno", prize: "", status: "open", winner: null, bets: {} }
+      ]
+    };
+
+    const defaultState = {
+      selectedPlayer: 0,
+      ideas: structuredClone(defaultIdeas),
+      ideaVotes: {},
+      players: [
+        { name: "Jason", initials: "J", colour: colours[0], role: roles[0], vibe: "foodie", progress: 2, completed: { squad: true, outbound: true } },
+        { name: "Traveller 2", initials: "T2", colour: colours[1], role: roles[1], vibe: null, progress: 0, completed: {} },
+        { name: "Traveller 3", initials: "T3", colour: colours[2], role: roles[2], vibe: null, progress: 0, completed: {} },
+        { name: "Traveller 4", initials: "T4", colour: colours[3], role: roles[3], vibe: null, progress: 0, completed: {} },
+        { name: "Traveller 5", initials: "T5", colour: colours[4], role: roles[4], vibe: null, progress: 0, completed: {} },
+        { name: "Traveller 6", initials: "T6", colour: colours[5], role: roles[5], vibe: null, progress: 0, completed: {} },
+        { name: "Traveller 7", initials: "T7", colour: colours[6], role: roles[6], vibe: null, progress: 0, completed: {} }
+      ],
+      groupDone: {
+        flightKraken: false,
+        budgetPact: false,
+        seoulJejuSplit: false,
+        accommodation: false,
+        vehicle: false,
+        activityShortlist: false,
+        itinerary: false,
+        foodBars: false,
+        offlinePack: false
+      },
+      bookie: structuredClone(defaultBookie)
+    };
+
+    const personalTasks = [
+      { id: "squad", icon: "🎤", title: "Confirm traveller details", desc: "Name, contact, passport name, passport expiry and yes or no status.", priority: "P1", checkpoint: 1 },
+      { id: "outbound", icon: "🎟️", title: "Outbound flight locked", desc: "Jason done. Others choose same route or their own outbound.", priority: "P1", checkpoint: 2 },
+      { id: "return", icon: "↩️", title: "Return flight locked", desc: "Return flight still TBC.", priority: "P1", checkpoint: 3 },
+      { id: "wishlistVote", icon: "⭐", title: "Vote on activity ideas", desc: "Vote on at least one idea.", priority: "P2", checkpoint: 4 },
+      { id: "jejuHop", icon: "💺", title: "Seoul to Jeju domestic leg locked", desc: "Book ICN or GMP to CJU after the Seoul and Jeju split is clear.", priority: "P1", checkpoint: 5 },
+      { id: "accomShare", icon: "🏨", title: "Accommodation share paid", desc: "Confirm share after villa or hotel is selected.", priority: "P2", checkpoint: 6 },
+      { id: "transportShare", icon: "🚘", title: "Transport share confirmed", desc: "Confirm driver, passenger or taxi role.", priority: "P2", checkpoint: 7 },
+      { id: "entry", icon: "🪪", title: "Entry admin ready", desc: "Passport, arrival admin, insurance and entry rules checked.", priority: "P1", checkpoint: 8 },
+      { id: "final", icon: "✨", title: "Packed and offline ready", desc: "Bookings, QR codes, maps and emergency info saved offline.", priority: "P2", checkpoint: 9 }
+    ];
+
+    const groupTasks = [
+      { id: "flightKraken", icon: "🛩️", title: "Lock the route", desc: "Confirm dates, outbound route, return route and arrivals.", priority: "P1" },
+      { id: "budgetPact", icon: "💳", title: "Set the budget", desc: "Agree per person budget.", priority: "P1" },
+      { id: "seoulJejuSplit", icon: "🌆", title: "Choose the Seoul and Jeju split", desc: "Decide Seoul before Jeju, after Jeju, or both.", priority: "P1" },
+      { id: "accommodation", icon: "🏨", title: "Pick the stay", desc: "Choose villa or split hotel rooms.", priority: "P2" },
+      { id: "vehicle", icon: "🚘", title: "Lock the ride plan", desc: "Choose van, two cars, transfers or taxis.", priority: "P2" },
+      { id: "activityShortlist", icon: "🎤", title: "Choose the activity shortlist", desc: "Pick the strongest Seoul and Jeju ideas.", priority: "P2" },
+      { id: "itinerary", icon: "📍", title: "Build the main itinerary", desc: "Lock Seoul, Jeju, rain backups and return plan.", priority: "P2" },
+      { id: "foodBars", icon: "🌙", title: "Food and nightlife shortlist", desc: "Build Seoul and Jeju shortlist with confirmed map links.", priority: "P2" },
+      { id: "offlinePack", icon: "📲", title: "Generate the offline pack", desc: "Tickets, accommodation, transport, insurance, maps and emergency contacts saved.", priority: "P3" }
+    ];
+
+    let state = loadState();
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORE_KEY);
+        if (!raw) return structuredClone(defaultState);
+        const parsed = JSON.parse(raw);
+        return {
+          ...structuredClone(defaultState),
+          ...parsed,
+          players: parsed.players || structuredClone(defaultState.players),
+          groupDone: { ...defaultState.groupDone, ...(parsed.groupDone || {}) },
+          ideas: parsed.ideas || structuredClone(defaultIdeas),
+          ideaVotes: parsed.ideaVotes || {},
+          bookie: parsed.bookie || structuredClone(defaultBookie)
+        };
+      } catch (e) {
+        return structuredClone(defaultState);
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORE_KEY, JSON.stringify(state));
+      queueRemoteSave();
+    }
+
+    function hasRemoteSync() {
+      return REMOTE_API_URL && REMOTE_API_URL.startsWith("https://script.google.com/");
+    }
+
+    function mergeRemoteState(remote) {
+      if (!remote || typeof remote !== "object") return;
+      // "Who am I" is a per-device choice — never let a remote sync change it.
+      const localSelected = state.selectedPlayer;
+      state = {
+        ...structuredClone(defaultState),
+        ...remote,
+        players: remote.players || structuredClone(defaultState.players),
+        groupDone: { ...defaultState.groupDone, ...(remote.groupDone || {}) },
+        ideas: remote.ideas || structuredClone(defaultIdeas),
+        ideaVotes: remote.ideaVotes || {},
+        bookie: remote.bookie || structuredClone(defaultBookie)
+      };
+      if (typeof localSelected === "number" && state.players[localSelected]) {
+        state.selectedPlayer = localSelected;
+      }
+      localStorage.setItem(STORE_KEY, JSON.stringify(state));
+    }
+
+    function relTime(ts) {
+      const s = Math.round((Date.now() - ts) / 1000);
+      if (s < 10) return "just now";
+      if (s < 60) return `${s}s ago`;
+      const m = Math.round(s / 60);
+      if (m < 60) return `${m}m ago`;
+      const h = Math.round(m / 60);
+      return `${h}h ago`;
+    }
+
+    function setSyncChip(kind) {
+      const chip = document.getElementById("syncChip");
+      const textEl = document.getElementById("syncChipText");
+      const stamp = document.getElementById("syncTabStamp");
+      if (chip) chip.classList.remove("syncing", "offline");
+      if (kind === "disabled") {
+        if (chip) chip.classList.add("offline");
+        if (textEl) textEl.textContent = "Local only";
+        if (stamp) stamp.textContent = "Live sync is not configured on this copy of the board.";
+        return;
+      }
+      if (kind === "syncing") {
+        if (chip) chip.classList.add("syncing");
+        if (textEl) textEl.textContent = "Syncing…";
+        if (stamp) stamp.textContent = "Checking the group sheet…";
+        return;
+      }
+      if (kind === "offline") {
+        if (chip) chip.classList.add("offline");
+        if (textEl) textEl.textContent = "Offline";
+        if (stamp) stamp.textContent = "Could not reach the sheet. Your changes are still saved on this device.";
+        return;
+      }
+      const rel = lastSyncedAt ? relTime(lastSyncedAt) : null;
+      if (textEl) textEl.textContent = rel ? `Live · ${rel}` : "Live";
+      if (stamp) stamp.textContent = rel ? `Last synced ${rel}.` : "Connected to the group sheet.";
+    }
+
+    function remotePull(opts) {
+      opts = opts || {};
+      if (!hasRemoteSync()) { setSyncChip("disabled"); return; }
+      if (!opts.poll) setSyncChip("syncing");
+      const callbackName = `koreaBoardSync_${Date.now()}_${Math.floor(Math.random() * 100000)}`;
+      const script = document.createElement("script");
+      let done = false;
+      const cleanup = () => {
+        if (done) return;
+        done = true;
+        try { delete window[callbackName]; } catch (e) { window[callbackName] = undefined; }
+        script.remove();
+      };
+      window[callbackName] = (response) => {
+        if (response && response.ok) {
+          const remoteStamp = response.updatedAt || null;
+          const changed = remoteStamp && remoteStamp !== lastSeenUpdatedAt;
+          // Don't overwrite local edits that haven't finished saving yet.
+          const safe = !pendingSave && (Date.now() - lastLocalSaveAt > 4000);
+          const allowMerge = opts.manual || opts.initial || (changed && safe);
+          if (response.state && allowMerge) {
+            mergeRemoteState(response.state);
+            renderAll();
+            if (opts.manual) toast("Pulled the latest from the group");
+            else if (changed && !opts.initial) toast("Synced a group update");
+          }
+          lastSeenUpdatedAt = remoteStamp || lastSeenUpdatedAt;
+          lastSyncedAt = Date.now();
+          remoteLoadAttempted = true;
+          setSyncChip("live");
+        } else {
+          setSyncChip(lastSyncedAt ? "live" : "offline");
+          if (opts.manual) toast("Could not read the group sheet");
+        }
+        cleanup();
+      };
+      script.onerror = () => {
+        setSyncChip(lastSyncedAt ? "live" : "offline");
+        if (opts.manual) toast("Could not reach the group sheet");
+        cleanup();
+      };
+      script.src = `${REMOTE_API_URL}?callback=${encodeURIComponent(callbackName)}&t=${Date.now()}`;
+      document.body.appendChild(script);
+      setTimeout(() => { if (!done) { setSyncChip(lastSyncedAt ? "live" : "offline"); cleanup(); } }, 10000);
+    }
+
+    function startSyncLoops() {
+      if (!hasRemoteSync()) { setSyncChip("disabled"); return; }
+      // Quietly check for group updates in the background.
+      setInterval(() => remotePull({ poll: true }), 25000);
+      // Keep the "synced 2m ago" label fresh.
+      setInterval(() => {
+        const chip = document.getElementById("syncChip");
+        if (chip && lastSyncedAt && !chip.classList.contains("syncing") && !chip.classList.contains("offline")) {
+          setSyncChip("live");
+        }
+      }, 20000);
+    }
+
+    function queueRemoteSave() {
+      if (!hasRemoteSync()) return;
+      pendingSave = true;
+      setSyncChip("syncing");
+      clearTimeout(remoteSaveTimer);
+      remoteSaveTimer = setTimeout(remoteSave, 450);
+    }
+
+    function remoteSave() {
+      if (!hasRemoteSync()) return;
+      const iframeId = "koreaBoardSyncFrame";
+      let iframe = document.getElementById(iframeId);
+      if (!iframe) {
+        iframe = document.createElement("iframe");
+        iframe.id = iframeId;
+        iframe.name = iframeId;
+        iframe.style.display = "none";
+        document.body.appendChild(iframe);
+      }
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = REMOTE_API_URL;
+      form.target = iframeId;
+      form.style.display = "none";
+
+      const input = document.createElement("textarea");
+      input.name = "payload";
+      input.value = JSON.stringify({ state, updatedAt: new Date().toISOString() });
+      form.appendChild(input);
+      document.body.appendChild(form);
+      form.submit();
+      lastLocalSaveAt = Date.now();
+      setTimeout(() => form.remove(), 1000);
+      setTimeout(() => {
+        pendingSave = false;
+        lastSyncedAt = Date.now();
+        setSyncChip("live");
+      }, 1300);
+    }
+
+    function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+    function selectedPlayer() { return state.players[state.selectedPlayer] || state.players[0]; }
+
+    function computePlayerProgress(player) {
+      const maxCheckpoint = Math.max(...personalTasks.filter(t => player.completed[t.id]).map(t => t.checkpoint), player.progress || 0);
+      return clamp(maxCheckpoint, 0, checkpoints.length - 1);
+    }
+
+    function renderNodes() {
+      const holder = document.getElementById("nodes");
+      holder.innerHTML = checkpoints.map(cp => `
+        <div class="node ${cp.type}" style="left:${cp.x}%; top:${cp.y}%" title="${cp.title}">
+          <div class="node-core">${cp.icon}</div>
+          <div class="node-title">${cp.title}</div>
+          <div class="node-meta">${cp.meta}</div>
+        </div>
+      `).join("");
+    }
+
+    function renderTokens() {
+      const holder = document.getElementById("tokens");
+      const used = {};
+      holder.innerHTML = state.players.map((p, idx) => {
+        const progress = computePlayerProgress(p);
+        p.progress = progress;
+        const cp = checkpoints[progress];
+        const key = progress;
+        used[key] = used[key] || 0;
+        const stackIndex = used[key]++;
+        const angle = (stackIndex / 7) * Math.PI * 2;
+        const radius = stackIndex === 0 ? 0 : 2.7 + Math.floor((stackIndex - 1) / 6) * 2;
+        const x = cp.x + Math.cos(angle) * radius;
+        const y = cp.y + Math.sin(angle) * radius;
+        const v = vibeById(p.vibe);
+        return `<div class="token ${idx === state.selectedPlayer ? "active" : ""}" data-name="${escapeHtml(p.name)}${v ? " · " + v.name : ""}" style="left:${x}%; top:${y}%; background:${p.colour}" onclick="void(0)">${escapeHtml(p.initials)}${v ? `<span class="token-vibe">${v.emoji}</span>` : ""}</div>`;
+      }).join("");
+    }
+
+    function renderPlayerSelect() {
+      const sel = document.getElementById("playerSelect");
+      sel.innerHTML = state.players.map((p, idx) => `<option value="${idx}" ${idx === state.selectedPlayer ? "selected" : ""}>${escapeHtml(p.name)}</option>`).join("");
+    }
+
+    function renderTravellerGrid() {
+      const holder = document.getElementById("travellerGrid");
+      holder.innerHTML = state.players.map((p, idx) => {
+        const progress = computePlayerProgress(p);
+        const v = vibeById(p.vibe);
+        return `<div class="traveller-row" role="button" tabindex="0" data-player="${idx}">
+          <div class="avatar-dot" style="background:${p.colour}">${escapeHtml(p.initials)}</div>
+          <div><div class="traveller-name">${escapeHtml(p.name)}${v ? `<span class="traveller-vibe">${v.emoji}</span>` : ""}</div><div class="traveller-progress">${v ? v.name + " · " : ""}${checkpoints[progress].title}</div></div>
+          <span class="pill ${idx === state.selectedPlayer ? "done" : ""}">${Math.round(progress / (checkpoints.length - 1) * 100)}%</span>
+        </div>`;
+      }).join("");
+      holder.querySelectorAll(".traveller-row").forEach(row => {
+        row.addEventListener("click", () => { state.selectedPlayer = Number(row.dataset.player); saveState(); renderAll(); });
+      });
+    }
+
+    function renderSelectedPanel() {
+      const p = selectedPlayer();
+      const progress = computePlayerProgress(p);
+      const percent = Math.round(progress / (checkpoints.length - 1) * 100);
+      document.getElementById("selectedName").textContent = p.name;
+      document.getElementById("selectedProgress").textContent = `${percent}%`;
+      document.getElementById("selectedProgressFill").style.width = `${percent}%`;
+      document.getElementById("selectedRole").textContent = p.role || "🧭 No role yet";
+      document.getElementById("selectedStage").textContent = checkpoints[progress].title;
+    }
+
+    function renderTasks() {
+      const p = selectedPlayer();
+      const personalHolder = document.getElementById("personalTasks");
+      personalHolder.innerHTML = personalTasks.map(task => {
+        const done = !!p.completed[task.id];
+        return `<label class="task-card ${done ? "completed" : ""}">
+          <div class="task-icon">${task.icon}</div>
+          <div><div class="task-title">${task.title}</div><div class="task-desc">${task.desc}</div><div class="task-tags"><span class="tag ${task.priority.toLowerCase()}">${task.priority}</span><span class="tag personal">${escapeHtml(p.name)} only</span></div></div>
+          <input class="toggle personal-toggle" type="checkbox" data-task="${task.id}" ${done ? "checked" : ""}/>
+        </label>`;
+      }).join("");
+      personalHolder.querySelectorAll(".personal-toggle").forEach(toggle => {
+        toggle.addEventListener("change", e => {
+          const taskId = e.target.dataset.task;
+          const player = selectedPlayer();
+          player.completed[taskId] = e.target.checked;
+          const progress = computePlayerProgress(player);
+          player.progress = progress;
+          saveState();
+          renderAll();
+          toast(e.target.checked ? `${player.name} cleared a checkpoint` : `${player.name} checkpoint unchecked`);
+        });
+      });
+
+      const groupHolder = document.getElementById("groupTasks");
+      groupHolder.innerHTML = groupTasks.map(task => {
+        const done = !!state.groupDone[task.id];
+        return `<label class="task-card ${done ? "group-done" : ""}">
+          <div class="task-icon">${task.icon}</div>
+          <div><div class="task-title">${task.title}</div><div class="task-desc">${task.desc}</div><div class="task-tags"><span class="tag ${task.priority.toLowerCase()}">${task.priority}</span><span class="tag">Group boss</span></div></div>
+          <input class="toggle group-toggle" type="checkbox" data-task="${task.id}" ${done ? "checked" : ""}/>
+        </label>`;
+      }).join("");
+      groupHolder.querySelectorAll(".group-toggle").forEach(toggle => {
+        toggle.addEventListener("change", e => {
+          state.groupDone[e.target.dataset.task] = e.target.checked;
+          saveState();
+          renderAll();
+          if (e.target.checked) celebrate();
+          toast(e.target.checked ? "Group boss cleared" : "Group boss reopened");
+        });
+      });
+    }
+
+
+    function allIdeas() {
+      if (!state.ideas || !Array.isArray(state.ideas)) state.ideas = structuredClone(defaultIdeas);
+      return state.ideas;
+    }
+
+    function tallyIdea(ideaId) {
+      const votes = state.ideaVotes?.[ideaId] || {};
+      const tally = { keen: 0, maybe: 0, no: 0, total: 0 };
+      Object.values(votes).forEach(v => { if (tally[v] !== undefined) { tally[v] += 1; tally.total += 1; } });
+      tally.score = tally.keen * 2 + tally.maybe - tally.no * 2;
+      return tally;
+    }
+
+    function ideaStatus(tally) {
+      if (tally.keen >= 4 && tally.no <= 1) return { label: "Shortlist", cls: "hot" };
+      if (tally.no >= 2) return { label: "Discuss", cls: "cold" };
+      if (tally.total === 0) return { label: "Unvoted", cls: "" };
+      return { label: "Maybe", cls: "watch" };
+    }
+
+    function selectedPlayerVoteCount(playerIdx = state.selectedPlayer) {
+      return allIdeas().filter(idea => state.ideaVotes?.[idea.id]?.[playerIdx]).length;
+    }
+
+    function updateWishlistCheckpoint() {
+      const p = selectedPlayer();
+      p.completed.wishlistVote = selectedPlayerVoteCount(state.selectedPlayer) > 0;
+      if (p.completed.wishlistVote && (p.progress || 0) < 4) p.progress = 4;
+    }
+
+    function renderIdeas() {
+      const holder = document.getElementById("ideaGrid");
+      if (!holder) return;
+      const ideas = allIdeas();
+      holder.innerHTML = ideas.map(idea => {
+        const tally = tallyIdea(idea.id);
+        const status = ideaStatus(tally);
+        const selectedVote = state.ideaVotes?.[idea.id]?.[state.selectedPlayer] || "";
+        const denom = Math.max(tally.total, 1);
+        return `<article class="idea-card">
+          <div class="idea-top">
+            <div class="idea-emoji">${idea.emoji || "💡"}</div>
+            <div><div class="idea-title">${escapeHtml(idea.title)}</div><div class="idea-desc">${escapeHtml(idea.desc)}</div></div>
+            <span class="idea-status ${status.cls}">${status.label}</span>
+          </div>
+          <div class="pill-row" style="margin:0"><span class="pill idea-city">${escapeHtml(idea.city || "TBC")}</span><span class="pill">${tally.total}/7 voted</span><span class="pill">Score ${tally.score}</span></div>
+          <div class="vote-row" aria-label="Vote on ${escapeAttr(idea.title)}">
+            <button class="vote-btn keen ${selectedVote === "keen" ? "active" : ""}" data-idea="${idea.id}" data-vote="keen">✅ Keen</button>
+            <button class="vote-btn maybe ${selectedVote === "maybe" ? "active" : ""}" data-idea="${idea.id}" data-vote="maybe">🤷 Maybe</button>
+            <button class="vote-btn no ${selectedVote === "no" ? "active" : ""}" data-idea="${idea.id}" data-vote="no">❌ No</button>
+          </div>
+          <div class="vote-meter">
+            <div class="meter-track"><div class="meter-keen" style="width:${tally.keen / denom * 100}%"></div><div class="meter-maybe" style="width:${tally.maybe / denom * 100}%"></div><div class="meter-no" style="width:${tally.no / denom * 100}%"></div></div>
+            <div class="vote-counts"><span>✅ ${tally.keen} keen</span><span>🤷 ${tally.maybe} maybe</span><span>❌ ${tally.no} no</span></div>
+          </div>
+        </article>`;
+      }).join("");
+      holder.querySelectorAll(".vote-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const ideaId = btn.dataset.idea;
+          const vote = btn.dataset.vote;
+          state.ideaVotes[ideaId] = state.ideaVotes[ideaId] || {};
+          if (state.ideaVotes[ideaId][state.selectedPlayer] === vote) delete state.ideaVotes[ideaId][state.selectedPlayer];
+          else state.ideaVotes[ideaId][state.selectedPlayer] = vote;
+          updateWishlistCheckpoint();
+          saveState(); renderAll(); toast(`${selectedPlayer().name} voted on an idea`);
+        });
+      });
+      const tallies = ideas.map(i => tallyIdea(i.id));
+      const hot = tallies.filter(t => t.keen >= 4 && t.no <= 1).length;
+      const maybe = tallies.filter(t => t.total > 0 && !(t.keen >= 4 && t.no <= 1) && t.no < 2).length;
+      const blocked = tallies.filter(t => t.no >= 2).length;
+      const totalVotes = tallies.reduce((sum, t) => sum + t.total, 0);
+      document.getElementById("hotIdeaCount").textContent = hot;
+      document.getElementById("maybeIdeaCount").textContent = maybe;
+      document.getElementById("blockedIdeaCount").textContent = blocked;
+      document.getElementById("ideasHotBadge").textContent = `${hot} shortlist ideas`;
+      document.getElementById("ideasVotesBadge").textContent = `${totalVotes} votes cast`;
+      renderBoardIdeaPreview();
+    }
+
+    function renderBoardIdeaPreview() {
+      const holder = document.getElementById("boardIdeaPreview");
+      const status = document.getElementById("boardVoteStatus");
+      if (!holder || !status) return;
+      const ideas = allIdeas();
+      const totalVotes = ideas.reduce((sum, idea) => sum + tallyIdea(idea.id).total, 0);
+      const selectedVotes = selectedPlayerVoteCount(state.selectedPlayer);
+      status.textContent = `${totalVotes} votes cast · ${selectedVotes} by selected player`;
+      holder.innerHTML = ideas.slice(0, 4).map(idea => {
+        const tally = tallyIdea(idea.id);
+        const status = ideaStatus(tally);
+        return `<div class="mini-idea-row">
+          <span>${idea.emoji || "💡"}</span>
+          <div><div class="mini-idea-name">${escapeHtml(idea.title)}</div><div class="mini-idea-meta">${tally.keen} keen · ${tally.maybe} maybe · ${tally.no} no</div></div>
+          <span class="idea-status ${status.cls}">${status.label}</span>
+        </div>`;
+      }).join("");
+    }
+
+    function renderNextActions() {
+      const p = selectedPlayer();
+      const openPersonal = personalTasks.filter(t => !p.completed[t.id]).slice(0, 2);
+      const openGroup = groupTasks.filter(t => !state.groupDone[t.id]).slice(0, 1);
+      const actions = [...openPersonal, ...openGroup];
+      document.getElementById("nextActions").innerHTML = actions.map(t => `<div class="task-card" style="grid-template-columns:auto 1fr; padding:12px"><div class="task-icon">${t.icon}</div><div><div class="task-title">${t.title}</div><div class="task-desc">${t.desc}</div></div></div>`).join("") || `<div class="info-card"><div class="emoji">🏆</div><h3>All clear</h3><p>No open actions for the selected view.</p></div>`;
+    }
+
+    function renderBadges() {
+      const vibeSet = state.players.filter(p => p.vibe).length;
+      const vibeBadge = document.getElementById("vibeSummaryBadge");
+      if (vibeBadge) vibeBadge.textContent = `${vibeSet}/${state.players.length} vibes set`;
+      const groupTotal = groupTasks.length;
+      const groupDone = Object.values(state.groupDone).filter(Boolean).length;
+      const percent = Math.round(groupDone / groupTotal * 100);
+      const gpb = document.getElementById("groupProgressBadge");
+      if (gpb) gpb.textContent = `Group bosses ${percent}%`;
+    }
+
+    function renderHero() {
+      const days = Math.ceil((TRIP_START - new Date()) / 86400000);
+      const daysEl = document.getElementById("countdownDays");
+      const subEl = document.getElementById("countdownSub");
+      if (daysEl) {
+        if (days > 1) { daysEl.textContent = `${days} days`; if (subEl) subEl.textContent = "until you land in Seoul · 23 Oct 2026"; }
+        else if (days === 1) { daysEl.textContent = "1 day"; if (subEl) subEl.textContent = "Seoul tomorrow — pack the bags"; }
+        else if (days === 0) { daysEl.textContent = "Today ✈️"; if (subEl) subEl.textContent = "Departure day"; }
+        else { daysEl.textContent = "In Korea 🇰🇷"; if (subEl) subEl.textContent = "Seoul + Jeju · 23 Oct to 2 Nov 2026"; }
+      }
+      const groupDone = Object.values(state.groupDone).filter(Boolean).length;
+      const pct = Math.round(groupDone / groupTasks.length * 100);
+      const pctEl = document.getElementById("heroProgressPct");
+      const fillEl = document.getElementById("heroProgressFill");
+      const subP = document.getElementById("heroProgressSub");
+      if (pctEl) pctEl.textContent = `${pct}%`;
+      if (fillEl) fillEl.style.width = `${pct}%`;
+      if (subP) subP.textContent = `${groupDone} of ${groupTasks.length} group bosses cleared together.`;
+      const tcp = document.getElementById("travellerCountPill");
+      if (tcp) tcp.textContent = `${state.players.length} travellers`;
+    }
+
+    function renderVibePicker() {
+      const holder = document.getElementById("vibePicker");
+      if (!holder) return;
+      const p = selectedPlayer();
+      holder.innerHTML = vibes.map(v => `
+        <button class="vibe-chip ${p.vibe === v.id ? "active" : ""}" data-vibe="${v.id}" title="${escapeAttr(v.tag)}">
+          <span class="vibe-emoji">${v.emoji}</span><span class="vibe-name">${v.name}</span>
+        </button>`).join("");
+      holder.querySelectorAll(".vibe-chip").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const player = selectedPlayer();
+          player.vibe = player.vibe === btn.dataset.vibe ? null : btn.dataset.vibe;
+          saveState();
+          renderAll();
+          const chosen = vibeById(player.vibe);
+          toast(chosen ? `${player.name}: ${chosen.name} ${chosen.emoji}` : `${player.name} cleared their vibe`);
+        });
+      });
+    }
+
+    function spawnLeaves() {
+      const holder = document.getElementById("leaves");
+      if (!holder) return;
+      const glyphs = ["🍁", "🍂", "🍃"];
+      let html = "";
+      for (let i = 0; i < 11; i++) {
+        const left = Math.round(Math.random() * 100);
+        const dur = (7 + Math.random() * 8).toFixed(1);
+        const delay = (Math.random() * 12).toFixed(1);
+        const size = (14 + Math.random() * 12).toFixed(0);
+        html += `<span class="leaf" style="left:${left}%; font-size:${size}px; animation-duration:${dur}s; animation-delay:-${delay}s;">${glyphs[i % 3]}</span>`;
+      }
+      holder.innerHTML = html;
+    }
+
+    function renderRosterEditor() {
+      const holder = document.getElementById("rosterEditor");
+      holder.innerHTML = state.players.map((p, idx) => `<div class="roster-row">
+        <div class="avatar-dot" style="background:${p.colour}; width:42px; height:42px">${escapeHtml(p.initials)}</div>
+        <div class="roster-fields">
+          <input type="text" value="${escapeAttr(p.name)}" data-field="name" data-idx="${idx}" aria-label="Name for traveller ${idx + 1}" placeholder="Name" />
+          <input type="text" value="${escapeAttr(p.role)}" data-field="role" data-idx="${idx}" aria-label="Role for traveller ${idx + 1}" placeholder="Role" />
+          <select data-field="vibe" data-idx="${idx}" aria-label="Vibe for traveller ${idx + 1}">
+            <option value="">Pick a vibe…</option>
+            ${vibes.map(v => `<option value="${v.id}" ${p.vibe === v.id ? "selected" : ""}>${v.emoji} ${v.name}</option>`).join("")}
+          </select>
+        </div>
+      </div>`).join("");
+      const onChange = e => {
+        const idx = Number(e.target.dataset.idx);
+        const field = e.target.dataset.field;
+        state.players[idx][field] = field === "vibe" ? (e.target.value || null) : e.target.value;
+        if (field === "name") state.players[idx].initials = makeInitials(e.target.value, idx);
+        saveState();
+        renderPlayerSelect(); renderTravellerGrid(); renderTokens(); renderSelectedPanel(); renderVibePicker(); renderNextActions(); renderBadges();
+      };
+      holder.querySelectorAll("input").forEach(el => el.addEventListener("input", onChange));
+      holder.querySelectorAll("select").forEach(el => el.addEventListener("change", onChange));
+    }
+
+    function makeInitials(name, idx) {
+      const clean = (name || "").trim();
+      if (!clean) return `T${idx + 1}`;
+      const parts = clean.split(/\s+/).slice(0, 2).map(x => x[0]).join("").toUpperCase();
+      return parts || `T${idx + 1}`;
+    }
+
+    function escapeHtml(str) { return String(str || "").replace(/[&<>"]/g, s => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[s])); }
+    function escapeAttr(str) { return escapeHtml(str).replace(/'/g, "&#039;"); }
+
+    // ---- The Bookies: betting + prizes (no real money, chips only) ----
+    const DEFAULT_MARKET_IDS = defaultBookie.markets.map(m => m.id);
+
+    function ensureBookie() {
+      if (!state.bookie || typeof state.bookie !== "object") state.bookie = structuredClone(defaultBookie);
+      if (!Array.isArray(state.bookie.markets)) state.bookie.markets = structuredClone(defaultBookie.markets);
+      if (typeof state.bookie.startingChips !== "number") state.bookie.startingChips = 1000;
+      state.bookie.markets.forEach(m => { if (!m.bets || typeof m.bets !== "object") m.bets = {}; });
+    }
+    function market(id) { ensureBookie(); return state.bookie.markets.find(m => m.id === id); }
+    function marketRunners(m) {
+      if (m.type === "yesno") return [
+        { id: "yes", label: "Yes", emoji: "✅", colour: "#8be8d4" },
+        { id: "no", label: "No", emoji: "❌", colour: "#ff7575" }
+      ];
+      if (m.type === "custom" && Array.isArray(m.runners)) return m.runners.map((r, i) => ({ id: String(r.id != null ? r.id : i), label: r.label, emoji: r.emoji || "🎯", colour: colours[i % colours.length] }));
+      return state.players.map((p, i) => ({ id: String(i), label: p.name, emoji: (vibeById(p.vibe) || {}).emoji || "🙂", colour: p.colour }));
+    }
+    function runnerById(m, id) { return marketRunners(m).find(r => r.id === String(id)) || null; }
+    function marketPool(m) { return Object.values(m.bets).reduce((s, b) => s + (b.stake || 0), 0); }
+    function runnerPool(m, id) { return Object.values(m.bets).reduce((s, b) => s + (String(b.runner) === String(id) ? (b.stake || 0) : 0), 0); }
+    function runnerOdds(m, id) { const pool = marketPool(m); const rp = runnerPool(m, id); if (rp <= 0) return null; return Math.max(1, pool / rp); }
+    function marketPayout(m, stake) {
+      const pool = marketPool(m); const wp = runnerPool(m, m.winner);
+      if (wp <= 0) return stake;
+      return stake * (pool / wp);
+    }
+    function playerBalance(idx) {
+      ensureBookie();
+      let bal = state.bookie.startingChips;
+      state.bookie.markets.forEach(m => {
+        const bet = m.bets[idx];
+        if (!bet || !bet.stake) return;
+        bal -= bet.stake;
+        if (m.status === "settled" && m.winner != null && String(bet.runner) === String(m.winner)) bal += marketPayout(m, bet.stake);
+      });
+      return Math.round(bal);
+    }
+    function prizesWon(idx) {
+      ensureBookie();
+      return state.bookie.markets.filter(m => m.status === "settled" && m.type !== "yesno" && m.prize && String(m.winner) === String(idx));
+    }
+
+    function pickRunner(marketId, runnerId) {
+      const m = market(marketId); if (!m || m.status === "settled") return;
+      const idx = state.selectedPlayer;
+      const existing = m.bets[idx];
+      const free = playerBalance(idx) + (existing ? existing.stake : 0);
+      const stake = existing && existing.stake ? existing.stake : Math.min(50, free);
+      if (stake <= 0) { toast("You're out of chips"); return; }
+      m.bets[idx] = { runner: String(runnerId), stake };
+      saveState(); renderAll();
+      const r = runnerById(m, runnerId);
+      toast(`${selectedPlayer().name} backed ${r ? r.label : "a runner"}`);
+    }
+    function setBetStake(marketId, stake) {
+      const m = market(marketId); if (!m || m.status === "settled") return;
+      const idx = state.selectedPlayer;
+      const existing = m.bets[idx];
+      if (!existing) { toast("Pick who you're backing first"); return; }
+      const free = playerBalance(idx) + existing.stake;
+      stake = Math.round(stake);
+      if (stake > free) { stake = free; toast("That's your lot — all in"); }
+      if (stake <= 0) { delete m.bets[idx]; toast("Bet cleared"); }
+      else { existing.stake = stake; }
+      saveState(); renderAll();
+    }
+    function adjustBet(marketId, delta) {
+      const m = market(marketId); const idx = state.selectedPlayer;
+      const existing = m && m.bets[idx];
+      setBetStake(marketId, (existing ? existing.stake : 0) + delta);
+    }
+    function maxBet(marketId) {
+      const m = market(marketId); const idx = state.selectedPlayer;
+      const existing = m && m.bets[idx];
+      setBetStake(marketId, playerBalance(idx) + (existing ? existing.stake : 0));
+    }
+    function settleMarket(marketId, runnerId) {
+      const m = market(marketId); if (!m) return;
+      m.status = "settled"; m.winner = String(runnerId);
+      saveState(); renderAll(); celebrate();
+      const r = runnerById(m, runnerId);
+      toast(`Settled: ${r ? r.label : "result in"}`);
+    }
+    function reopenMarket(marketId) {
+      const m = market(marketId); if (!m) return;
+      m.status = "open"; m.winner = null;
+      saveState(); renderAll(); toast("Market reopened");
+    }
+    function removeMarket(marketId) {
+      ensureBookie();
+      state.bookie.markets = state.bookie.markets.filter(m => m.id !== marketId);
+      saveState(); renderAll(); toast("Bet removed");
+    }
+    function restoreStarterMarkets() {
+      ensureBookie();
+      const have = new Set(state.bookie.markets.map(m => m.id));
+      let added = 0;
+      defaultBookie.markets.forEach(dm => { if (!have.has(dm.id)) { state.bookie.markets.push(structuredClone(dm)); added++; } });
+      saveState(); renderAll();
+      toast(added ? `Restored ${added} starter bet${added > 1 ? "s" : ""}` : "Starter bets already here");
+    }
+
+    function renderBookie() {
+      ensureBookie();
+      const idx = state.selectedPlayer;
+      const startChips = state.bookie.startingChips;
+
+      // Form table (leaderboard)
+      const ftHolder = document.getElementById("formTable");
+      if (ftHolder) {
+        const table = state.players.map((p, i) => ({ i, p, bal: playerBalance(i), trophies: prizesWon(i).length }))
+          .sort((a, b) => b.bal - a.bal || b.trophies - a.trophies);
+        ftHolder.innerHTML = table.map((row, rank) => {
+          const v = vibeById(row.p.vibe);
+          const net = row.bal - startChips;
+          const netCls = net > 0 ? "up" : net < 0 ? "down" : "";
+          return `<div class="ft-row ${row.i === idx ? "me" : ""}">
+            <span class="ft-rank">${rank === 0 ? "👑" : "#" + (rank + 1)}</span>
+            <span class="avatar-dot" style="background:${row.p.colour}">${escapeHtml(row.p.initials)}</span>
+            <div class="ft-name">${escapeHtml(row.p.name)}${v ? `<span class="traveller-vibe">${v.emoji}</span>` : ""}${row.trophies ? `<span class="ft-trophies">${"🏆".repeat(Math.min(row.trophies, 4))}</span>` : ""}</div>
+            <div class="ft-bal">${row.bal.toLocaleString()}<span class="ft-net ${netCls}">${net > 0 ? "+" : ""}${net.toLocaleString()}</span></div>
+          </div>`;
+        }).join("");
+      }
+      const myBalEl = document.getElementById("myChipBal");
+      if (myBalEl) myBalEl.textContent = `${playerBalance(idx).toLocaleString()} chips`;
+
+      // Prize shelf
+      const upForGrabs = state.bookie.markets.filter(m => m.status !== "settled" && m.type !== "yesno" && m.prize);
+      const claimed = state.bookie.markets.filter(m => m.status === "settled" && m.type !== "yesno" && m.prize);
+      const shelf = document.getElementById("prizeShelf");
+      if (shelf) {
+        const grabs = upForGrabs.map(m => `<div class="prize-row"><span class="prize-tag">${escapeHtml(m.prize)}</span><span class="prize-meta">${escapeHtml(m.title)}</span></div>`).join("");
+        const won = claimed.map(m => { const r = runnerById(m, m.winner); return `<div class="prize-row claimed"><span class="prize-tag">${escapeHtml(m.prize)}</span><span class="prize-meta">🏆 ${r ? escapeHtml(r.label) : "winner"}</span></div>`; }).join("");
+        shelf.innerHTML = (grabs || won) ? (grabs + won) : `<div class="micro">No prizes attached yet. Add a bet with a prize below.</div>`;
+      }
+
+      // Markets
+      const holder = document.getElementById("marketList");
+      if (holder) {
+        holder.innerHTML = state.bookie.markets.map(m => {
+          const runners = marketRunners(m);
+          const pool = marketPool(m);
+          const myBet = m.bets[idx];
+          const settled = m.status === "settled";
+          const runnerHtml = runners.map(r => {
+            const rp = runnerPool(m, r.id);
+            const odds = runnerOdds(m, r.id);
+            const pct = pool > 0 ? Math.round(rp / pool * 100) : 0;
+            const mine = myBet && String(myBet.runner) === r.id;
+            const win = settled && String(m.winner) === r.id;
+            return `<button class="runner-btn ${mine ? "mine" : ""} ${win ? "win" : ""} ${settled ? "locked" : ""}" data-mk="${m.id}" data-runner="${r.id}" ${settled ? "disabled" : ""}>
+              <span class="runner-dot" style="background:${r.colour}">${r.emoji}</span>
+              <span class="runner-name">${escapeHtml(r.label)}</span>
+              <span class="runner-odds">${odds ? odds.toFixed(2) + "×" : "open"}</span>
+              <span class="runner-bar"><span style="width:${pct}%; background:${r.colour}"></span></span>
+            </button>`;
+          }).join("");
+
+          let betPanel = "";
+          if (!settled) {
+            if (myBet) {
+              const odds = runnerOdds(m, myBet.runner);
+              const r = runnerById(m, myBet.runner);
+              const toWin = odds ? Math.round(myBet.stake * odds) : myBet.stake;
+              betPanel = `<div class="bet-strip">
+                <div class="bet-line">Backing <strong>${r ? escapeHtml(r.label) : "—"}</strong> · <strong>${myBet.stake}</strong> chips · to win <strong>${toWin}</strong></div>
+                <div class="stake-row">
+                  <button class="btn small ghost" data-act="dec" data-mk="${m.id}">−25</button>
+                  <button class="btn small ghost" data-act="inc" data-mk="${m.id}">+25</button>
+                  <button class="btn small ghost" data-act="inc100" data-mk="${m.id}">+100</button>
+                  <button class="btn small secondary" data-act="max" data-mk="${m.id}">Max</button>
+                  <button class="btn small danger" data-act="clear" data-mk="${m.id}">Clear</button>
+                </div>
+              </div>`;
+            } else {
+              betPanel = `<div class="bet-strip"><div class="bet-line muted-line">Tap who you're backing — opens with 50 chips, then nudge the stake up or down.</div></div>`;
+            }
+          } else {
+            const r = runnerById(m, m.winner);
+            const mineWon = myBet && String(myBet.runner) === String(m.winner);
+            const myLine = myBet ? (mineWon ? ` · you won <strong>${Math.round(marketPayout(m, myBet.stake))}</strong>` : ` · you lost <strong>${myBet.stake}</strong>`) : "";
+            betPanel = `<div class="bet-strip settled-strip"><div class="bet-line">🏁 Result: <strong>${r ? escapeHtml(r.label) : "—"}</strong>${m.type !== "yesno" && m.prize ? ` wins ${escapeHtml(m.prize)}` : ""}${myLine}</div></div>`;
+          }
+
+          const settleHtml = settled
+            ? `<button class="btn small ghost" data-act="reopen" data-mk="${m.id}">Reopen</button>`
+            : `<div class="settle-wrap"><button class="btn small secondary" data-act="settletoggle" data-mk="${m.id}">⚖️ Settle</button><div class="settle-pick" id="settle_${m.id}" hidden>${runners.map(r => `<button class="btn small" data-act="settle" data-mk="${m.id}" data-runner="${r.id}">${r.emoji} ${escapeHtml(r.label)}</button>`).join("")}</div></div>`;
+
+          const removable = !DEFAULT_MARKET_IDS.includes(m.id);
+          return `<article class="bet-card ${settled ? "is-settled" : ""}">
+            <div class="bet-head">
+              <div class="bet-emoji">${m.emoji || "🎲"}</div>
+              <div class="bet-titlewrap"><div class="bet-title">${escapeHtml(m.title)}</div><div class="bet-desc">${escapeHtml(m.desc || "")}</div></div>
+              <div class="bet-tags">${m.prize && m.type !== "yesno" ? `<span class="prize-tag">${escapeHtml(m.prize)}</span>` : ""}<span class="pill">${pool} in pot</span><span class="idea-status ${settled ? "" : "hot"}">${settled ? "Settled" : "Open"}</span></div>
+            </div>
+            <div class="runner-grid">${runnerHtml}</div>
+            ${betPanel}
+            <div class="bet-foot">${settleHtml}${removable ? `<button class="btn small danger" data-act="remove" data-mk="${m.id}">🗑️ Remove</button>` : ""}</div>
+          </article>`;
+        }).join("");
+
+        holder.querySelectorAll(".runner-btn").forEach(btn => btn.addEventListener("click", () => pickRunner(btn.dataset.mk, btn.dataset.runner)));
+        holder.querySelectorAll("[data-act]").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const id = btn.dataset.mk; const act = btn.dataset.act;
+            if (act === "dec") adjustBet(id, -25);
+            else if (act === "inc") adjustBet(id, 25);
+            else if (act === "inc100") adjustBet(id, 100);
+            else if (act === "max") maxBet(id);
+            else if (act === "clear") setBetStake(id, 0);
+            else if (act === "reopen") reopenMarket(id);
+            else if (act === "remove") { if (confirm("Remove this bet for everyone?")) removeMarket(id); }
+            else if (act === "settletoggle") { const el = document.getElementById("settle_" + id); if (el) el.hidden = !el.hidden; }
+            else if (act === "settle") { if (confirm("Settle this bet? This pays out everyone's chips.")) settleMarket(id, btn.dataset.runner); }
+          });
+        });
+      }
+
+      // Badges
+      const openCount = state.bookie.markets.filter(m => m.status !== "settled").length;
+      const ob = document.getElementById("openMarketsBadge");
+      if (ob) ob.textContent = `${openCount} open market${openCount === 1 ? "" : "s"}`;
+      const pb = document.getElementById("prizesBadge");
+      if (pb) pb.textContent = `${upForGrabs.length} prize${upForGrabs.length === 1 ? "" : "s"} up for grabs`;
+      const bbs = document.getElementById("boardBookieStatus");
+      if (bbs) bbs.textContent = `${openCount} open market${openCount === 1 ? "" : "s"}`;
+    }
+
+    function renderAll() {
+      ensureBookie();
+      renderNodes(); renderTokens(); renderPlayerSelect(); renderTravellerGrid(); renderSelectedPanel(); renderVibePicker(); renderTasks(); renderIdeas(); renderBoardIdeaPreview(); renderNextActions(); renderBadges(); renderRosterEditor(); renderHero(); renderBookie();
+    }
+
+    function toast(message) {
+      const t = document.getElementById("toast");
+      t.textContent = message;
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 1800);
+    }
+
+    function celebrate() {
+      const wrap = document.createElement("div");
+      wrap.className = "confetti-wrap";
+      const cols = ["#72f4ff", "#ff97ca", "#8be8d4", "#ffd15c", "#8fa9ff", "#f7fbff"];
+      for (let i = 0; i < 26; i++) {
+        const p = document.createElement("span");
+        p.className = "confetti";
+        p.style.left = `${Math.random() * 100}vw`;
+        p.style.background = cols[i % cols.length];
+        p.style.animationDuration = `${1.1 + Math.random() * 0.9}s`;
+        p.style.animationDelay = `${Math.random() * 0.18}s`;
+        p.style.transform = `rotate(${Math.random() * 360}deg)`;
+        wrap.appendChild(p);
+      }
+      document.body.appendChild(wrap);
+      setTimeout(() => wrap.remove(), 2600);
+    }
+
+    document.querySelectorAll(".nav button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (!btn.dataset.tab) return; // the sync chip is a nav button with no tab
+        document.querySelectorAll(".nav button").forEach(x => x.classList.remove("active"));
+        document.querySelectorAll(".section").forEach(x => x.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById(btn.dataset.tab).classList.add("active");
+      });
+    });
+
+    document.querySelectorAll("[data-jump]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const target = btn.dataset.jump;
+        document.querySelector(`.nav button[data-tab='${target}']`).click();
+        document.getElementById(target).scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    document.getElementById("playerSelect").addEventListener("change", e => { state.selectedPlayer = Number(e.target.value); saveState(); renderAll(); });
+    document.getElementById("focusPlayerBtn").addEventListener("click", () => toast(`${selectedPlayer().name} is selected`));
+    document.getElementById("advanceBtn").addEventListener("click", () => { const p = selectedPlayer(); p.progress = clamp((p.progress || 0) + 1, 0, checkpoints.length - 1); saveState(); renderAll(); toast(`${p.name} moved forward`); });
+    document.getElementById("undoBtn").addEventListener("click", () => { const p = selectedPlayer(); p.progress = clamp((p.progress || 0) - 1, 0, checkpoints.length - 1); saveState(); renderAll(); toast(`${p.name} moved back`); });
+    document.getElementById("resetBtn").addEventListener("click", () => { if (confirm("Reset this browser's Korea board state?")) { localStorage.removeItem(STORE_KEY); state = loadState(); renderAll(); toast("Board reset"); } });
+    document.getElementById("markJasonFactsBtn").addEventListener("click", () => {
+      const jason = state.players[0];
+      jason.name = "Jason"; jason.initials = "J"; jason.completed.squad = true; jason.completed.outbound = true; jason.progress = 2;
+      state.selectedPlayer = 0;
+      saveState(); renderAll(); toast("Jason facts applied");
+    });
+
+    document.getElementById("addIdeaBtn").addEventListener("click", () => {
+      const title = document.getElementById("newIdeaTitle").value.trim();
+      const city = document.getElementById("newIdeaCity").value.trim() || "TBC";
+      const desc = document.getElementById("newIdeaDesc").value.trim() || "New group idea. Vote first, commit later.";
+      if (!title) { toast("Add an idea name first"); return; }
+      state.ideas = allIdeas();
+      state.ideas.push({ id: `custom_${Date.now()}`, emoji: "💡", title, city, desc });
+      document.getElementById("newIdeaTitle").value = "";
+      document.getElementById("newIdeaCity").value = "";
+      document.getElementById("newIdeaDesc").value = "";
+      saveState(); renderAll(); toast("Idea added");
+    });
+
+    document.getElementById("copyIdeasBtn").addEventListener("click", async () => {
+      const lines = [
+        "Korea Boys Trip Idea Votes",
+        `Selected traveller: ${selectedPlayer().name}`,
+        "",
+        ...allIdeas().map(idea => {
+          const t = tallyIdea(idea.id);
+          const status = ideaStatus(t).label;
+          return `• ${idea.title} (${idea.city}): ${status}, ${t.keen} keen, ${t.maybe} maybe, ${t.no} no`;
+        })
+      ];
+      await navigator.clipboard.writeText(lines.join("\n")); toast("Idea results copied");
+    });
+
+
+    document.getElementById("copySummaryBtn").addEventListener("click", async () => {
+      const groupDoneCount = Object.values(state.groupDone).filter(Boolean).length;
+      const lines = [
+        "Korea Boys Trip Quest Summary",
+        "Dates: 23 Oct to 2 Nov 2026",
+        "Route: London to Seoul to Jeju",
+        `Group boss progress: ${groupDoneCount}/${groupTasks.length}`,
+        "",
+        "Traveller progress:",
+        ...state.players.map(p => { const v = vibeById(p.vibe); return `• ${p.name}${v ? ` (${v.name})` : ""}: ${checkpoints[computePlayerProgress(p)].title}`; }),
+        "",
+        "Shortlist ideas:",
+        ...allIdeas().filter(i => ideaStatus(tallyIdea(i.id)).label === "Shortlist").map(i => `• ${i.title} (${i.city})`),
+        "",
+        "Open group bosses:",
+        ...groupTasks.filter(t => !state.groupDone[t.id]).map(t => `• ${t.title}`),
+        "",
+        "The Bookies — form table:",
+        ...state.players.map((p, i) => ({ name: p.name, bal: playerBalance(i) })).sort((a, b) => b.bal - a.bal).map((r, n) => `${n + 1}. ${r.name}: ${r.bal.toLocaleString()} chips`),
+        "",
+        "Prizes up for grabs:",
+        ...state.bookie.markets.filter(m => m.status !== "settled" && m.type !== "yesno" && m.prize).map(m => `• ${m.prize} — ${m.title}`)
+      ];
+      await navigator.clipboard.writeText(lines.join("\n")); toast("Summary copied");
+    });
+
+    document.getElementById("exportBtn").addEventListener("click", async () => { await navigator.clipboard.writeText(JSON.stringify(state, null, 2)); toast("JSON snapshot copied"); });
+    document.getElementById("importBtn").addEventListener("click", async () => {
+      const raw = prompt("Paste JSON snapshot");
+      if (!raw) return;
+      try { state = { ...structuredClone(defaultState), ...JSON.parse(raw) }; saveState(); renderAll(); toast("Snapshot imported"); } catch (e) { alert("Invalid JSON snapshot"); }
+    });
+
+    const mkTypeSel = document.getElementById("newMkType");
+    function syncMkRunnersVisibility() { const wrap = document.getElementById("newMkRunnersWrap"); if (wrap) wrap.hidden = mkTypeSel.value !== "custom"; }
+    if (mkTypeSel) { mkTypeSel.addEventListener("change", syncMkRunnersVisibility); syncMkRunnersVisibility(); }
+    const addMarketBtn = document.getElementById("addMarketBtn");
+    if (addMarketBtn) addMarketBtn.addEventListener("click", () => {
+      const title = document.getElementById("newMkTitle").value.trim();
+      if (!title) { toast("Give the bet a title"); return; }
+      const desc = document.getElementById("newMkDesc").value.trim();
+      const prize = document.getElementById("newMkPrize").value.trim();
+      const type = mkTypeSel.value;
+      const m = { id: `mk_${Date.now()}`, emoji: "🎲", title, desc, type, prize: type === "yesno" ? "" : prize, status: "open", winner: null, bets: {} };
+      if (type === "custom") {
+        const raw = document.getElementById("newMkRunners").value.split(",").map(s => s.trim()).filter(Boolean);
+        if (raw.length < 2) { toast("Add at least two options, comma separated"); return; }
+        m.runners = raw.map((label, i) => ({ id: String(i), label, emoji: "🎯" }));
+      }
+      ensureBookie(); state.bookie.markets.push(m);
+      ["newMkTitle", "newMkDesc", "newMkPrize", "newMkRunners"].forEach(id => { const el = document.getElementById(id); if (el) el.value = ""; });
+      saveState(); renderAll(); toast("Bet added");
+    });
+    const restoreMarketsBtn = document.getElementById("restoreMarketsBtn");
+    if (restoreMarketsBtn) restoreMarketsBtn.addEventListener("click", restoreStarterMarkets);
+
+    document.getElementById("syncChip").addEventListener("click", () => remotePull({ manual: true }));
+    const syncRefreshBtn = document.getElementById("syncRefreshBtn");
+    if (syncRefreshBtn) syncRefreshBtn.addEventListener("click", () => remotePull({ manual: true }));
+
+    spawnLeaves();
+    renderAll();
+    setSyncChip(hasRemoteSync() ? "syncing" : "disabled");
+    remotePull({ initial: true });
+    startSyncLoops();
+    setInterval(renderHero, 3600000); // refresh the countdown hourly
+  </script>
+</body>
+</html>
