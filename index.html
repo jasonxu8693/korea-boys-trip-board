@@ -771,7 +771,7 @@
                 <p class="panel-sub">The shared to-do list. Tick a boss and the whole crew's tokens move forward on the board.</p>
               </div>
               <div class="pill-row" style="margin:0">
-                <span class="pill warn" id="groupTasksBadge">0 of 9 done</span>
+                <span class="pill warn" id="groupTasksBadge">0 of 8 done</span>
               </div>
             </div>
             <div style="padding:20px">
@@ -1072,14 +1072,13 @@
     const checkpoints = [
       { id: "spawn", title: "Trip start", meta: "Go", icon: "🛫", type: "personal", x: 10.5, y: 82 },
       { id: "flightKraken", title: "Lock the route", meta: "Boss 1", icon: "🛩️", type: "group", x: 22, y: 61 },
-      { id: "budgetPact", title: "Set the budget", meta: "Boss 2", icon: "💳", type: "group", x: 26, y: 39 },
-      { id: "seoulJejuSplit", title: "Seoul / Jeju split", meta: "Boss 3", icon: "🌆", type: "group", x: 42, y: 22 },
-      { id: "accommodation", title: "Pick the stay", meta: "Boss 4", icon: "🏨", type: "boss", x: 63, y: 31 },
-      { id: "vehicle", title: "Lock the ride", meta: "Boss 5", icon: "🚘", type: "boss", x: 74, y: 45 },
-      { id: "activityShortlist", title: "Activity shortlist", meta: "Boss 6", icon: "🎤", type: "group", x: 84, y: 61 },
-      { id: "itinerary", title: "Build itinerary", meta: "Boss 7", icon: "📍", type: "group", x: 76, y: 75 },
-      { id: "foodBars", title: "Food & nightlife", meta: "Boss 8", icon: "🌙", type: "group", x: 58, y: 77 },
-      { id: "offlinePack", title: "Trip ready", meta: "Boss 9", icon: "✨", type: "boss", x: 42, y: 68 }
+      { id: "seoulJejuSplit", title: "Seoul / Jeju split", meta: "Boss 2", icon: "🌆", type: "group", x: 42, y: 22 },
+      { id: "accommodation", title: "Pick the stay", meta: "Boss 3", icon: "🏨", type: "boss", x: 63, y: 31 },
+      { id: "vehicle", title: "Lock the ride", meta: "Boss 4", icon: "🚘", type: "boss", x: 74, y: 45 },
+      { id: "activityShortlist", title: "Activity shortlist", meta: "Boss 5", icon: "🎤", type: "group", x: 84, y: 61 },
+      { id: "itinerary", title: "Build itinerary", meta: "Boss 6", icon: "📍", type: "group", x: 76, y: 75 },
+      { id: "foodBars", title: "Food & nightlife", meta: "Boss 7", icon: "🌙", type: "group", x: 58, y: 77 },
+      { id: "offlinePack", title: "Trip ready", meta: "Boss 8", icon: "✨", type: "boss", x: 42, y: 68 }
     ];
 
     const colours = ["#72f4ff", "#ff97ca", "#d7e6ff", "#8be8d4", "#8fa9ff", "#9ec9ff", "#f5f8ff"];
@@ -1160,7 +1159,6 @@
       ],
       groupDone: {
         flightKraken: false,
-        budgetPact: false,
         seoulJejuSplit: false,
         accommodation: false,
         vehicle: false,
@@ -1176,7 +1174,6 @@
 
     const groupTasks = [
       { id: "flightKraken", icon: "🛩️", title: "Lock the route", desc: "Confirm dates, outbound route, return route and arrivals.", priority: "P1" },
-      { id: "budgetPact", icon: "💳", title: "Set the budget", desc: "Agree per person budget.", priority: "P1" },
       { id: "seoulJejuSplit", icon: "🌆", title: "Choose the Seoul and Jeju split", desc: "Decide Seoul before Jeju, after Jeju, or both.", priority: "P1" },
       { id: "accommodation", icon: "🏨", title: "Pick the stay", desc: "Choose villa or split hotel rooms.", priority: "P2" },
       { id: "vehicle", icon: "🚘", title: "Lock the ride plan", desc: "Choose van, two cars, transfers or taxis.", priority: "P2" },
@@ -2271,7 +2268,7 @@
 
 
     document.getElementById("copySummaryBtn").addEventListener("click", async () => {
-      const groupDoneCount = Object.values(state.groupDone).filter(Boolean).length;
+      const groupDoneCount = groupTasks.filter(t => state.groupDone[t.id]).length;
       const lines = [
         "Korea Boys Trip Quest Summary",
         "Dates: 23 Oct to 2 Nov 2026",
