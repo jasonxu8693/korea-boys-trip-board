@@ -78,25 +78,20 @@
 
     .hero {
       position: relative;
-      min-height: 420px;
+      min-height: 460px;
       border: 1px solid var(--line);
       border-radius: var(--radius-xl);
       overflow: hidden;
       background:
-        linear-gradient(180deg, rgba(8, 12, 20, 0.28), rgba(8, 12, 20, 0.90)),
-        radial-gradient(circle at 14% 18%, rgba(255, 151, 202, 0.22), transparent 22%),
-        radial-gradient(circle at 82% 18%, rgba(114, 244, 255, 0.24), transparent 26%),
-        linear-gradient(135deg, rgba(22, 29, 42, 0.95), rgba(10, 16, 25, 0.92));
+        linear-gradient(180deg, rgba(7, 11, 19, 0.30) 0%, rgba(7, 11, 19, 0.52) 50%, rgba(6, 9, 16, 0.93) 100%),
+        linear-gradient(110deg, rgba(40, 16, 26, 0.42), rgba(8, 14, 28, 0.12)),
+        url("images/seoul-hero.jpg") center 38% / cover no-repeat;
       box-shadow: var(--shadow);
       isolation: isolate;
     }
 
-    .hero-art {
-      position: absolute;
-      inset: 0;
-      opacity: 0.95;
-      z-index: -1;
-    }
+    /* Photo hero replaces the old illustrated skyline */
+    .hero-art { display: none; }
 
     .skyline { position: absolute; left: 0; right: 0; bottom: 0; height: 54%; }
     .building { position: absolute; bottom: 0; width: 6%; border-radius: 18px 18px 0 0; background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)); border: 1px solid rgba(255,255,255,0.10); box-shadow: inset 0 0 30px rgba(114,244,255,0.08), 0 0 20px rgba(0,0,0,0.10); }
@@ -131,9 +126,9 @@
 
     .hero-content { position: relative; z-index: 1; padding: 28px; display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 28px; min-height: 420px; align-items: end; }
     .eyebrow { display: inline-flex; align-items: center; gap: 8px; width: fit-content; padding: 8px 12px; border: 1px solid rgba(255,255,255,0.16); border-radius: 999px; background: rgba(255,255,255,0.08); backdrop-filter: blur(14px); color: var(--muted); font-size: 13px; letter-spacing: 0.02em; }
-    .hero h1 { margin: 18px 0 12px; font-size: clamp(40px, 7vw, 82px); line-height: 0.92; letter-spacing: -0.07em; max-width: 760px; }
+    .hero h1 { margin: 18px 0 12px; font-size: clamp(40px, 7vw, 82px); line-height: 0.92; letter-spacing: -0.07em; max-width: 760px; text-shadow: 0 4px 30px rgba(0,0,0,0.5); }
     .hero h1 .shine { display: block; background: linear-gradient(100deg, #fff6d1, #5fe6ff 44%, #ff5cc8 72%, #ffd15c); -webkit-background-clip: text; color: transparent; }
-    .hero p { max-width: 720px; color: var(--muted); font-size: 17px; line-height: 1.55; margin: 0; }
+    .hero p { max-width: 720px; color: rgba(245, 248, 255, 0.92); font-size: 17px; line-height: 1.55; margin: 0; text-shadow: 0 2px 16px rgba(0,0,0,0.55); }
     .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
     .btn { border: 0; border-radius: 999px; padding: 13px 17px; color: #0c1520; background: linear-gradient(135deg, #f7fbff, #8defff); font-weight: 800; box-shadow: 0 12px 30px rgba(114, 244, 255, 0.20); transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease; }
     .btn:hover { transform: translateY(-2px); box-shadow: 0 18px 40px rgba(114, 244, 255, 0.28); }
@@ -178,14 +173,15 @@
       min-height: 660px;
       border-radius: 30px;
       overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.16);
       background:
-        radial-gradient(circle at 80% 14%, rgba(255,179,120,0.20), transparent 26%),
-        radial-gradient(circle at 20% 18%, rgba(255,151,202,0.16), transparent 24%),
-        radial-gradient(circle at 52% 88%, rgba(120,170,255,0.12), transparent 26%),
-        linear-gradient(180deg, #131a30 0%, #281f3e 42%, #45283f 74%, #59333f 100%);
-      box-shadow: inset 0 0 110px rgba(255,255,255,0.05);
+        linear-gradient(180deg, rgba(12, 10, 24, 0.50) 0%, rgba(22, 14, 30, 0.68) 52%, rgba(34, 18, 30, 0.90) 100%),
+        url("images/namsan.jpg") center 30% / cover no-repeat;
+      box-shadow: inset 0 0 130px rgba(0,0,0,0.45);
     }
+    /* With a real photo behind the route, retire the heavy illustrated scene
+       but keep the atmospheric motion (lanterns, falling leaves, taegeuk mark). */
+    .k-scene, .sea, .cloud { display: none; }
     .board:before { content: ""; position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg width='180' height='180' viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.07)' stroke-width='1'%3E%3Cpath d='M0 92 C26 70, 44 104, 70 84 S122 70, 180 98'/%3E%3Cpath d='M14 132 C42 112, 63 150, 98 128 S142 120, 170 144'/%3E%3C/g%3E%3C/svg%3E"); opacity: 0.7; }
     .sea { position: absolute; left: -5%; right: -5%; bottom: -10%; height: 36%; background: linear-gradient(180deg, rgba(114,244,255,0.16), rgba(21, 63, 92, 0.60)); border-radius: 50% 50% 0 0; filter: blur(0.2px); }
     .island { position: absolute; width: 240px; height: 150px; right: 8%; bottom: 8%; background: linear-gradient(180deg, rgba(63,87,110,0.52), rgba(24, 38, 50, 0.92)); border-radius: 54% 46% 42% 58%; box-shadow: 0 18px 44px rgba(5,9,18,0.24); border: 1px solid rgba(255,255,255,0.14); }
@@ -258,7 +254,10 @@
 
     .idea-toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 16px; }
     .idea-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-    .idea-card { position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.14); border-radius: 24px; background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05)); padding: 16px; display: grid; gap: 13px; box-shadow: 0 14px 34px rgba(24,7,49,0.12); }
+    .idea-card { position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.14); border-radius: 24px; background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05)); display: grid; box-shadow: 0 14px 34px rgba(24,7,49,0.12); }
+    .idea-photo { width: 100%; height: 152px; object-fit: cover; display: block; border-bottom: 1px solid rgba(255,255,255,0.12); }
+    .idea-photo-fallback { width: 100%; height: 152px; display: grid; place-items: center; font-size: 56px; background: linear-gradient(135deg, #2a3550, #6b3f5e); border-bottom: 1px solid rgba(255,255,255,0.12); }
+    .idea-body { padding: 16px; display: grid; gap: 13px; }
     .idea-card:before { content: ""; position: absolute; width: 160px; height: 160px; border-radius: 50%; right: -60px; top: -78px; background: rgba(255,209,92,0.10); pointer-events: none; }
     .idea-top { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: start; position: relative; }
     .idea-emoji { width: 48px; height: 48px; border-radius: 18px; display: grid; place-items: center; font-size: 26px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.12); }
@@ -532,10 +531,20 @@
     .plan-add select { width:auto; }
     @media (max-width:620px){ .add-opt, .plan-add { grid-template-columns:1fr; } .plan-add select { width:100%; } .plan-item { grid-template-columns:auto 1fr; } }
 
+    /* Photo gallery (Korea in pictures) */
+    .photo-gallery { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
+    .photo-card { position: relative; border-radius: var(--radius-lg); overflow: hidden; min-height: 190px; border: 1px solid rgba(255,255,255,0.14); display: flex; align-items: flex-end; }
+    .photo-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; transition: transform 0.4s ease; }
+    .photo-card:hover img { transform: scale(1.05); }
+    .photo-card:after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,9,18,0) 28%, rgba(8,9,18,0.86)); z-index: 1; }
+    .photo-card .cap { position: relative; z-index: 2; padding: 14px; }
+    .photo-card .cap strong { display: block; font-size: 16px; letter-spacing: -0.02em; }
+    .photo-card .cap span { display: block; color: rgba(245,248,255,0.85); font-size: 12px; margin-top: 3px; line-height: 1.4; }
+
     @media (max-width: 980px) {
       .hero-content { grid-template-columns: 1fr; align-items: end; }
       .layout { grid-template-columns: 1fr; }
-      .grid-3, .grid-2, .sync-diagram, .idea-grid, .idea-summary-grid, .add-idea-form, .planning-hub, .flow-steps { grid-template-columns: 1fr; }
+      .grid-3, .grid-2, .sync-diagram, .idea-grid, .idea-summary-grid, .add-idea-form, .planning-hub, .flow-steps, .photo-gallery { grid-template-columns: 1fr; }
       .board { min-height: 720px; }
       .personality-grid { grid-template-columns: repeat(2, 1fr); }
       .node { width: 94px; }
@@ -1023,6 +1032,16 @@
             <div class="info-card"><div class="emoji">🏝️</div><h3>Why Jeju</h3><p>Volcanic island, scenic drives, hiking, seafood, golf and Jeju City bars.</p></div>
           </div>
 
+          <h3 style="margin:24px 0 12px">Korea in pictures</h3>
+          <div class="photo-gallery">
+            <div class="photo-card"><img src="images/gyeongbok.jpg" alt="Gyeongbokgung Palace" loading="lazy"><div class="cap"><strong>Gyeongbokgung</strong><span>Seoul's grand palace and the Gyeonghoeru pavilion.</span></div></div>
+            <div class="photo-card"><img src="images/bukchon.jpg" alt="Bukchon Hanok Village" loading="lazy"><div class="cap"><strong>Bukchon Hanok Village</strong><span>Traditional lanes between the two palaces.</span></div></div>
+            <div class="photo-card"><img src="images/namsan.jpg" alt="N Seoul Tower at sunset" loading="lazy"><div class="cap"><strong>Namsan &amp; N Tower</strong><span>Sunset views over the city skyline.</span></div></div>
+            <div class="photo-card"><img src="images/myeongdong.jpg" alt="Myeongdong" loading="lazy"><div class="cap"><strong>Myeongdong</strong><span>Street food, K-beauty and shopping crowds.</span></div></div>
+            <div class="photo-card"><img src="images/hallasan.jpg" alt="Hallasan crater lake" loading="lazy"><div class="cap"><strong>Hallasan</strong><span>Jeju's volcano and the Baengnokdam crater lake.</span></div></div>
+            <div class="photo-card"><img src="images/seongsan.jpg" alt="Seongsan Ilchulbong" loading="lazy" style="object-position:center top"><div class="cap"><strong>Seongsan Ilchulbong</strong><span>The sunrise crater peak on Jeju's east coast.</span></div></div>
+          </div>
+
           <h3 style="margin:24px 0 12px">Draft rhythm</h3>
           <div class="timeline">
             <div class="timeline-item"><div class="timeline-date">23 Oct</div><div><div class="timeline-title">Jason departs London</div><div class="timeline-body">LHR T3 · QW901 · 22:05 departure · e-ticket and PNR pending.</div></div></div>
@@ -1108,11 +1127,15 @@
 
 
     const defaultIdeas = [
-      { id: "colourAnalysis", emoji: "🎨", title: "Colour analysis", city: "Seoul", desc: "Personal colour consult. Good for shopping and group content." },
+      { id: "colourAnalysis", emoji: "🎨", title: "Colour analysis", city: "Seoul", img: "myeongdong.jpg", desc: "Personal colour consult. Good for shopping and group content." },
       { id: "skinAnalysis", emoji: "🧴", title: "Skin analysis", city: "Seoul", desc: "K-beauty skin check or clinic consult. Low effort Seoul option." },
-      { id: "hanokStay", emoji: "🏯", title: "Live in a traditional site", city: "Seoul or Jeju", desc: "Hanok or heritage style stay. Check comfort, bathrooms and location." },
+      { id: "hanokStay", emoji: "🏯", title: "Live in a traditional site", city: "Seoul or Jeju", img: "bukchon.jpg", desc: "Hanok or heritage style stay. Check comfort, bathrooms and location." },
       { id: "jjimjilbang", emoji: "♨️", title: "Korean bathhouse / jjimjilbang", city: "Seoul or Jeju", desc: "Korean sauna, hot bath and chill zone. Treat this as the Korea version of the onsen idea, but check everyone is comfortable with the bathhouse setup." }
     ];
+
+    // Photo per idea by id — applied at render time so it also reaches ideas
+    // already saved in the synced state (which predate the img field).
+    const IDEA_IMG = { colourAnalysis: "myeongdong.jpg", hanokStay: "bukchon.jpg" };
 
     // The Bookies — fun pari-mutuel betting with virtual chips + real trip perks.
     const defaultBookie = {
@@ -1508,7 +1531,13 @@
         const status = ideaStatus(tally);
         const selectedVote = state.ideaVotes?.[idea.id]?.[state.selectedPlayer] || "";
         const denom = Math.max(tally.total, 1);
+        const imgSrc = idea.img || IDEA_IMG[idea.id];
+        const photo = imgSrc
+          ? `<img class="idea-photo" src="images/${escapeAttr(imgSrc)}" alt="${escapeAttr(idea.title)}" loading="lazy" onerror="this.outerHTML='<div class=\\'idea-photo-fallback\\'>${idea.emoji || "💡"}</div>'">`
+          : `<div class="idea-photo-fallback">${idea.emoji || "💡"}</div>`;
         return `<article class="idea-card">
+          ${photo}
+          <div class="idea-body">
           <div class="idea-top">
             <div class="idea-emoji">${idea.emoji || "💡"}</div>
             <div><div class="idea-title">${escapeHtml(idea.title)}</div><div class="idea-desc">${escapeHtml(idea.desc)}</div></div>
@@ -1523,6 +1552,7 @@
           <div class="vote-meter">
             <div class="meter-track"><div class="meter-keen" style="width:${tally.keen / denom * 100}%"></div><div class="meter-maybe" style="width:${tally.maybe / denom * 100}%"></div><div class="meter-no" style="width:${tally.no / denom * 100}%"></div></div>
             <div class="vote-counts"><span>✅ ${tally.keen} keen</span><span>🤷 ${tally.maybe} maybe</span><span>❌ ${tally.no} no</span></div>
+          </div>
           </div>
         </article>`;
       }).join("");
