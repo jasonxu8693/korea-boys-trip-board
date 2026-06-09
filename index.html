@@ -402,9 +402,13 @@
     .vibe-chip.active { background: rgba(255,209,92,0.18); border-color: rgba(255,209,92,0.42); color: #ffe7ae; box-shadow: 0 8px 22px rgba(255,209,92,0.12); }
     .vibe-chip .vibe-emoji { font-size: 21px; line-height: 1; }
     .vibe-chip .vibe-name { font-size: 10px; font-weight: 900; letter-spacing: 0.02em; }
+    .piece-picker { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; }
+    .piece-chip { width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.14); background: rgba(0,0,0,0.22); border-radius: 12px; font-size: 19px; line-height: 1; display: grid; place-items: center; transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease; }
+    .piece-chip:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.28); }
+    .piece-chip.active { background: rgba(114,244,255,0.2); border-color: rgba(114,244,255,0.5); box-shadow: 0 6px 16px rgba(114,244,255,0.18); }
 
     .roster-row { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; padding: 12px; border: 1px solid rgba(255,255,255,0.12); border-radius: 18px; background: rgba(255,255,255,0.05); }
-    .roster-fields { display: grid; grid-template-columns: 1.1fr 1fr 1fr; gap: 10px; }
+    .roster-fields { display: grid; grid-template-columns: 1.2fr 1fr; gap: 10px; }
     .roster-fields select { width: 100%; border: 1px solid rgba(255,255,255,0.14); border-radius: 14px; background: rgba(0,0,0,0.2); color: var(--ink); padding: 11px 12px; outline: none; }
     .roster-fields select option { color: #111; }
     @media (max-width: 620px) { .roster-fields { grid-template-columns: 1fr; } }
@@ -645,7 +649,7 @@
               <button class="hub-card" data-jump="settings">
                 <span class="hub-icon">👥</span>
                 <span class="hub-title">Roster</span>
-                <span class="hub-copy">Names, roles and tokens.</span>
+                <span class="hub-copy">Names, vibes and board pieces.</span>
                 <span class="hub-status">Edit roster</span>
               </button>
               <button class="hub-card" data-jump="desk">
@@ -732,12 +736,16 @@
                 <div class="progress-bar"><div class="progress-fill" id="selectedProgressFill"></div></div>
               </div>
               <div class="pill-row">
-                <span class="pill" id="selectedRole">🧭 No role yet</span>
+                <span class="pill" id="selectedRole">Pick a vibe</span>
                 <span class="pill" id="selectedStage">Spawn point</span>
               </div>
               <div class="vibe-block">
                 <div class="label">Their vibe</div>
                 <div class="vibe-picker" id="vibePicker"></div>
+              </div>
+              <div class="vibe-block">
+                <div class="label">Their board piece</div>
+                <div class="piece-picker" id="piecePicker"></div>
               </div>
             </div>
 
@@ -1082,7 +1090,8 @@
     ];
 
     const colours = ["#72f4ff", "#ff97ca", "#d7e6ff", "#8be8d4", "#8fa9ff", "#9ec9ff", "#f5f8ff"];
-    const roles = ["🎤 Frontman", "🍜 Food Scout", "📸 Visual Lead", "🧾 Money Manager", "🚘 Ride Lead", "🎬 Content Lead", "🪪 Admin Lead"];
+    // Each traveller picks their own board piece (token) — no assigned roles.
+    const pieces = ["🎤", "🍜", "📸", "🧋", "🐯", "🎮", "🧭", "🍻", "🛍️", "♨️", "🥢", "🚗", "🎧", "🐉", "🗼", "🚀"];
 
     // Each traveller picks their own vibe — shown on their token and roster card.
     const vibes = [
@@ -1149,13 +1158,13 @@
       ideas: structuredClone(defaultIdeas),
       ideaVotes: {},
       players: [
-        { name: "Jason", initials: "J", colour: colours[0], role: roles[0], vibe: "foodie" },
-        { name: "Traveller 2", initials: "T2", colour: colours[1], role: roles[1], vibe: null },
-        { name: "Traveller 3", initials: "T3", colour: colours[2], role: roles[2], vibe: null },
-        { name: "Traveller 4", initials: "T4", colour: colours[3], role: roles[3], vibe: null },
-        { name: "Traveller 5", initials: "T5", colour: colours[4], role: roles[4], vibe: null },
-        { name: "Traveller 6", initials: "T6", colour: colours[5], role: roles[5], vibe: null },
-        { name: "Traveller 7", initials: "T7", colour: colours[6], role: roles[6], vibe: null }
+        { name: "Jason", initials: "J", colour: colours[0], vibe: "foodie", piece: "🎤" },
+        { name: "Traveller 2", initials: "T2", colour: colours[1], vibe: null, piece: null },
+        { name: "Traveller 3", initials: "T3", colour: colours[2], vibe: null, piece: null },
+        { name: "Traveller 4", initials: "T4", colour: colours[3], vibe: null, piece: null },
+        { name: "Traveller 5", initials: "T5", colour: colours[4], vibe: null, piece: null },
+        { name: "Traveller 6", initials: "T6", colour: colours[5], vibe: null, piece: null },
+        { name: "Traveller 7", initials: "T7", colour: colours[6], vibe: null, piece: null }
       ],
       groupDone: {
         flightKraken: false,
@@ -1407,7 +1416,8 @@
         const x = cp.x + Math.cos(angle) * radius;
         const y = cp.y + Math.sin(angle) * radius;
         const v = vibeById(p.vibe);
-        return `<div class="token ${idx === state.selectedPlayer ? "active" : ""}" data-name="${escapeHtml(p.name)}${v ? " · " + v.name : ""}" style="left:${x}%; top:${y}%; background:${p.colour}" onclick="void(0)">${escapeHtml(p.initials)}${v ? `<span class="token-vibe">${v.emoji}</span>` : ""}</div>`;
+        const face = p.piece ? escapeHtml(p.piece) : escapeHtml(p.initials);
+        return `<div class="token ${idx === state.selectedPlayer ? "active" : ""}" data-name="${escapeHtml(p.name)}${v ? " · " + v.name : ""}" style="left:${x}%; top:${y}%; background:${p.colour}" onclick="void(0)">${face}${v ? `<span class="token-vibe">${v.emoji}</span>` : ""}</div>`;
       }).join("");
     }
 
@@ -1421,8 +1431,8 @@
       holder.innerHTML = state.players.map((p, idx) => {
         const v = vibeById(p.vibe);
         return `<div class="traveller-row" role="button" tabindex="0" data-player="${idx}">
-          <div class="avatar-dot" style="background:${p.colour}">${escapeHtml(p.initials)}</div>
-          <div><div class="traveller-name">${escapeHtml(p.name)}${v ? `<span class="traveller-vibe">${v.emoji}</span>` : ""}</div><div class="traveller-progress">${v ? v.name + " · " : ""}${escapeHtml(p.role || "No role yet")}</div></div>
+          <div class="avatar-dot" style="background:${p.colour}">${p.piece ? escapeHtml(p.piece) : escapeHtml(p.initials)}</div>
+          <div><div class="traveller-name">${escapeHtml(p.name)}${v ? `<span class="traveller-vibe">${v.emoji}</span>` : ""}</div><div class="traveller-progress">${v ? v.name : "no vibe yet"}</div></div>
           ${idx === state.selectedPlayer ? `<span class="pill done">You</span>` : ""}
         </div>`;
       }).join("");
@@ -1438,7 +1448,8 @@
       document.getElementById("selectedName").textContent = p.name;
       document.getElementById("selectedProgress").textContent = `${percent}%`;
       document.getElementById("selectedProgressFill").style.width = `${percent}%`;
-      document.getElementById("selectedRole").textContent = p.role || "🧭 No role yet";
+      const sv = vibeById(p.vibe);
+      document.getElementById("selectedRole").textContent = `${p.piece || "♟️"} ${sv ? sv.name : "pick a vibe"}`;
       document.getElementById("selectedStage").textContent = checkpoints[progress].title;
     }
 
@@ -1617,6 +1628,23 @@
       });
     }
 
+    function renderPiecePicker() {
+      const holder = document.getElementById("piecePicker");
+      if (!holder) return;
+      const p = selectedPlayer();
+      holder.innerHTML = pieces.map(pc => `
+        <button class="piece-chip ${p.piece === pc ? "active" : ""}" data-piece="${escapeAttr(pc)}" title="Use ${escapeAttr(pc)} as your board piece">${pc}</button>`).join("");
+      holder.querySelectorAll(".piece-chip").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const player = selectedPlayer();
+          player.piece = player.piece === btn.dataset.piece ? null : btn.dataset.piece;
+          saveState();
+          renderAll();
+          toast(player.piece ? `${player.name}'s piece: ${player.piece}` : `${player.name} cleared their piece`);
+        });
+      });
+    }
+
     function spawnLeaves() {
       const holder = document.getElementById("leaves");
       if (!holder) return;
@@ -1638,7 +1666,6 @@
         <div class="avatar-dot" style="background:${p.colour}; width:42px; height:42px">${escapeHtml(p.initials)}</div>
         <div class="roster-fields">
           <input type="text" value="${escapeAttr(p.name)}" data-field="name" data-idx="${idx}" aria-label="Name for traveller ${idx + 1}" placeholder="Name" />
-          <input type="text" value="${escapeAttr(p.role)}" data-field="role" data-idx="${idx}" aria-label="Role for traveller ${idx + 1}" placeholder="Role" />
           <select data-field="vibe" data-idx="${idx}" aria-label="Vibe for traveller ${idx + 1}">
             <option value="">Pick a vibe…</option>
             ${vibes.map(v => `<option value="${v.id}" ${p.vibe === v.id ? "selected" : ""}>${v.emoji} ${v.name}</option>`).join("")}
@@ -1651,7 +1678,7 @@
         state.players[idx][field] = field === "vibe" ? (e.target.value || null) : e.target.value;
         if (field === "name") state.players[idx].initials = makeInitials(e.target.value, idx);
         saveState();
-        renderPlayerSelect(); renderTravellerGrid(); renderTokens(); renderSelectedPanel(); renderVibePicker(); renderNextActions(); renderBadges();
+        renderPlayerSelect(); renderTravellerGrid(); renderTokens(); renderSelectedPanel(); renderVibePicker(); renderPiecePicker(); renderNextActions(); renderBadges();
       };
       holder.querySelectorAll("input").forEach(el => el.addEventListener("input", onChange));
       holder.querySelectorAll("select").forEach(el => el.addEventListener("change", onChange));
@@ -1988,7 +2015,7 @@
       const holder = document.getElementById("deskList");
       if (!holder) return;
       const idx = state.selectedPlayer;
-      const avatar = i => { const p = state.players[i]; return p ? `<span class="avatar-dot" style="background:${p.colour}">${escapeHtml(p.initials)}</span>` : ""; };
+      const avatar = i => { const p = state.players[i]; return p ? `<span class="avatar-dot" style="background:${p.colour}">${p.piece ? escapeHtml(p.piece) : escapeHtml(p.initials)}</span>` : ""; };
       const nameOf = i => { const p = state.players[i]; return p ? escapeHtml(p.name) : "—"; };
 
       holder.innerHTML = state.desk.rooms.map(r => {
@@ -2189,7 +2216,7 @@
 
     function renderAll() {
       ensureBookie(); ensureDesk(); ensurePlan();
-      renderNodes(); renderTokens(); renderPlayerSelect(); renderTravellerGrid(); renderSelectedPanel(); renderVibePicker(); renderTasks(); renderIdeas(); renderBoardIdeaPreview(); renderNextActions(); renderBadges(); renderRosterEditor(); renderHero(); renderBookie(); renderDesk(); renderPlan();
+      renderNodes(); renderTokens(); renderPlayerSelect(); renderTravellerGrid(); renderSelectedPanel(); renderVibePicker(); renderPiecePicker(); renderTasks(); renderIdeas(); renderBoardIdeaPreview(); renderNextActions(); renderBadges(); renderRosterEditor(); renderHero(); renderBookie(); renderDesk(); renderPlan();
     }
 
     function toast(message) {
@@ -2276,7 +2303,7 @@
         `Group boss progress: ${groupDoneCount}/${groupTasks.length} — at "${checkpoints[groupProgressIndex()].title}"`,
         "",
         "Crew:",
-        ...state.players.map(p => { const v = vibeById(p.vibe); return `• ${p.name}${v ? ` (${v.name})` : ""}${p.role ? ` — ${p.role}` : ""}`; }),
+        ...state.players.map(p => { const v = vibeById(p.vibe); return `• ${p.piece ? p.piece + " " : ""}${p.name}${v ? ` (${v.name})` : ""}`; }),
         "",
         "Shortlist ideas:",
         ...allIdeas().filter(i => ideaStatus(tallyIdea(i.id)).label === "Shortlist").map(i => `• ${i.title} (${i.city})`),
