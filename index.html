@@ -463,6 +463,71 @@
     .add-market-form { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
     .add-market-form #newMkTitle, .add-market-form #newMkRunnersWrap, .add-market-form #addMarketBtn { grid-column: 1 / -1; }
 
+    /* Crew Desk — hands up, share options, vote (added) */
+    .nav button.desk-tab { color:#c8ffe6; border:1px solid rgba(139,232,212,0.26); background:rgba(139,232,212,0.08); }
+    .nav button.desk-tab.active { color:#06231b; background:linear-gradient(90deg,#8be8d4,#72f4ff); }
+    .nav button.plan-tab { color:#dfe7ff; border:1px solid rgba(143,169,255,0.28); background:rgba(143,169,255,0.08); }
+    .nav button.plan-tab.active { color:#0c1430; background:linear-gradient(90deg,#8fa9ff,#72f4ff); }
+
+    .desk-list { display:grid; gap:14px; }
+    .desk-room { position:relative; overflow:hidden; border:1px solid rgba(255,255,255,0.14); border-radius:24px; background:linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.045)); padding:16px; display:grid; gap:13px; box-shadow:0 14px 34px rgba(24,7,49,0.12); }
+    .desk-room.is-decided { border-color:rgba(139,232,212,0.32); background:linear-gradient(180deg, rgba(139,232,212,0.10), rgba(255,255,255,0.03)); }
+    .desk-head { display:grid; grid-template-columns:auto 1fr auto; gap:12px; align-items:start; }
+    .desk-emoji { width:46px; height:46px; border-radius:16px; display:grid; place-items:center; font-size:24px; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.12); }
+    .desk-title { font-weight:1000; letter-spacing:-0.03em; font-size:17px; }
+    .desk-desc { color:var(--muted); font-size:13px; line-height:1.42; margin-top:3px; }
+    .crew-row { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+    .crew-label { color:var(--subtle); font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:0.08em; margin-right:2px; }
+    .owner-chip { display:inline-flex; align-items:center; gap:6px; border:1px solid rgba(255,255,255,0.14); background:rgba(0,0,0,0.2); color:var(--ink); border-radius:999px; padding:5px 11px 5px 5px; font-size:12px; font-weight:800; }
+    .owner-chip .avatar-dot { width:20px; height:20px; border-radius:7px; font-size:10px; }
+    .owner-chip.empty { color:var(--subtle); font-weight:700; border-style:dashed; padding:6px 11px; }
+    .hand-btn { border:1px solid rgba(255,255,255,0.16); border-radius:999px; background:rgba(0,0,0,0.2); color:var(--muted); padding:7px 12px; font-weight:850; font-size:12px; transition:transform .15s ease, background .15s ease, border-color .15s ease; }
+    .hand-btn:hover { transform:translateY(-1px); border-color:rgba(255,255,255,0.28); }
+    .hand-btn.on { background:rgba(114,244,255,0.16); border-color:rgba(114,244,255,0.4); color:#d4f9ff; }
+    .hand-btn.drive.on { background:rgba(255,209,92,0.16); border-color:rgba(255,209,92,0.42); color:#ffe7ae; }
+    .opt-list { display:grid; gap:9px; }
+    .opt-card { position:relative; border:1px solid rgba(255,255,255,0.12); border-radius:16px; background:rgba(0,0,0,0.18); padding:11px 12px; }
+    .opt-card.leading { border-color:rgba(255,209,92,0.4); background:rgba(255,209,92,0.08); }
+    .opt-card.chosen { border-color:rgba(139,232,212,0.5); background:rgba(139,232,212,0.12); }
+    .opt-main { display:grid; grid-template-columns:1fr auto; gap:10px; align-items:start; }
+    .opt-name { font-weight:900; font-size:14px; letter-spacing:-0.01em; }
+    .opt-name a { color:#bdefff; text-decoration:underline; text-underline-offset:3px; }
+    .opt-sub { color:var(--muted); font-size:12px; line-height:1.4; margin-top:3px; }
+    .opt-meta { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+    .opt-meta .pill { padding:5px 9px; font-size:11px; }
+    .opt-actions { display:grid; gap:6px; justify-items:end; align-content:start; }
+    .vote-up { border:1px solid rgba(255,255,255,0.14); border-radius:12px; background:rgba(0,0,0,0.22); color:var(--muted); padding:8px 12px; font-weight:950; font-size:13px; white-space:nowrap; transition:transform .15s ease, background .15s ease, border-color .15s ease; }
+    .vote-up:hover { transform:translateY(-1px); border-color:rgba(255,255,255,0.26); }
+    .vote-up.on { background:rgba(119,240,168,0.18); border-color:rgba(119,240,168,0.4); color:#c8ffdc; }
+    .add-opt { display:grid; grid-template-columns:1.3fr 1fr 0.7fr auto; gap:8px; }
+    .add-opt input { padding:10px 11px; }
+    .add-opt .btn { white-space:nowrap; }
+    .opt-notes-in { margin-top:8px; padding:10px 11px; }
+
+    /* Itinerary builder (added) */
+    .plan-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+    .plan-days { display:grid; gap:12px; margin-top:14px; }
+    .plan-day { border:1px solid rgba(255,255,255,0.12); border-radius:20px; background:rgba(255,255,255,0.05); padding:14px; }
+    .plan-day.is-logistics { background:rgba(255,255,255,0.03); border-style:dashed; }
+    .plan-day-head { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:6px; }
+    .plan-date { font-weight:1000; font-size:14px; color:var(--gold); }
+    .plan-citytag { font-size:10px; font-weight:900; letter-spacing:0.06em; text-transform:uppercase; padding:5px 8px; border-radius:999px; background:rgba(114,244,255,0.14); color:#d4f9ff; }
+    .plan-citytag.jeju { background:rgba(255,151,202,0.14); color:#ffd7f1; }
+    .plan-daynote { color:var(--subtle); font-size:12px; flex-basis:100%; }
+    .plan-item { display:grid; grid-template-columns:auto 1fr auto auto; gap:9px; align-items:center; padding:9px 10px; border:1px solid rgba(255,255,255,0.1); border-radius:14px; background:rgba(0,0,0,0.16); margin-top:8px; }
+    .plan-item.dinner { border-color:rgba(255,209,92,0.3); background:rgba(255,209,92,0.08); }
+    .plan-item .pi-emoji { font-size:18px; }
+    .pi-title { font-weight:850; font-size:13px; }
+    .pi-sub { color:var(--subtle); font-size:11px; }
+    a.pi-sub { color:#bdefff; text-decoration:underline; text-underline-offset:2px; }
+    .pi-move { border:1px solid rgba(255,255,255,0.14); border-radius:10px; background:rgba(0,0,0,0.25); color:var(--ink); padding:7px 8px; font-size:11px; }
+    .pi-move option { color:#111; }
+    .pi-x { border:1px solid rgba(255,100,100,0.3); border-radius:10px; background:rgba(255,100,100,0.12); color:#ffdada; padding:7px 9px; font-weight:900; }
+    .plan-empty-day { color:var(--subtle); font-size:12px; padding:5px 2px; }
+    .plan-add { display:grid; grid-template-columns:1fr auto auto; gap:8px; margin-top:14px; }
+    .plan-add select { width:auto; }
+    @media (max-width:620px){ .add-opt, .plan-add { grid-template-columns:1fr; } .plan-add select { width:100%; } .plan-item { grid-template-columns:auto 1fr; } }
+
     @media (max-width: 980px) {
       .hero-content { grid-template-columns: 1fr; align-items: end; }
       .layout { grid-template-columns: 1fr; }
@@ -540,6 +605,8 @@
       <button class="active" data-tab="board">🗺️ Board</button>
       <button data-tab="tasks">🎬 Group tasks</button>
       <button class="market-tab" data-tab="ideas">🎯 Activity Market</button>
+      <button class="desk-tab" data-tab="desk">🛎️ Crew Desk</button>
+      <button class="plan-tab" data-tab="plan">🗓️ Itinerary</button>
       <button class="casino-tab" data-tab="bookie">🎲 The Bookies</button>
       <button data-tab="intel">📍 Trip intel</button>
       <button data-tab="settings">⚙️ Roster &amp; vibes</button>
@@ -580,6 +647,18 @@
                 <span class="hub-title">Roster</span>
                 <span class="hub-copy">Names, roles and tokens.</span>
                 <span class="hub-status">Edit roster</span>
+              </button>
+              <button class="hub-card" data-jump="desk">
+                <span class="hub-icon">🛎️</span>
+                <span class="hub-title">Crew Desk</span>
+                <span class="hub-copy">Own a job, share options, vote: accom, car, dinners.</span>
+                <span class="hub-status" id="boardDeskStatus">0 open · 0 decided</span>
+              </button>
+              <button class="hub-card" data-jump="plan">
+                <span class="hub-icon">🗓️</span>
+                <span class="hub-title">Itinerary</span>
+                <span class="hub-copy">Auto-draft the days from the winning activities.</span>
+                <span class="hub-status" id="boardPlanStatus">Not drafted yet</span>
               </button>
               <button class="hub-card" data-jump="bookie">
                 <span class="hub-icon">🎲</span>
@@ -780,6 +859,87 @@
         </div>
       </section>
 
+      <section id="desk" class="section">
+        <div class="layout">
+          <div class="panel pad">
+            <div class="panel-head" style="padding:0 0 18px; border-bottom:0">
+              <div>
+                <h2>Crew Desk</h2>
+                <p class="panel-sub">Put your hand up, share options, vote. Where group jobs get owned and decisions get made.</p>
+              </div>
+              <div class="pill-row" style="margin:0">
+                <span class="pill done" id="deskDecidedBadge">0 decided</span>
+                <span class="pill warn" id="deskOpenBadge">0 open</span>
+                <span class="pill hot" id="deskOptionsBadge">0 options shared</span>
+              </div>
+            </div>
+            <div class="idea-help" style="margin-bottom:14px">🙋 Tap <strong>“I'll look into this”</strong> to own a job · 📋 share options with a link + price · 👍 the group votes on the best one · ✔️ an owner locks the pick. Pick yourself with the player dropdown on the Board tab first.</div>
+            <div class="desk-list" id="deskList"></div>
+            <h3 style="margin:26px 0 4px">Start a new decision room</h3>
+            <p class="panel-sub">Anything the group needs to sort — a day trip, a SIM plan, airport transfers.</p>
+            <div class="add-opt" style="grid-template-columns:1.3fr 1.7fr auto; margin-top:12px">
+              <input type="text" id="newRoomTitle" placeholder="What's the decision? e.g. Airport transfer" />
+              <input type="text" id="newRoomDesc" placeholder="One line of detail (optional)" />
+              <button class="btn small" id="addRoomBtn">Add room</button>
+            </div>
+          </div>
+          <aside class="side-stack">
+            <div class="panel pad">
+              <div class="label">How it flows</div>
+              <div class="flow-step" style="margin-top:12px"><strong>1. Hands up 🙋</strong><span>Someone owns each job — accom, car, dinners.</span></div>
+              <div class="flow-step" style="margin-top:10px"><strong>2. Share options 📋</strong><span>Owner posts links + prices for the group.</span></div>
+              <div class="flow-step" style="margin-top:10px"><strong>3. Vote + lock 👍</strong><span>Group thumbs-up the favourite; an owner locks it.</span></div>
+            </div>
+            <div class="info-card">
+              <div class="emoji">🔗</div>
+              <h3>Feeds the board</h3>
+              <p>Locking both stays ticks <strong>Pick the stay</strong>. Locking Jeju car hire ticks <strong>Lock the ride plan</strong>. Decided dinners drop into the Itinerary.</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="plan" class="section">
+        <div class="layout">
+          <div class="panel pad">
+            <div class="panel-head" style="padding:0 0 18px; border-bottom:0">
+              <div>
+                <h2>Itinerary</h2>
+                <p class="panel-sub">Auto-draft a day-by-day plan from the winning activities, then tweak it together.</p>
+              </div>
+              <div class="pill-row" style="margin:0">
+                <span class="pill hot" id="planCountBadge">0 placed</span>
+              </div>
+            </div>
+            <div class="idea-help" id="planSummary" style="margin-bottom:14px">Shortlist some activities in the Activity Market first, then draft the days here.</div>
+            <div class="plan-toolbar">
+              <button class="btn small" id="planGenBtn">✨ Auto-draft from the votes</button>
+              <button class="btn small secondary" id="planCopyBtn">Copy itinerary</button>
+              <button class="btn small ghost" id="planClearBtn">Clear</button>
+            </div>
+            <div class="plan-days" id="planDays"></div>
+            <div class="plan-add">
+              <input type="text" id="planAddTitle" placeholder="Add something manually — e.g. Han River picnic" />
+              <select id="planAddDay" aria-label="Day to add to"></select>
+              <button class="btn small" id="planAddBtn">Add</button>
+            </div>
+          </div>
+          <aside class="side-stack">
+            <div class="panel pad">
+              <div class="label">Feeding the plan</div>
+              <p class="panel-sub" style="margin-top:4px">Shortlisted activities + decided dinners.</p>
+              <div class="mini-idea-list" id="planFeed" style="margin-top:12px"></div>
+              <button class="btn small ghost" id="planLockBtn" style="margin-top:6px">🔒 Lock this itinerary</button>
+            </div>
+            <div class="info-card">
+              <div class="emoji">🧭</div>
+              <h3>How the draft works</h3>
+              <p>Activities are bucketed by city — Seoul ideas land on Seoul days, Jeju ideas on Jeju days — and spread ~2 per day. A smart starting point, not gospel: shuffle freely with each item's day dropdown.</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
       <section id="bookie" class="section">
         <div class="layout">
           <div class="panel pad">
@@ -960,6 +1120,31 @@
       ]
     };
 
+    // Crew Desk — own a job, share options, group votes, owner locks the pick.
+    const defaultDesk = {
+      rooms: [
+        { id: "stay_seoul", emoji: "🏨", kind: "accom", title: "Seoul stay", desc: "Where we base in Seoul — hotel rooms or an apartment near the action.", owners: [], options: [], status: "open", chosen: null },
+        { id: "stay_jeju", emoji: "🏝️", kind: "accom", title: "Jeju villa / stay", desc: "The Jeju base — villa, pension or hotel. Pool + space is the dream.", owners: [], options: [], status: "open", chosen: null },
+        { id: "car_jeju", emoji: "🚘", kind: "car", title: "Jeju car hire", desc: "Rental cars for the island. Who's driving and who's researching?", owners: [], drivers: [], options: [], status: "open", chosen: null },
+        { id: "dinner_seoul", emoji: "🍖", kind: "dinner", title: "Seoul group dinner", desc: "One big group dinner in Seoul — KBBQ, fried chicken, whatever wins.", owners: [], options: [], status: "open", chosen: null },
+        { id: "dinner_jeju", emoji: "🦞", kind: "dinner", title: "Jeju group dinner", desc: "Island seafood or BBQ night together.", owners: [], options: [], status: "open", chosen: null }
+      ]
+    };
+
+    // Itinerary builder — fixed trip skeleton; activities auto-slot onto these days.
+    const TRIP_DAYS = [
+      { id: "d24", date: "Fri 24 Oct", city: "Seoul", logistics: true, note: "Land in Seoul late — easy arrival night." },
+      { id: "d25", date: "Sat 25 Oct", city: "Seoul" },
+      { id: "d26", date: "Sun 26 Oct", city: "Seoul" },
+      { id: "d27", date: "Mon 27 Oct", city: "Seoul → Jeju", logistics: true, note: "Fly ICN/GMP → CJU. Afternoon and evening on the island." },
+      { id: "d28", date: "Tue 28 Oct", city: "Jeju" },
+      { id: "d29", date: "Wed 29 Oct", city: "Jeju" },
+      { id: "d30", date: "Thu 30 Oct", city: "Jeju" },
+      { id: "d31", date: "Fri 31 Oct", city: "Jeju" },
+      { id: "d1", date: "Sat 1 Nov", city: "Seoul", note: "Back to Seoul — last night." },
+      { id: "d2", date: "Sun 2 Nov", city: "Home", logistics: true, note: "Fly home." }
+    ];
+
     const defaultState = {
       selectedPlayer: 0,
       ideas: structuredClone(defaultIdeas),
@@ -984,7 +1169,9 @@
         foodBars: false,
         offlinePack: false
       },
-      bookie: structuredClone(defaultBookie)
+      bookie: structuredClone(defaultBookie),
+      desk: structuredClone(defaultDesk),
+      plan: { generatedAt: null, items: [] }
     };
 
     const personalTasks = [
@@ -1025,7 +1212,9 @@
           groupDone: { ...defaultState.groupDone, ...(parsed.groupDone || {}) },
           ideas: parsed.ideas || structuredClone(defaultIdeas),
           ideaVotes: parsed.ideaVotes || {},
-          bookie: parsed.bookie || structuredClone(defaultBookie)
+          bookie: parsed.bookie || structuredClone(defaultBookie),
+          desk: parsed.desk || structuredClone(defaultDesk),
+          plan: parsed.plan || { generatedAt: null, items: [] }
         };
       } catch (e) {
         return structuredClone(defaultState);
@@ -1052,7 +1241,9 @@
         groupDone: { ...defaultState.groupDone, ...(remote.groupDone || {}) },
         ideas: remote.ideas || structuredClone(defaultIdeas),
         ideaVotes: remote.ideaVotes || {},
-        bookie: remote.bookie || structuredClone(defaultBookie)
+        bookie: remote.bookie || structuredClone(defaultBookie),
+        desk: remote.desk || structuredClone(defaultDesk),
+        plan: remote.plan || { generatedAt: null, items: [] }
       };
       if (typeof localSelected === "number" && state.players[localSelected]) {
         state.selectedPlayer = localSelected;
@@ -1753,9 +1944,299 @@
       if (bbs) bbs.textContent = `${openCount} open market${openCount === 1 ? "" : "s"}`;
     }
 
+    // ---- Crew Desk: hands up, share options, group vote, lock the pick ----
+    const DEFAULT_ROOM_IDS = defaultDesk.rooms.map(r => r.id);
+
+    function ensureDesk() {
+      if (!state.desk || typeof state.desk !== "object") state.desk = structuredClone(defaultDesk);
+      if (!Array.isArray(state.desk.rooms)) state.desk.rooms = structuredClone(defaultDesk.rooms);
+      state.desk.rooms.forEach(r => {
+        if (!Array.isArray(r.owners)) r.owners = [];
+        if (!Array.isArray(r.options)) r.options = [];
+        if (r.kind === "car" && !Array.isArray(r.drivers)) r.drivers = [];
+        r.options.forEach(o => { if (!o.votes || typeof o.votes !== "object") o.votes = {}; });
+        if (!r.status) r.status = "open";
+      });
+    }
+    function deskRoom(id) { ensureDesk(); return state.desk.rooms.find(r => r.id === id); }
+    function optVotes(o) { return Object.keys(o.votes || {}).length; }
+
+    function toggleOwner(id) {
+      const r = deskRoom(id); if (!r) return;
+      const idx = state.selectedPlayer;
+      const on = r.owners.includes(idx);
+      r.owners = on ? r.owners.filter(x => x !== idx) : [...r.owners, idx];
+      saveState(); renderAll();
+      toast(on ? `${selectedPlayer().name} stepped off ${r.title}` : `${selectedPlayer().name} is on ${r.title} 🙋`);
+    }
+    function toggleDriver(id) {
+      const r = deskRoom(id); if (!r || r.kind !== "car") return;
+      const idx = state.selectedPlayer;
+      const on = r.drivers.includes(idx);
+      r.drivers = on ? r.drivers.filter(x => x !== idx) : [...r.drivers, idx];
+      if (!on && !r.owners.includes(idx)) r.owners.push(idx); // a driver is on the job too
+      saveState(); renderAll();
+      toast(on ? `${selectedPlayer().name} is off driving` : `${selectedPlayer().name} will drive in Jeju 🚗`);
+    }
+    function addDeskOption(id, data) {
+      const r = deskRoom(id); if (!r) return;
+      if (!data.title) { toast("Give the option a name first"); return; }
+      let link = (data.link || "").trim();
+      if (link && !/^https?:\/\//i.test(link)) link = "https://" + link;
+      r.options.push({ id: `op_${Date.now()}_${Math.floor(Math.random() * 1000)}`, by: state.selectedPlayer, title: data.title.trim(), link, price: (data.price || "").trim(), notes: (data.notes || "").trim(), votes: { [state.selectedPlayer]: true } });
+      saveState(); renderAll(); toast(`${selectedPlayer().name} shared an option`);
+    }
+    function removeDeskOption(roomId, optId) {
+      const r = deskRoom(roomId); if (!r) return;
+      r.options = r.options.filter(o => o.id !== optId);
+      if (r.chosen === optId) { r.chosen = null; r.status = "open"; syncDeskTasks(); }
+      saveState(); renderAll(); toast("Option removed");
+    }
+    function toggleOptionVote(roomId, optId) {
+      const r = deskRoom(roomId); if (!r) return;
+      const o = r.options.find(x => x.id === optId); if (!o) return;
+      const idx = state.selectedPlayer;
+      if (o.votes[idx]) delete o.votes[idx]; else o.votes[idx] = true;
+      saveState(); renderAll();
+    }
+    function decideRoom(roomId, optId) {
+      const r = deskRoom(roomId); if (!r) return;
+      r.status = "decided"; r.chosen = optId;
+      syncDeskTasks(); saveState(); renderAll(); celebrate();
+      const o = r.options.find(x => x.id === optId);
+      toast(`Locked: ${o ? o.title : r.title}`);
+    }
+    function reopenRoom(roomId) {
+      const r = deskRoom(roomId); if (!r) return;
+      r.status = "open"; r.chosen = null;
+      syncDeskTasks(); saveState(); renderAll(); toast(`${r.title} reopened`);
+    }
+    function syncDeskTasks() {
+      ensureDesk();
+      const accom = state.desk.rooms.filter(r => r.kind === "accom");
+      if (accom.length) state.groupDone.accommodation = accom.every(r => r.status === "decided");
+      const cars = state.desk.rooms.filter(r => r.kind === "car");
+      if (cars.length) state.groupDone.vehicle = cars.every(r => r.status === "decided");
+    }
+    function addDeskRoom(title, desc) {
+      ensureDesk();
+      if (!(title || "").trim()) { toast("Name the decision first"); return; }
+      state.desk.rooms.push({ id: `room_${Date.now()}`, emoji: "📌", kind: "custom", title: title.trim(), desc: (desc || "Group decision — put your hand up, share options, vote.").trim(), owners: [], options: [], status: "open", chosen: null });
+      saveState(); renderAll(); toast("Decision room added");
+    }
+    function removeDeskRoom(roomId) {
+      ensureDesk();
+      state.desk.rooms = state.desk.rooms.filter(r => r.id !== roomId);
+      saveState(); renderAll(); toast("Room removed");
+    }
+
+    function renderDesk() {
+      ensureDesk();
+      const holder = document.getElementById("deskList");
+      if (!holder) return;
+      const idx = state.selectedPlayer;
+      const avatar = i => { const p = state.players[i]; return p ? `<span class="avatar-dot" style="background:${p.colour}">${escapeHtml(p.initials)}</span>` : ""; };
+      const nameOf = i => { const p = state.players[i]; return p ? escapeHtml(p.name) : "—"; };
+
+      holder.innerHTML = state.desk.rooms.map(r => {
+        const decided = r.status === "decided";
+        const opts = (r.options || []).slice().sort((a, b) => optVotes(b) - optVotes(a));
+        const topVotes = opts.length ? optVotes(opts[0]) : 0;
+        const ownerChips = r.owners.length
+          ? r.owners.map(i => `<span class="owner-chip">${avatar(i)}${nameOf(i)}</span>`).join("")
+          : `<span class="owner-chip empty">No one yet</span>`;
+        const meOwner = r.owners.includes(idx);
+
+        let driveRow = "";
+        if (r.kind === "car") {
+          const dchips = (r.drivers && r.drivers.length)
+            ? r.drivers.map(i => `<span class="owner-chip">🚗 ${avatar(i)}${nameOf(i)}</span>`).join("")
+            : `<span class="owner-chip empty">No driver yet</span>`;
+          const meDriver = r.drivers && r.drivers.includes(idx);
+          driveRow = `<div class="crew-row"><span class="crew-label">Driving</span>${dchips}<button class="hand-btn drive ${meDriver ? "on" : ""}" data-desk="drive" data-room="${r.id}">${meDriver ? "🚗 You're driving" : "🚗 I'll drive"}</button></div>`;
+        }
+
+        const optHtml = opts.length ? opts.map(o => {
+          const v = optVotes(o);
+          const leading = !decided && v > 0 && v === topVotes;
+          const chosen = decided && r.chosen === o.id;
+          const mine = o.by === idx;
+          const voted = !!o.votes[idx];
+          const name = o.link ? `<a href="${escapeAttr(o.link)}" target="_blank" rel="noopener">${escapeHtml(o.title)} ↗</a>` : escapeHtml(o.title);
+          const meta = [];
+          if (o.price) meta.push(`<span class="pill">${escapeHtml(o.price)}</span>`);
+          meta.push(`<span class="pill">by ${nameOf(o.by)}</span>`);
+          if (leading) meta.push(`<span class="pill warn">👑 Leading</span>`);
+          if (chosen) meta.push(`<span class="pill done">✅ Chosen</span>`);
+          return `<div class="opt-card ${leading ? "leading" : ""} ${chosen ? "chosen" : ""}">
+            <div class="opt-main">
+              <div><div class="opt-name">${name}</div>${o.notes ? `<div class="opt-sub">${escapeHtml(o.notes)}</div>` : ""}<div class="opt-meta">${meta.join("")}</div></div>
+              <div class="opt-actions">
+                <button class="vote-up ${voted ? "on" : ""}" data-desk="vote" data-room="${r.id}" data-opt="${o.id}">👍 ${v}</button>
+                ${!decided ? `<button class="btn small secondary" data-desk="pick" data-room="${r.id}" data-opt="${o.id}">✔️ Lock</button>` : ""}
+                ${(!decided && mine) ? `<button class="btn small danger" data-desk="delopt" data-room="${r.id}" data-opt="${o.id}">🗑️</button>` : ""}
+              </div>
+            </div>
+          </div>`;
+        }).join("") : `<div class="plan-empty-day">No options shared yet. Add the first one below.</div>`;
+
+        const addForm = !decided ? `<div class="add-opt">
+          <input type="text" data-room="${r.id}" data-f="title" placeholder="Option name (e.g. Sunrise Villa)" />
+          <input type="text" data-room="${r.id}" data-f="link" placeholder="Link (optional)" />
+          <input type="text" data-room="${r.id}" data-f="price" placeholder="Price (optional)" />
+          <button class="btn small" data-desk="addopt" data-room="${r.id}">Add option</button>
+        </div>
+        <input type="text" class="opt-notes-in" data-room="${r.id}" data-f="notes" placeholder="One-line note (optional)" />` : "";
+
+        const removable = !DEFAULT_ROOM_IDS.includes(r.id);
+        const footer = (decided || removable) ? `<div class="bet-foot">
+          ${decided ? `<button class="btn small ghost" data-desk="reopen" data-room="${r.id}">Reopen</button>` : ""}
+          ${removable ? `<button class="btn small danger" data-desk="delroom" data-room="${r.id}">🗑️ Remove room</button>` : ""}
+        </div>` : "";
+
+        return `<article class="desk-room ${decided ? "is-decided" : ""}">
+          <div class="desk-head">
+            <div class="desk-emoji">${r.emoji || "📌"}</div>
+            <div><div class="desk-title">${escapeHtml(r.title)}</div><div class="desk-desc">${escapeHtml(r.desc || "")}</div></div>
+            <span class="idea-status ${decided ? "hot" : ""}">${decided ? "Decided" : "Open"}</span>
+          </div>
+          <div class="crew-row"><span class="crew-label">On it</span>${ownerChips}<button class="hand-btn ${meOwner ? "on" : ""}" data-desk="hand" data-room="${r.id}">${meOwner ? "✋ You're on it" : "🙋 I'll look into this"}</button></div>
+          ${driveRow}
+          <div class="opt-list">${optHtml}</div>
+          ${addForm}
+          ${footer}
+        </article>`;
+      }).join("");
+
+      holder.querySelectorAll("[data-desk]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const act = btn.dataset.desk, room = btn.dataset.room, opt = btn.dataset.opt;
+          if (act === "hand") toggleOwner(room);
+          else if (act === "drive") toggleDriver(room);
+          else if (act === "vote") toggleOptionVote(room, opt);
+          else if (act === "pick") { if (confirm("Lock this as the group's pick?")) decideRoom(room, opt); }
+          else if (act === "reopen") reopenRoom(room);
+          else if (act === "delopt") removeDeskOption(room, opt);
+          else if (act === "delroom") { if (confirm("Remove this whole decision room for everyone?")) removeDeskRoom(room); }
+          else if (act === "addopt") {
+            const get = f => { const el = holder.querySelector(`input[data-room="${room}"][data-f="${f}"]`); return el ? el.value : ""; };
+            addDeskOption(room, { title: get("title"), link: get("link"), price: get("price"), notes: get("notes") });
+          }
+        });
+      });
+
+      const decidedCount = state.desk.rooms.filter(r => r.status === "decided").length;
+      const openCount = state.desk.rooms.length - decidedCount;
+      const optCount = state.desk.rooms.reduce((s, r) => s + (r.options ? r.options.length : 0), 0);
+      const db = document.getElementById("deskDecidedBadge"); if (db) db.textContent = `${decidedCount} decided`;
+      const ob = document.getElementById("deskOpenBadge"); if (ob) ob.textContent = `${openCount} open`;
+      const opb = document.getElementById("deskOptionsBadge"); if (opb) opb.textContent = `${optCount} option${optCount === 1 ? "" : "s"} shared`;
+      const bds = document.getElementById("boardDeskStatus"); if (bds) bds.textContent = `${openCount} open · ${decidedCount} decided`;
+    }
+
+    // ---- Itinerary builder: auto-draft from winning votes, then editable ----
+    function cityBucket(city) {
+      const c = (city || "").toLowerCase();
+      const s = c.includes("seoul"), j = c.includes("jeju");
+      if (s && j) return "both"; if (j) return "jeju"; if (s) return "seoul"; return "both";
+    }
+    function ensurePlan() {
+      if (!state.plan || typeof state.plan !== "object") state.plan = { generatedAt: null, items: [] };
+      if (!Array.isArray(state.plan.items)) state.plan.items = [];
+    }
+    function planWinners() {
+      const ideas = allIdeas();
+      let w = ideas.filter(i => ideaStatus(tallyIdea(i.id)).label === "Shortlist");
+      if (w.length === 0) w = ideas.filter(i => tallyIdea(i.id).score > 0);
+      return w.slice().sort((a, b) => tallyIdea(b.id).score - tallyIdea(a.id).score);
+    }
+    function generatePlan() {
+      ensurePlan(); ensureDesk();
+      const winners = planWinners();
+      const seoulDays = ["d25", "d26", "d1"], jejuDays = ["d28", "d29", "d30", "d31"];
+      const buckets = { seoul: [], jeju: [] };
+      winners.forEach(i => {
+        const c = cityBucket(i.city);
+        if (c === "jeju") buckets.jeju.push(i);
+        else if (c === "seoul") buckets.seoul.push(i);
+        else (buckets.seoul.length <= buckets.jeju.length ? buckets.seoul : buckets.jeju).push(i);
+      });
+      const items = [];
+      const spread = (arr, days) => arr.forEach((i, n) => items.push({ id: `pl_${i.id}`, dayId: days[n % days.length], title: i.title, emoji: i.emoji || "📍", city: i.city || "", kind: "activity", note: "" }));
+      spread(buckets.seoul, seoulDays); spread(buckets.jeju, jejuDays);
+      state.desk.rooms.filter(r => r.kind === "dinner" && r.status === "decided" && r.chosen).forEach(r => {
+        const o = (r.options || []).find(x => x.id === r.chosen);
+        items.push({ id: `pl_${r.id}`, dayId: r.id === "dinner_jeju" ? "d28" : "d25", title: `Group dinner — ${o ? o.title : r.title}`, emoji: r.emoji || "🍽️", city: "", kind: "dinner", note: (o && o.link) ? o.link : "" });
+      });
+      state.plan = { generatedAt: new Date().toISOString(), items };
+      saveState(); renderAll();
+      if (items.length) celebrate();
+      toast(items.length ? `Drafted ${items.length} item${items.length > 1 ? "s" : ""} across the trip` : "No shortlisted activities yet — vote first");
+    }
+    function changeItemDay(itemId, dayId) { ensurePlan(); const it = state.plan.items.find(x => x.id === itemId); if (it) { it.dayId = dayId; saveState(); renderAll(); } }
+    function removePlanItem(itemId) { ensurePlan(); state.plan.items = state.plan.items.filter(x => x.id !== itemId); saveState(); renderAll(); toast("Removed from itinerary"); }
+    function addPlanItem(dayId, title) { ensurePlan(); if (!(title || "").trim()) { toast("Type something to add"); return; } state.plan.items.push({ id: `pl_x_${Date.now()}`, dayId, title: title.trim(), emoji: "📍", city: "", kind: "activity", note: "" }); saveState(); renderAll(); toast("Added to the day"); }
+    function clearPlan() { state.plan = { generatedAt: null, items: [] }; saveState(); renderAll(); toast("Itinerary cleared"); }
+
+    function renderPlan() {
+      ensurePlan();
+      const holder = document.getElementById("planDays");
+      if (!holder) return;
+      const items = state.plan.items;
+      const winners = planWinners();
+
+      const ps = document.getElementById("planSummary");
+      if (ps) ps.textContent = items.length
+        ? `${items.length} item${items.length > 1 ? "s" : ""} placed${state.plan.generatedAt ? ` · drafted ${relTime(new Date(state.plan.generatedAt).getTime())}` : ""}. Move anything with its day dropdown.`
+        : (winners.length ? `${winners.length} activit${winners.length > 1 ? "ies" : "y"} ready — tap “Auto-draft from the votes”.` : "Shortlist some activities in the Activity Market first, then draft the days here.");
+
+      const dayOpts = sel => TRIP_DAYS.map(d => `<option value="${d.id}" ${d.id === sel ? "selected" : ""}>${d.date}</option>`).join("");
+
+      holder.innerHTML = TRIP_DAYS.map(d => {
+        const dayItems = items.filter(it => it.dayId === d.id);
+        const cl = d.city.toLowerCase(); const tagCls = cl.includes("jeju") && !cl.includes("seoul") ? "jeju" : "";
+        const itemsHtml = dayItems.map(it => {
+          const sub = it.kind === "dinner"
+            ? (it.note ? `<a href="${escapeAttr(it.note)}" target="_blank" rel="noopener" class="pi-sub">booking ↗</a>` : `<span class="pi-sub">group dinner</span>`)
+            : (it.city ? `<span class="pi-sub">${escapeHtml(it.city)}</span>` : "");
+          return `<div class="plan-item ${it.kind === "dinner" ? "dinner" : ""}">
+            <span class="pi-emoji">${it.emoji || "📍"}</span>
+            <div><div class="pi-title">${escapeHtml(it.title)}</div>${sub}</div>
+            <select class="pi-move" data-plan="move" data-item="${it.id}" aria-label="Move to another day">${dayOpts(it.dayId)}</select>
+            <button class="pi-x" data-plan="del" data-item="${it.id}" aria-label="Remove">✕</button>
+          </div>`;
+        }).join("") || `<div class="plan-empty-day">${d.logistics ? "Travel / logistics day." : "Open — drop an activity here."}</div>`;
+        return `<div class="plan-day ${d.logistics ? "is-logistics" : ""}">
+          <div class="plan-day-head">
+            <span class="plan-date">${d.date}</span>
+            <span class="plan-citytag ${tagCls}">${escapeHtml(d.city)}</span>
+            ${d.note ? `<span class="plan-daynote">${escapeHtml(d.note)}</span>` : ""}
+          </div>
+          ${itemsHtml}
+        </div>`;
+      }).join("");
+
+      holder.querySelectorAll('[data-plan="move"]').forEach(sel => sel.addEventListener("change", () => changeItemDay(sel.dataset.item, sel.value)));
+      holder.querySelectorAll('[data-plan="del"]').forEach(b => b.addEventListener("click", () => removePlanItem(b.dataset.item)));
+
+      const feed = document.getElementById("planFeed");
+      if (feed) {
+        const dinners = state.desk ? state.desk.rooms.filter(r => r.kind === "dinner" && r.status === "decided") : [];
+        feed.innerHTML = (winners.map(i => `<div class="mini-idea-row"><span>${i.emoji || "📍"}</span><div><div class="mini-idea-name">${escapeHtml(i.title)}</div><div class="mini-idea-meta">${escapeHtml(i.city || "TBC")} · score ${tallyIdea(i.id).score}</div></div><span class="idea-status hot">In</span></div>`).join("")
+          + dinners.map(r => { const o = (r.options || []).find(x => x.id === r.chosen); return `<div class="mini-idea-row"><span>${r.emoji || "🍽️"}</span><div><div class="mini-idea-name">${escapeHtml(o ? o.title : r.title)}</div><div class="mini-idea-meta">Decided dinner</div></div><span class="idea-status hot">In</span></div>`; }).join(""))
+          || `<div class="micro">Nothing shortlisted yet. Win some votes in the Activity Market.</div>`;
+      }
+
+      const cb = document.getElementById("planCountBadge"); if (cb) cb.textContent = `${items.length} placed`;
+      const bp = document.getElementById("boardPlanStatus"); if (bp) bp.textContent = items.length ? `${items.length} placed` : "Not drafted yet";
+      const lockBtn = document.getElementById("planLockBtn"); if (lockBtn) lockBtn.textContent = state.groupDone.itinerary ? "✅ Itinerary locked (tap to unlock)" : "🔒 Lock this itinerary";
+      const addDay = document.getElementById("planAddDay");
+      if (addDay && !addDay.dataset.filled) { addDay.innerHTML = TRIP_DAYS.map(d => `<option value="${d.id}">${d.date}</option>`).join(""); addDay.dataset.filled = "1"; }
+    }
+
     function renderAll() {
-      ensureBookie();
-      renderNodes(); renderTokens(); renderPlayerSelect(); renderTravellerGrid(); renderSelectedPanel(); renderVibePicker(); renderTasks(); renderIdeas(); renderBoardIdeaPreview(); renderNextActions(); renderBadges(); renderRosterEditor(); renderHero(); renderBookie();
+      ensureBookie(); ensureDesk(); ensurePlan();
+      renderNodes(); renderTokens(); renderPlayerSelect(); renderTravellerGrid(); renderSelectedPanel(); renderVibePicker(); renderTasks(); renderIdeas(); renderBoardIdeaPreview(); renderNextActions(); renderBadges(); renderRosterEditor(); renderHero(); renderBookie(); renderDesk(); renderPlan();
     }
 
     function toast(message) {
@@ -1858,6 +2339,16 @@
         "Open group bosses:",
         ...groupTasks.filter(t => !state.groupDone[t.id]).map(t => `• ${t.title}`),
         "",
+        "Crew Desk:",
+        ...(state.desk ? state.desk.rooms : []).map(r => {
+          const o = (r.options || []).find(x => x.id === r.chosen);
+          const owners = r.owners.map(i => state.players[i] ? state.players[i].name : "").filter(Boolean).join(", ");
+          return `• ${r.title}: ${r.status === "decided" ? ("✅ " + (o ? o.title : "decided")) : `open (${(r.options || []).length} option${(r.options || []).length === 1 ? "" : "s"})`}${owners ? ` — on it: ${owners}` : ""}`;
+        }),
+        "",
+        "Draft itinerary:",
+        ...TRIP_DAYS.map(d => { const its = (state.plan ? state.plan.items : []).filter(it => it.dayId === d.id); return `• ${d.date} (${d.city}): ${its.length ? its.map(it => it.title).join("; ") : "—"}`; }),
+        "",
         "The Bookies — form table:",
         ...state.players.map((p, i) => ({ name: p.name, bal: playerBalance(i) })).sort((a, b) => b.bal - a.bal).map((r, n) => `${n + 1}. ${r.name}: ${r.bal.toLocaleString()} chips`),
         "",
@@ -1896,6 +2387,31 @@
     });
     const restoreMarketsBtn = document.getElementById("restoreMarketsBtn");
     if (restoreMarketsBtn) restoreMarketsBtn.addEventListener("click", restoreStarterMarkets);
+
+    const addRoomBtn = document.getElementById("addRoomBtn");
+    if (addRoomBtn) addRoomBtn.addEventListener("click", () => {
+      const t = document.getElementById("newRoomTitle"), d = document.getElementById("newRoomDesc");
+      addDeskRoom(t.value, d.value); t.value = ""; d.value = "";
+    });
+
+    const planGenBtn = document.getElementById("planGenBtn");
+    if (planGenBtn) planGenBtn.addEventListener("click", () => { if (state.plan.items.length && !confirm("Re-draft the itinerary? This replaces the current day plan.")) return; generatePlan(); });
+    const planClearBtn = document.getElementById("planClearBtn");
+    if (planClearBtn) planClearBtn.addEventListener("click", () => { if (state.plan.items.length && confirm("Clear the whole itinerary?")) clearPlan(); });
+    const planAddBtn = document.getElementById("planAddBtn");
+    if (planAddBtn) planAddBtn.addEventListener("click", () => { const t = document.getElementById("planAddTitle"), dsel = document.getElementById("planAddDay"); addPlanItem(dsel.value || "d25", t.value); t.value = ""; });
+    const planLockBtn = document.getElementById("planLockBtn");
+    if (planLockBtn) planLockBtn.addEventListener("click", () => { state.groupDone.itinerary = !state.groupDone.itinerary; if (state.groupDone.itinerary) celebrate(); saveState(); renderAll(); toast(state.groupDone.itinerary ? "Itinerary locked 🔒" : "Itinerary unlocked"); });
+    const planCopyBtn = document.getElementById("planCopyBtn");
+    if (planCopyBtn) planCopyBtn.addEventListener("click", async () => {
+      const lines = ["Korea Boys Trip — Draft Itinerary", "23 Oct to 2 Nov 2026", ""];
+      TRIP_DAYS.forEach(d => {
+        const its = state.plan.items.filter(it => it.dayId === d.id);
+        lines.push(`${d.date} — ${d.city}${d.note ? ` (${d.note})` : ""}`);
+        if (its.length) its.forEach(it => lines.push(`  • ${it.title}`)); else lines.push("  • —");
+      });
+      await navigator.clipboard.writeText(lines.join("\n")); toast("Itinerary copied");
+    });
 
     document.getElementById("syncChip").addEventListener("click", () => remotePull({ manual: true }));
     const syncRefreshBtn = document.getElementById("syncRefreshBtn");
