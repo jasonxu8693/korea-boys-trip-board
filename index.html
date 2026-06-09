@@ -714,8 +714,6 @@
               </div>
             </div>
             <div class="quest-controls">
-              <button class="btn small" id="advanceBtn">Move player forward</button>
-              <button class="btn small secondary" id="undoBtn">Move player back</button>
               <button class="btn small ghost" id="copySummaryBtn">Copy summary</button>
               <button class="btn small danger" id="resetBtn">Reset board</button>
             </div>
@@ -770,14 +768,13 @@
             <div class="panel-head">
               <div>
                 <h2>Group tasks</h2>
-                <p class="panel-sub">Personal tasks move one player. Group tasks move everyone.</p>
+                <p class="panel-sub">The shared to-do list. Tick a boss and the whole crew's tokens move forward on the board.</p>
               </div>
-              <button class="btn small secondary" id="markJasonFactsBtn">Apply Jason facts</button>
+              <div class="pill-row" style="margin:0">
+                <span class="pill warn" id="groupTasksBadge">0 of 9 done</span>
+              </div>
             </div>
             <div style="padding:20px">
-              <h3 style="margin-bottom:12px">Personal checkpoints</h3>
-              <div class="task-list" id="personalTasks"></div>
-              <h3 style="margin:24px 0 12px">Group tasks</h3>
               <div class="task-list" id="groupTasks"></div>
             </div>
           </div>
@@ -1069,17 +1066,20 @@
     let pendingSave = false;
     let lastLocalSaveAt = 0;
 
+    // The board route is now a SHARED progress track: a start, then one stop per
+    // group boss (same order as groupTasks). Every traveller's token sits at the
+    // group's current stop and they all advance together as bosses get cleared.
     const checkpoints = [
-      { id: "spawn", title: "London check in", meta: "Start", icon: "✈️", type: "personal", x: 10.5, y: 82 },
-      { id: "squad", title: "Crew lock", meta: "P1", icon: "🎤", type: "personal", x: 22, y: 61 },
-      { id: "outbound", title: "Ticket drop", meta: "P1", icon: "🎟️", type: "personal", x: 26, y: 39 },
-      { id: "flightBoss", title: "Route lock", meta: "Boss", icon: "🛩️", type: "boss", x: 42, y: 22 },
-      { id: "seoul", title: "Seoul set", meta: "Plan", icon: "🎧", type: "group", x: 63, y: 31 },
-      { id: "jejuHop", title: "CJU hop", meta: "Book", icon: "💺", type: "personal", x: 74, y: 45 },
-      { id: "basecamp", title: "Stay lock", meta: "Boss", icon: "🏨", type: "boss", x: 84, y: 61 },
-      { id: "wheels", title: "Ride plan", meta: "Boss", icon: "🚘", type: "boss", x: 76, y: 75 },
-      { id: "entry", title: "Admin clear", meta: "Admin", icon: "🪪", type: "personal", x: 58, y: 77 },
-      { id: "final", title: "Show ready", meta: "Clear", icon: "✨", type: "personal", x: 42, y: 68 }
+      { id: "spawn", title: "Trip start", meta: "Go", icon: "🛫", type: "personal", x: 10.5, y: 82 },
+      { id: "flightKraken", title: "Lock the route", meta: "Boss 1", icon: "🛩️", type: "group", x: 22, y: 61 },
+      { id: "budgetPact", title: "Set the budget", meta: "Boss 2", icon: "💳", type: "group", x: 26, y: 39 },
+      { id: "seoulJejuSplit", title: "Seoul / Jeju split", meta: "Boss 3", icon: "🌆", type: "group", x: 42, y: 22 },
+      { id: "accommodation", title: "Pick the stay", meta: "Boss 4", icon: "🏨", type: "boss", x: 63, y: 31 },
+      { id: "vehicle", title: "Lock the ride", meta: "Boss 5", icon: "🚘", type: "boss", x: 74, y: 45 },
+      { id: "activityShortlist", title: "Activity shortlist", meta: "Boss 6", icon: "🎤", type: "group", x: 84, y: 61 },
+      { id: "itinerary", title: "Build itinerary", meta: "Boss 7", icon: "📍", type: "group", x: 76, y: 75 },
+      { id: "foodBars", title: "Food & nightlife", meta: "Boss 8", icon: "🌙", type: "group", x: 58, y: 77 },
+      { id: "offlinePack", title: "Trip ready", meta: "Boss 9", icon: "✨", type: "boss", x: 42, y: 68 }
     ];
 
     const colours = ["#72f4ff", "#ff97ca", "#d7e6ff", "#8be8d4", "#8fa9ff", "#9ec9ff", "#f5f8ff"];
@@ -1150,13 +1150,13 @@
       ideas: structuredClone(defaultIdeas),
       ideaVotes: {},
       players: [
-        { name: "Jason", initials: "J", colour: colours[0], role: roles[0], vibe: "foodie", progress: 2, completed: { squad: true, outbound: true } },
-        { name: "Traveller 2", initials: "T2", colour: colours[1], role: roles[1], vibe: null, progress: 0, completed: {} },
-        { name: "Traveller 3", initials: "T3", colour: colours[2], role: roles[2], vibe: null, progress: 0, completed: {} },
-        { name: "Traveller 4", initials: "T4", colour: colours[3], role: roles[3], vibe: null, progress: 0, completed: {} },
-        { name: "Traveller 5", initials: "T5", colour: colours[4], role: roles[4], vibe: null, progress: 0, completed: {} },
-        { name: "Traveller 6", initials: "T6", colour: colours[5], role: roles[5], vibe: null, progress: 0, completed: {} },
-        { name: "Traveller 7", initials: "T7", colour: colours[6], role: roles[6], vibe: null, progress: 0, completed: {} }
+        { name: "Jason", initials: "J", colour: colours[0], role: roles[0], vibe: "foodie" },
+        { name: "Traveller 2", initials: "T2", colour: colours[1], role: roles[1], vibe: null },
+        { name: "Traveller 3", initials: "T3", colour: colours[2], role: roles[2], vibe: null },
+        { name: "Traveller 4", initials: "T4", colour: colours[3], role: roles[3], vibe: null },
+        { name: "Traveller 5", initials: "T5", colour: colours[4], role: roles[4], vibe: null },
+        { name: "Traveller 6", initials: "T6", colour: colours[5], role: roles[5], vibe: null },
+        { name: "Traveller 7", initials: "T7", colour: colours[6], role: roles[6], vibe: null }
       ],
       groupDone: {
         flightKraken: false,
@@ -1173,18 +1173,6 @@
       desk: structuredClone(defaultDesk),
       plan: { generatedAt: null, items: [] }
     };
-
-    const personalTasks = [
-      { id: "squad", icon: "🎤", title: "Confirm traveller details", desc: "Name, contact, passport name, passport expiry and yes or no status.", priority: "P1", checkpoint: 1 },
-      { id: "outbound", icon: "🎟️", title: "Outbound flight locked", desc: "Jason done. Others choose same route or their own outbound.", priority: "P1", checkpoint: 2 },
-      { id: "return", icon: "↩️", title: "Return flight locked", desc: "Return flight still TBC.", priority: "P1", checkpoint: 3 },
-      { id: "wishlistVote", icon: "⭐", title: "Vote on activity ideas", desc: "Vote on at least one idea.", priority: "P2", checkpoint: 4 },
-      { id: "jejuHop", icon: "💺", title: "Seoul to Jeju domestic leg locked", desc: "Book ICN or GMP to CJU after the Seoul and Jeju split is clear.", priority: "P1", checkpoint: 5 },
-      { id: "accomShare", icon: "🏨", title: "Accommodation share paid", desc: "Confirm share after villa or hotel is selected.", priority: "P2", checkpoint: 6 },
-      { id: "transportShare", icon: "🚘", title: "Transport share confirmed", desc: "Confirm driver, passenger or taxi role.", priority: "P2", checkpoint: 7 },
-      { id: "entry", icon: "🪪", title: "Entry admin ready", desc: "Passport, arrival admin, insurance and entry rules checked.", priority: "P1", checkpoint: 8 },
-      { id: "final", icon: "✨", title: "Packed and offline ready", desc: "Bookings, QR codes, maps and emergency info saved offline.", priority: "P2", checkpoint: 9 }
-    ];
 
     const groupTasks = [
       { id: "flightKraken", icon: "🛩️", title: "Lock the route", desc: "Confirm dates, outbound route, return route and arrivals.", priority: "P1" },
@@ -1391,9 +1379,10 @@
     function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
     function selectedPlayer() { return state.players[state.selectedPlayer] || state.players[0]; }
 
-    function computePlayerProgress(player) {
-      const maxCheckpoint = Math.max(...personalTasks.filter(t => player.completed[t.id]).map(t => t.checkpoint), player.progress || 0);
-      return clamp(maxCheckpoint, 0, checkpoints.length - 1);
+    // Shared progress: the whole crew's token position = how many group bosses are done.
+    function groupProgressIndex() {
+      const done = groupTasks.filter(t => state.groupDone[t.id]).length;
+      return clamp(done, 0, checkpoints.length - 1);
     }
 
     function renderNodes() {
@@ -1410,9 +1399,8 @@
     function renderTokens() {
       const holder = document.getElementById("tokens");
       const used = {};
+      const progress = groupProgressIndex();
       holder.innerHTML = state.players.map((p, idx) => {
-        const progress = computePlayerProgress(p);
-        p.progress = progress;
         const cp = checkpoints[progress];
         const key = progress;
         used[key] = used[key] || 0;
@@ -1434,12 +1422,11 @@
     function renderTravellerGrid() {
       const holder = document.getElementById("travellerGrid");
       holder.innerHTML = state.players.map((p, idx) => {
-        const progress = computePlayerProgress(p);
         const v = vibeById(p.vibe);
         return `<div class="traveller-row" role="button" tabindex="0" data-player="${idx}">
           <div class="avatar-dot" style="background:${p.colour}">${escapeHtml(p.initials)}</div>
-          <div><div class="traveller-name">${escapeHtml(p.name)}${v ? `<span class="traveller-vibe">${v.emoji}</span>` : ""}</div><div class="traveller-progress">${v ? v.name + " · " : ""}${checkpoints[progress].title}</div></div>
-          <span class="pill ${idx === state.selectedPlayer ? "done" : ""}">${Math.round(progress / (checkpoints.length - 1) * 100)}%</span>
+          <div><div class="traveller-name">${escapeHtml(p.name)}${v ? `<span class="traveller-vibe">${v.emoji}</span>` : ""}</div><div class="traveller-progress">${v ? v.name + " · " : ""}${escapeHtml(p.role || "No role yet")}</div></div>
+          ${idx === state.selectedPlayer ? `<span class="pill done">You</span>` : ""}
         </div>`;
       }).join("");
       holder.querySelectorAll(".traveller-row").forEach(row => {
@@ -1449,7 +1436,7 @@
 
     function renderSelectedPanel() {
       const p = selectedPlayer();
-      const progress = computePlayerProgress(p);
+      const progress = groupProgressIndex();
       const percent = Math.round(progress / (checkpoints.length - 1) * 100);
       document.getElementById("selectedName").textContent = p.name;
       document.getElementById("selectedProgress").textContent = `${percent}%`;
@@ -1459,29 +1446,6 @@
     }
 
     function renderTasks() {
-      const p = selectedPlayer();
-      const personalHolder = document.getElementById("personalTasks");
-      personalHolder.innerHTML = personalTasks.map(task => {
-        const done = !!p.completed[task.id];
-        return `<label class="task-card ${done ? "completed" : ""}">
-          <div class="task-icon">${task.icon}</div>
-          <div><div class="task-title">${task.title}</div><div class="task-desc">${task.desc}</div><div class="task-tags"><span class="tag ${task.priority.toLowerCase()}">${task.priority}</span><span class="tag personal">${escapeHtml(p.name)} only</span></div></div>
-          <input class="toggle personal-toggle" type="checkbox" data-task="${task.id}" ${done ? "checked" : ""}/>
-        </label>`;
-      }).join("");
-      personalHolder.querySelectorAll(".personal-toggle").forEach(toggle => {
-        toggle.addEventListener("change", e => {
-          const taskId = e.target.dataset.task;
-          const player = selectedPlayer();
-          player.completed[taskId] = e.target.checked;
-          const progress = computePlayerProgress(player);
-          player.progress = progress;
-          saveState();
-          renderAll();
-          toast(e.target.checked ? `${player.name} cleared a checkpoint` : `${player.name} checkpoint unchecked`);
-        });
-      });
-
       const groupHolder = document.getElementById("groupTasks");
       groupHolder.innerHTML = groupTasks.map(task => {
         const done = !!state.groupDone[task.id];
@@ -1527,12 +1491,6 @@
       return allIdeas().filter(idea => state.ideaVotes?.[idea.id]?.[playerIdx]).length;
     }
 
-    function updateWishlistCheckpoint() {
-      const p = selectedPlayer();
-      p.completed.wishlistVote = selectedPlayerVoteCount(state.selectedPlayer) > 0;
-      if (p.completed.wishlistVote && (p.progress || 0) < 4) p.progress = 4;
-    }
-
     function renderIdeas() {
       const holder = document.getElementById("ideaGrid");
       if (!holder) return;
@@ -1567,7 +1525,6 @@
           state.ideaVotes[ideaId] = state.ideaVotes[ideaId] || {};
           if (state.ideaVotes[ideaId][state.selectedPlayer] === vote) delete state.ideaVotes[ideaId][state.selectedPlayer];
           else state.ideaVotes[ideaId][state.selectedPlayer] = vote;
-          updateWishlistCheckpoint();
           saveState(); renderAll(); toast(`${selectedPlayer().name} voted on an idea`);
         });
       });
@@ -1604,11 +1561,8 @@
     }
 
     function renderNextActions() {
-      const p = selectedPlayer();
-      const openPersonal = personalTasks.filter(t => !p.completed[t.id]).slice(0, 2);
-      const openGroup = groupTasks.filter(t => !state.groupDone[t.id]).slice(0, 1);
-      const actions = [...openPersonal, ...openGroup];
-      document.getElementById("nextActions").innerHTML = actions.map(t => `<div class="task-card" style="grid-template-columns:auto 1fr; padding:12px"><div class="task-icon">${t.icon}</div><div><div class="task-title">${t.title}</div><div class="task-desc">${t.desc}</div></div></div>`).join("") || `<div class="info-card"><div class="emoji">🏆</div><h3>All clear</h3><p>No open actions for the selected view.</p></div>`;
+      const actions = groupTasks.filter(t => !state.groupDone[t.id]).slice(0, 3);
+      document.getElementById("nextActions").innerHTML = actions.map(t => `<div class="task-card" style="grid-template-columns:auto 1fr; padding:12px"><div class="task-icon">${t.icon}</div><div><div class="task-title">${t.title}</div><div class="task-desc">${t.desc}</div></div></div>`).join("") || `<div class="info-card"><div class="emoji">🏆</div><h3>All bosses cleared</h3><p>Every group task is done — the crew's trip-ready. 🎉</p></div>`;
     }
 
     function renderBadges() {
@@ -1616,10 +1570,12 @@
       const vibeBadge = document.getElementById("vibeSummaryBadge");
       if (vibeBadge) vibeBadge.textContent = `${vibeSet}/${state.players.length} vibes set`;
       const groupTotal = groupTasks.length;
-      const groupDone = Object.values(state.groupDone).filter(Boolean).length;
+      const groupDone = groupTasks.filter(t => state.groupDone[t.id]).length;
       const percent = Math.round(groupDone / groupTotal * 100);
       const gpb = document.getElementById("groupProgressBadge");
       if (gpb) gpb.textContent = `Group bosses ${percent}%`;
+      const gtb = document.getElementById("groupTasksBadge");
+      if (gtb) gtb.textContent = `${groupDone} of ${groupTotal} done`;
     }
 
     function renderHero() {
@@ -2284,15 +2240,7 @@
 
     document.getElementById("playerSelect").addEventListener("change", e => { state.selectedPlayer = Number(e.target.value); saveState(); renderAll(); });
     document.getElementById("focusPlayerBtn").addEventListener("click", () => toast(`${selectedPlayer().name} is selected`));
-    document.getElementById("advanceBtn").addEventListener("click", () => { const p = selectedPlayer(); p.progress = clamp((p.progress || 0) + 1, 0, checkpoints.length - 1); saveState(); renderAll(); toast(`${p.name} moved forward`); });
-    document.getElementById("undoBtn").addEventListener("click", () => { const p = selectedPlayer(); p.progress = clamp((p.progress || 0) - 1, 0, checkpoints.length - 1); saveState(); renderAll(); toast(`${p.name} moved back`); });
     document.getElementById("resetBtn").addEventListener("click", () => { if (confirm("Reset this browser's Korea board state?")) { localStorage.removeItem(STORE_KEY); state = loadState(); renderAll(); toast("Board reset"); } });
-    document.getElementById("markJasonFactsBtn").addEventListener("click", () => {
-      const jason = state.players[0];
-      jason.name = "Jason"; jason.initials = "J"; jason.completed.squad = true; jason.completed.outbound = true; jason.progress = 2;
-      state.selectedPlayer = 0;
-      saveState(); renderAll(); toast("Jason facts applied");
-    });
 
     document.getElementById("addIdeaBtn").addEventListener("click", () => {
       const title = document.getElementById("newIdeaTitle").value.trim();
@@ -2328,10 +2276,10 @@
         "Korea Boys Trip Quest Summary",
         "Dates: 23 Oct to 2 Nov 2026",
         "Route: London to Seoul to Jeju",
-        `Group boss progress: ${groupDoneCount}/${groupTasks.length}`,
+        `Group boss progress: ${groupDoneCount}/${groupTasks.length} — at "${checkpoints[groupProgressIndex()].title}"`,
         "",
-        "Traveller progress:",
-        ...state.players.map(p => { const v = vibeById(p.vibe); return `• ${p.name}${v ? ` (${v.name})` : ""}: ${checkpoints[computePlayerProgress(p)].title}`; }),
+        "Crew:",
+        ...state.players.map(p => { const v = vibeById(p.vibe); return `• ${p.name}${v ? ` (${v.name})` : ""}${p.role ? ` — ${p.role}` : ""}`; }),
         "",
         "Shortlist ideas:",
         ...allIdeas().filter(i => ideaStatus(tallyIdea(i.id)).label === "Shortlist").map(i => `• ${i.title} (${i.city})`),
