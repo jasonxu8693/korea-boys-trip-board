@@ -517,7 +517,16 @@
     .plan-citytag { font-size:10px; font-weight:900; letter-spacing:0.06em; text-transform:uppercase; padding:5px 8px; border-radius:999px; background:rgba(114,244,255,0.14); color:#d4f9ff; }
     .plan-citytag.jeju { background:rgba(255,151,202,0.14); color:#ffd7f1; }
     .plan-daynote { color:var(--subtle); font-size:12px; flex-basis:100%; }
-    .plan-item { display:grid; grid-template-columns:auto 1fr auto auto; gap:9px; align-items:center; padding:9px 10px; border:1px solid rgba(255,255,255,0.1); border-radius:14px; background:rgba(0,0,0,0.16); margin-top:8px; }
+    .plan-item { display:grid; grid-template-columns:auto 1fr auto auto auto; gap:9px; align-items:center; padding:9px 10px; border:1px solid rgba(255,255,255,0.1); border-radius:14px; background:rgba(0,0,0,0.16); margin-top:8px; }
+    .pi-titlewrap { cursor:pointer; min-width:0; }
+    .pi-titlewrap:hover .pi-title { text-decoration:underline; text-decoration-color:rgba(255,255,255,0.35); text-underline-offset:3px; }
+    .pi-time { border:1px solid rgba(255,255,255,0.14); border-radius:10px; background:rgba(0,0,0,0.25); color:var(--ink); padding:6px 7px; font-size:11px; font-weight:800; width:88px; }
+    .pi-time::-webkit-calendar-picker-indicator { filter:invert(1); opacity:0.55; cursor:pointer; }
+    .pd-actions { margin-left:auto; display:flex; gap:6px; }
+    .pd-btn { border:1px solid rgba(255,255,255,0.14); border-radius:10px; background:rgba(0,0,0,0.22); color:var(--muted); padding:5px 9px; font-size:11px; font-weight:850; transition:border-color 0.15s ease, color 0.15s ease; }
+    .pd-btn:hover { border-color:rgba(255,255,255,0.3); color:var(--ink); }
+    .plan-day.is-off { opacity:0.55; border-style:dashed; }
+    .arr-sub { font-size:10px; font-weight:900; letter-spacing:0.07em; text-transform:uppercase; color:var(--subtle); }
     .plan-item.dinner { border-color:rgba(255,209,92,0.3); background:rgba(255,209,92,0.08); }
     .plan-item .pi-emoji { font-size:18px; }
     .pi-title { font-weight:850; font-size:13px; }
@@ -527,7 +536,7 @@
     .pi-move option { color:#111; }
     .pi-x { border:1px solid rgba(255,100,100,0.3); border-radius:10px; background:rgba(255,100,100,0.12); color:#ffdada; padding:7px 9px; font-weight:900; }
     .plan-empty-day { color:var(--subtle); font-size:12px; padding:5px 2px; }
-    .plan-add { display:grid; grid-template-columns:1fr auto auto; gap:8px; margin-top:14px; }
+    .plan-add { display:grid; grid-template-columns:1fr auto auto auto; gap:8px; margin-top:14px; }
     .plan-add select { width:auto; }
     @media (max-width:620px){ .add-opt, .plan-add { grid-template-columns:1fr; } .plan-add select { width:100%; } .plan-item { grid-template-columns:auto 1fr; } }
 
@@ -603,7 +612,7 @@
       </div>
       <div class="hero-content">
         <div>
-          <div class="eyebrow">🇰🇷 Seoul + Jeju tour board · 23 Oct to 2 Nov 2026</div>
+          <div class="eyebrow">🇰🇷 Seoul + Jeju tour board · 23 Oct → ~31 Oct 2026</div>
           <h1><span>Korea boys trip</span><span class="shine">tour board</span></h1>
           <p>Votes, flights, bookings and group progress.</p>
           <div class="hero-actions">
@@ -618,7 +627,7 @@
           <div class="glass countdown-card">
             <div class="label">Countdown to Seoul</div>
             <div class="big"><span id="countdownDays">—</span></div>
-            <div class="micro" id="countdownSub">Seoul + Jeju · 23 Oct to 2 Nov 2026</div>
+            <div class="micro" id="countdownSub">Seoul + Jeju · 23 Oct → ~31 Oct 2026</div>
             <div class="pill-row">
               <span class="pill hot">🍁 Autumn in Korea</span>
               <span class="pill" id="travellerCountPill">7 travellers</span>
@@ -953,15 +962,16 @@
             </div>
             <div class="plan-days" id="planDays"></div>
             <div class="plan-add">
-              <input type="text" id="planAddTitle" placeholder="Add something manually — e.g. Han River picnic" />
+              <input type="text" id="planAddTitle" placeholder="Add anything — e.g. Fly GMP → CJU, or Han River picnic" />
+              <input type="time" id="planAddTime" class="pi-time" style="width:auto" aria-label="Time (optional)" />
               <select id="planAddDay" aria-label="Day to add to"></select>
               <button class="btn small" id="planAddBtn">Add</button>
             </div>
           </div>
           <aside class="side-stack">
             <div class="panel pad">
-              <div class="label">✈️ Crew arrivals</div>
-              <p class="panel-sub" style="margin-top:4px">Set when you land — it shows up on the day. Pick yourself on the Board tab first.</p>
+              <div class="label">✈️ Crew flights</div>
+              <p class="panel-sub" style="margin-top:4px">Set when you land and when you fly home — both show on the day. Pick yourself on the Board tab first.</p>
               <div id="arrivalMe" style="margin-top:12px"></div>
               <div class="arrival-list" id="arrivalList" style="margin-top:12px"></div>
               <div class="arr-foot" id="arrivalsBadge" style="margin-top:10px"></div>
@@ -1054,7 +1064,7 @@
             </div>
           </div>
           <div class="grid-3">
-            <div class="info-card"><div class="emoji">📅</div><h3>Dates</h3><p>Fri 23 Oct to Mon 2 Nov 2026. Seoul and Jeju split TBC.</p></div>
+            <div class="info-card"><div class="emoji">📅</div><h3>Dates</h3><p>Out Fri 23 Oct 2026. Trip ends ~Sat 31 Oct — return flights TBC. Seoul and Jeju split TBC.</p></div>
             <div class="info-card"><div class="emoji">✈️</div><h3>Route</h3><p>Likely London → Seoul → Jeju via ICN or GMP to CJU.</p></div>
             <div class="info-card"><div class="emoji">🏝️</div><h3>Why Jeju</h3><p>Volcanic island, scenic drives, hiking, seafood, golf and Jeju City bars.</p></div>
           </div>
@@ -1075,7 +1085,7 @@
             <div class="timeline-item"><div class="timeline-date">24 Oct</div><div><div class="timeline-title">Arrive Seoul late</div><div class="timeline-body">ICN T1 · 21:35 arrival · light arrival night.</div></div></div>
             <div class="timeline-item"><div class="timeline-date">25 to 27 Oct</div><div><div class="timeline-title">Seoul opening arc</div><div class="timeline-body">Food, nightlife, shopping, recovery and group arrivals.</div></div></div>
             <div class="timeline-item"><div class="timeline-date">27 to 31 Oct</div><div><div class="timeline-title">Jeju main quest</div><div class="timeline-body">Island base, scenic drives, Hallasan or viewpoints, seafood and group adventure day.</div></div></div>
-            <div class="timeline-item"><div class="timeline-date">1 to 2 Nov</div><div><div class="timeline-title">Return arc</div><div class="timeline-body">Return via Seoul or connect CJU → Seoul → London if timings work.</div></div></div>
+            <div class="timeline-item"><div class="timeline-date">~31 Oct</div><div><div class="timeline-title">Fly home (TBC)</div><div class="timeline-body">Trip likely ends around Sat 31 Oct — return via Seoul or connect CJU → Seoul → London if timings work. Lock flights, then set your departure on the Itinerary tab.</div></div></div>
           </div>
 
           <h3 style="margin:24px 0 12px">Planning watchouts</h3>
@@ -1198,7 +1208,7 @@
       { id: "d28", iso: "2026-10-28", date: "Wed 28 Oct", city: "Jeju" },
       { id: "d29", iso: "2026-10-29", date: "Thu 29 Oct", city: "Jeju" },
       { id: "d30", iso: "2026-10-30", date: "Fri 30 Oct", city: "Jeju" },
-      { id: "d31", iso: "2026-10-31", date: "Sat 31 Oct", city: "Jeju" },
+      { id: "d31", iso: "2026-10-31", date: "Sat 31 Oct", city: "Jeju", note: "Likely trip end — add return flight times." },
       { id: "d1", iso: "2026-11-01", date: "Sun 1 Nov", city: "Seoul", note: "Back to Seoul — last night." },
       { id: "d2", iso: "2026-11-02", date: "Mon 2 Nov", city: "Home", logistics: true, note: "Fly home." }
     ];
@@ -1651,7 +1661,7 @@
         if (days > 1) { daysEl.textContent = `${days} days`; if (subEl) subEl.textContent = "until you land in Seoul · 23 Oct 2026"; }
         else if (days === 1) { daysEl.textContent = "1 day"; if (subEl) subEl.textContent = "Seoul tomorrow — pack the bags"; }
         else if (days === 0) { daysEl.textContent = "Today ✈️"; if (subEl) subEl.textContent = "Departure day"; }
-        else { daysEl.textContent = "In Korea 🇰🇷"; if (subEl) subEl.textContent = "Seoul + Jeju · 23 Oct to 2 Nov 2026"; }
+        else { daysEl.textContent = "In Korea 🇰🇷"; if (subEl) subEl.textContent = "Seoul + Jeju · 23 Oct → ~31 Oct 2026"; }
       }
       const groupDone = Object.values(state.groupDone).filter(Boolean).length;
       const pct = Math.round(groupDone / groupTasks.length * 100);
@@ -2180,6 +2190,31 @@
     function ensurePlan() {
       if (!state.plan || typeof state.plan !== "object") state.plan = { generatedAt: null, items: [] };
       if (!Array.isArray(state.plan.items)) state.plan.items = [];
+      if (!state.plan.dayMeta || typeof state.plan.dayMeta !== "object") {
+        // First run of this version: trip likely ends ~Sat 31 Oct, so the last
+        // two skeleton days start dropped — one tap re-adds them if return slips.
+        state.plan.dayMeta = { d1: { off: true }, d2: { off: true } };
+      }
+    }
+    function dayMeta(dayId) { ensurePlan(); return state.plan.dayMeta[dayId] || {}; }
+    function setDayMeta(dayId, patch) { ensurePlan(); state.plan.dayMeta[dayId] = { ...dayMeta(dayId), ...patch }; saveState(); renderAll(); }
+    function dayIsOff(dayId) { return !!dayMeta(dayId).off; }
+    function dayNote(d) { const m = dayMeta(d.id); return m.note != null ? m.note : (d.note || ""); }
+    function toggleDayOff(dayId, off) {
+      const d = TRIP_DAYS.find(x => x.id === dayId); if (!d) return;
+      if (off) {
+        const n = state.plan.items.filter(it => it.dayId === dayId).length;
+        if (n && !confirm(`${d.date} has ${n} item${n > 1 ? "s" : ""} on it — they'll be hidden until the day is re-added. Drop the day?`)) return;
+      }
+      setDayMeta(dayId, { off });
+      toast(off ? `${d.date} dropped from the trip` : `${d.date} is back in the trip`);
+    }
+    function editDayNote(dayId) {
+      const d = TRIP_DAYS.find(x => x.id === dayId); if (!d) return;
+      const next = prompt(`Note for ${d.date}`, dayNote(d) || "");
+      if (next === null) return;
+      setDayMeta(dayId, { note: next.trim() });
+      toast("Day note updated");
     }
     function planWinners() {
       const ideas = allIdeas();
@@ -2190,7 +2225,9 @@
     function generatePlan() {
       ensurePlan(); ensureDesk();
       const winners = planWinners();
-      const seoulDays = ["d25", "d26", "d1"], jejuDays = ["d28", "d29", "d30", "d31"];
+      const seoulDays = ["d25", "d26", "d1"].filter(id => !dayIsOff(id)), jejuDays = ["d28", "d29", "d30", "d31"].filter(id => !dayIsOff(id));
+      if (!seoulDays.length) seoulDays.push("d25");
+      if (!jejuDays.length) jejuDays.push("d28");
       const buckets = { seoul: [], jeju: [] };
       winners.forEach(i => {
         const c = cityBucket(i.city);
@@ -2212,7 +2249,24 @@
     }
     function changeItemDay(itemId, dayId) { ensurePlan(); const it = state.plan.items.find(x => x.id === itemId); if (it) { it.dayId = dayId; saveState(); renderAll(); } }
     function removePlanItem(itemId) { ensurePlan(); state.plan.items = state.plan.items.filter(x => x.id !== itemId); saveState(); renderAll(); toast("Removed from itinerary"); }
-    function addPlanItem(dayId, title) { ensurePlan(); if (!(title || "").trim()) { toast("Type something to add"); return; } state.plan.items.push({ id: `pl_x_${Date.now()}`, dayId, title: title.trim(), emoji: "📍", city: "", kind: "activity", note: "" }); saveState(); renderAll(); toast("Added to the day"); }
+    function guessEmoji(title) {
+      const t = (title || "").toLowerCase();
+      if (/(flight|fly\b|✈|airport|gmp|icn|cju|lhr)/.test(t)) return "✈️";
+      if (/(taxi|transfer|bus|train|drive|pick.?up)/.test(t)) return "🚐";
+      if (/(dinner|lunch|breakfast|bbq|food|eat|restaurant)/.test(t)) return "🍽️";
+      if (/(check.?in|check.?out|hotel|villa|accom)/.test(t)) return "🏨";
+      return "📍";
+    }
+    function addPlanItem(dayId, title, time) { ensurePlan(); if (!(title || "").trim()) { toast("Type something to add"); return; } state.plan.items.push({ id: `pl_x_${Date.now()}`, dayId, title: title.trim(), emoji: guessEmoji(title), city: "", kind: "activity", note: "", time: time || "" }); saveState(); renderAll(); toast("Added to the day"); }
+    function changeItemTime(itemId, time) { ensurePlan(); const it = state.plan.items.find(x => x.id === itemId); if (it) { it.time = time || ""; saveState(); renderAll(); } }
+    function renamePlanItem(itemId) {
+      ensurePlan(); const it = state.plan.items.find(x => x.id === itemId); if (!it) return;
+      const next = prompt("Rename this item", it.title);
+      if (next === null) return;
+      const t = next.trim(); if (!t) return;
+      it.title = t;
+      saveState(); renderAll(); toast("Renamed");
+    }
     function clearPlan() { state.plan = { generatedAt: null, items: [] }; saveState(); renderAll(); toast("Itinerary cleared"); }
 
     function renderPlan() {
@@ -2227,39 +2281,61 @@
         ? `${items.length} item${items.length > 1 ? "s" : ""} placed${state.plan.generatedAt ? ` · drafted ${relTime(new Date(state.plan.generatedAt).getTime())}` : ""}. Move anything with its day dropdown.`
         : (winners.length ? `${winners.length} activit${winners.length > 1 ? "ies" : "y"} ready — tap “Auto-draft from the votes”.` : "Shortlist some activities in the Activity Market first, then draft the days here.");
 
-      const dayOpts = sel => TRIP_DAYS.map(d => `<option value="${d.id}" ${d.id === sel ? "selected" : ""}>${d.date}</option>`).join("");
+      const dayOpts = sel => TRIP_DAYS.map(d => `<option value="${d.id}" ${d.id === sel ? "selected" : ""}>${d.date}${dayIsOff(d.id) ? " · off" : ""}</option>`).join("");
+      const flightChip = x => `<span class="arr-chip" title="${escapeAttr(x.p.name + (x.a.info ? " · " + x.a.info : ""))}"><span class="ac-dot" style="background:${x.p.colour}"></span>${escapeHtml(x.p.initials)}${x.a.time ? ` · ${escapeHtml(x.a.time)}` : ""}</span>`;
 
       holder.innerHTML = TRIP_DAYS.map(d => {
-        const dayItems = items.filter(it => it.dayId === d.id);
+        const dayItems = items.filter(it => it.dayId === d.id).slice().sort((a, b) => (a.time || "99:99").localeCompare(b.time || "99:99"));
         const cl = d.city.toLowerCase(); const tagCls = cl.includes("jeju") && !cl.includes("seoul") ? "jeju" : "";
+        if (dayIsOff(d.id)) {
+          return `<div class="plan-day is-off">
+            <div class="plan-day-head">
+              <span class="plan-date">${d.date}</span>
+              <span class="plan-citytag ${tagCls}">${escapeHtml(d.city)}</span>
+              <span class="plan-daynote">Not in the trip${dayItems.length ? ` · ${dayItems.length} item${dayItems.length > 1 ? "s" : ""} parked here` : ""}.</span>
+              <span class="pd-actions"><button class="pd-btn" data-plan="dayon" data-day="${d.id}">↩️ Re-add day</button></span>
+            </div>
+          </div>`;
+        }
         const itemsHtml = dayItems.map(it => {
           const sub = it.kind === "dinner"
             ? (it.note ? `<a href="${escapeAttr(it.note)}" target="_blank" rel="noopener" class="pi-sub">booking ↗</a>` : `<span class="pi-sub">group dinner</span>`)
             : (it.city ? `<span class="pi-sub">${escapeHtml(it.city)}</span>` : "");
           return `<div class="plan-item ${it.kind === "dinner" ? "dinner" : ""}">
             <span class="pi-emoji">${it.emoji || "📍"}</span>
-            <div><div class="pi-title">${escapeHtml(it.title)}</div>${sub}</div>
+            <div class="pi-titlewrap" data-plan="rename" data-item="${it.id}" title="Tap to rename"><div class="pi-title">${escapeHtml(it.title)}</div>${sub}</div>
+            <input type="time" class="pi-time" data-plan="time" data-item="${it.id}" value="${escapeAttr(it.time || "")}" aria-label="Time (optional)" />
             <select class="pi-move" data-plan="move" data-item="${it.id}" aria-label="Move to another day">${dayOpts(it.dayId)}</select>
             <button class="pi-x" data-plan="del" data-item="${it.id}" aria-label="Remove">✕</button>
           </div>`;
         }).join("") || `<div class="plan-empty-day">${d.logistics ? "Travel / logistics day." : "Open — drop an activity here."}</div>`;
-        const dayArr = arrivalsForDay(d.iso);
-        const arrHtml = dayArr.length
-          ? `<div class="day-arrivals"><span class="da-label">✈️ Arrivals</span>${dayArr.map(x => `<span class="arr-chip" title="${escapeAttr(x.p.name + (x.a.info ? " · " + x.a.info : ""))}"><span class="ac-dot" style="background:${x.p.colour}"></span>${escapeHtml(x.p.initials)}${x.a.time ? ` · ${escapeHtml(x.a.time)}` : ""}</span>`).join("")}</div>`
+        const arr = arrivalsForDay(d.iso), dep = departuresForDay(d.iso);
+        const flightsHtml = (arr.length || dep.length)
+          ? `<div class="day-arrivals">${arr.length ? `<span class="da-label">🛬 In</span>${arr.map(flightChip).join("")}` : ""}${dep.length ? `<span class="da-label">🛫 Out</span>${dep.map(flightChip).join("")}` : ""}</div>`
           : "";
+        const note = dayNote(d);
         return `<div class="plan-day ${d.logistics ? "is-logistics" : ""}">
           <div class="plan-day-head">
             <span class="plan-date">${d.date}</span>
             <span class="plan-citytag ${tagCls}">${escapeHtml(d.city)}</span>
-            ${d.note ? `<span class="plan-daynote">${escapeHtml(d.note)}</span>` : ""}
+            ${note ? `<span class="plan-daynote">${escapeHtml(note)}</span>` : ""}
+            <span class="pd-actions">
+              <button class="pd-btn" data-plan="note" data-day="${d.id}" title="Edit the day note">✎ Note</button>
+              <button class="pd-btn" data-plan="dayoff" data-day="${d.id}" title="Drop this day from the trip">🚫</button>
+            </span>
           </div>
-          ${arrHtml}
+          ${flightsHtml}
           ${itemsHtml}
         </div>`;
       }).join("");
 
       holder.querySelectorAll('[data-plan="move"]').forEach(sel => sel.addEventListener("change", () => changeItemDay(sel.dataset.item, sel.value)));
       holder.querySelectorAll('[data-plan="del"]').forEach(b => b.addEventListener("click", () => removePlanItem(b.dataset.item)));
+      holder.querySelectorAll('[data-plan="time"]').forEach(inp => inp.addEventListener("change", () => changeItemTime(inp.dataset.item, inp.value)));
+      holder.querySelectorAll('[data-plan="rename"]').forEach(el => el.addEventListener("click", () => renamePlanItem(el.dataset.item)));
+      holder.querySelectorAll('[data-plan="dayoff"]').forEach(b => b.addEventListener("click", () => toggleDayOff(b.dataset.day, true)));
+      holder.querySelectorAll('[data-plan="dayon"]').forEach(b => b.addEventListener("click", () => toggleDayOff(b.dataset.day, false)));
+      holder.querySelectorAll('[data-plan="note"]').forEach(b => b.addEventListener("click", () => editDayNote(b.dataset.day)));
 
       const feed = document.getElementById("planFeed");
       if (feed) {
@@ -2273,11 +2349,11 @@
       const bp = document.getElementById("boardPlanStatus"); if (bp) bp.textContent = items.length ? `${items.length} placed` : "Not drafted yet";
       const lockBtn = document.getElementById("planLockBtn"); if (lockBtn) lockBtn.textContent = state.groupDone.itinerary ? "✅ Itinerary locked (tap to unlock)" : "🔒 Lock this itinerary";
       const addDay = document.getElementById("planAddDay");
-      if (addDay && !addDay.dataset.filled) { addDay.innerHTML = TRIP_DAYS.map(d => `<option value="${d.id}">${d.date}</option>`).join(""); addDay.dataset.filled = "1"; }
+      if (addDay) { const cur = addDay.value; addDay.innerHTML = TRIP_DAYS.map(d => `<option value="${d.id}">${d.date}${dayIsOff(d.id) ? " · off" : ""}</option>`).join(""); if (cur) addDay.value = cur; }
     }
 
-    // ---- Crew arrivals: each traveller sets their own date/time/flight ----
-    function ensureArrival(p) { if (!p.arrival || typeof p.arrival !== "object") p.arrival = { date: "", time: "", info: "" }; return p.arrival; }
+    // ---- Crew flights: each traveller sets their own arrival AND departure ----
+    function ensureFlight(p, key) { if (!p[key] || typeof p[key] !== "object") p[key] = { date: "", time: "", info: "" }; return p[key]; }
     function tripDayByIso(iso) { return TRIP_DAYS.find(d => d.iso === iso); }
     function fmtArrivalDate(iso) {
       if (!iso) return "";
@@ -2292,49 +2368,62 @@
       if (a.info) s += " · " + a.info;
       return s;
     }
-    function setMyArrival(field, value) {
-      const a = ensureArrival(selectedPlayer());
-      a[field] = value;
+    function setMyFlight(key, field, value) {
+      const f = ensureFlight(selectedPlayer(), key);
+      f[field] = value;
       saveState(); renderAll();
     }
-    function arrivalsForDay(iso) {
+    function flightsForDay(iso, key) {
       if (!iso) return [];
-      return state.players.map((p, i) => ({ i, p, a: p.arrival })).filter(x => x.a && x.a.date === iso)
+      return state.players.map((p, i) => ({ i, p, a: p[key] })).filter(x => x.a && x.a.date === iso)
         .sort((x, y) => (x.a.time || "99:99").localeCompare(y.a.time || "99:99"));
     }
+    function arrivalsForDay(iso) { return flightsForDay(iso, "arrival"); }
+    function departuresForDay(iso) { return flightsForDay(iso, "departure"); }
     function renderArrivals() {
       const me = document.getElementById("arrivalMe");
       const list = document.getElementById("arrivalList");
       const badge = document.getElementById("arrivalsBadge");
       if (!me || !list) return;
-      const p = selectedPlayer(); const a = ensureArrival(p);
+      const p = selectedPlayer(); const a = ensureFlight(p, "arrival"); const dep = ensureFlight(p, "departure");
       me.innerHTML = `<div class="arrival-editor">
-        <div class="arr-editor-head"><span class="avatar-dot" style="background:${p.colour}">${escapeHtml(p.initials)}</span> Your arrival, <strong>${escapeHtml(p.name)}</strong></div>
+        <div class="arr-editor-head"><span class="avatar-dot" style="background:${p.colour}">${escapeHtml(p.initials)}</span> Your flights, <strong>${escapeHtml(p.name)}</strong></div>
+        <div class="arr-sub">🛬 Arriving in Korea</div>
         <div class="arr-fields">
           <input type="date" id="arrDate" min="2026-10-22" max="2026-11-03" value="${escapeAttr(a.date || "")}" aria-label="Arrival date" />
           <input type="time" id="arrTime" value="${escapeAttr(a.time || "")}" aria-label="Arrival time" />
-          <input type="text" id="arrInfo" placeholder="Flight / terminal (optional)" value="${escapeAttr(a.info || "")}" aria-label="Flight or terminal" />
+          <input type="text" id="arrInfo" placeholder="Flight / terminal (optional)" value="${escapeAttr(a.info || "")}" aria-label="Arrival flight or terminal" />
+        </div>
+        <div class="arr-sub">🛫 Flying home</div>
+        <div class="arr-fields">
+          <input type="date" id="depDate" min="2026-10-24" max="2026-11-03" value="${escapeAttr(dep.date || "")}" aria-label="Departure date" />
+          <input type="time" id="depTime" value="${escapeAttr(dep.time || "")}" aria-label="Departure time" />
+          <input type="text" id="depInfo" placeholder="Flight / terminal (optional)" value="${escapeAttr(dep.info || "")}" aria-label="Departure flight or terminal" />
         </div>
       </div>`;
-      document.getElementById("arrDate").addEventListener("change", e => setMyArrival("date", e.target.value));
-      document.getElementById("arrTime").addEventListener("change", e => setMyArrival("time", e.target.value));
-      document.getElementById("arrInfo").addEventListener("change", e => setMyArrival("info", e.target.value.trim()));
+      [["arrDate", "arrival", "date"], ["arrTime", "arrival", "time"], ["arrInfo", "arrival", "info"], ["depDate", "departure", "date"], ["depTime", "departure", "time"], ["depInfo", "departure", "info"]].forEach(([id, key, field]) => {
+        document.getElementById(id).addEventListener("change", e => setMyFlight(key, field, field === "info" ? e.target.value.trim() : e.target.value));
+      });
 
-      const rows = state.players.map((pl, i) => ({ i, pl, a: pl.arrival || {} }));
+      const rows = state.players.map((pl, i) => ({ i, pl, a: pl.arrival || {}, d: pl.departure || {} }));
       rows.sort((x, y) => {
         const kx = x.a.date ? (x.a.date + (x.a.time || "99:99")) : "9999";
         const ky = y.a.date ? (y.a.date + (y.a.time || "99:99")) : "9999";
         return kx.localeCompare(ky);
       });
       list.innerHTML = rows.map(r => {
-        const when = arrivalWhen(r.a);
+        const inW = arrivalWhen(r.a), outW = arrivalWhen(r.d);
         return `<div class="arrival-row ${r.i === state.selectedPlayer ? "me" : ""}">
           <span class="avatar-dot" style="background:${r.pl.colour}">${escapeHtml(r.pl.initials)}</span>
-          <div><div class="arr-name">${escapeHtml(r.pl.name)}</div><div class="arr-when ${when ? "" : "unset"}">${when ? escapeHtml(when) : "Arrival not set"}</div></div>
+          <div><div class="arr-name">${escapeHtml(r.pl.name)}</div>
+            <div class="arr-when ${inW ? "" : "unset"}">🛬 ${inW ? escapeHtml(inW) : "arrival not set"}</div>
+            <div class="arr-when ${outW ? "" : "unset"}">🛫 ${outW ? escapeHtml(outW) : "departure not set"}</div>
+          </div>
         </div>`;
       }).join("");
-      const setCount = state.players.filter(pl => pl.arrival && pl.arrival.date).length;
-      if (badge) badge.textContent = `${setCount} of ${state.players.length} arrivals set`;
+      const nA = state.players.filter(pl => pl.arrival && pl.arrival.date).length;
+      const nD = state.players.filter(pl => pl.departure && pl.departure.date).length;
+      if (badge) badge.textContent = `🛬 ${nA}/${state.players.length} arrivals · 🛫 ${nD}/${state.players.length} departures set`;
     }
 
     function renderAll() {
@@ -2421,7 +2510,7 @@
       const groupDoneCount = groupTasks.filter(t => state.groupDone[t.id]).length;
       const lines = [
         "Korea Boys Trip Quest Summary",
-        "Dates: 23 Oct to 2 Nov 2026",
+        "Dates: 23 Oct → ~31 Oct 2026 (return flights TBC)",
         "Route: London to Seoul to Jeju",
         `Group boss progress: ${groupDoneCount}/${groupTasks.length} — at "${checkpoints[groupProgressIndex()].title}"`,
         "",
@@ -2494,25 +2583,27 @@
     const planClearBtn = document.getElementById("planClearBtn");
     if (planClearBtn) planClearBtn.addEventListener("click", () => { if (state.plan.items.length && confirm("Clear the whole itinerary?")) clearPlan(); });
     const planAddBtn = document.getElementById("planAddBtn");
-    if (planAddBtn) planAddBtn.addEventListener("click", () => { const t = document.getElementById("planAddTitle"), dsel = document.getElementById("planAddDay"); addPlanItem(dsel.value || "d25", t.value); t.value = ""; });
+    if (planAddBtn) planAddBtn.addEventListener("click", () => { const t = document.getElementById("planAddTitle"), tm = document.getElementById("planAddTime"), dsel = document.getElementById("planAddDay"); addPlanItem(dsel.value || "d25", t.value, tm ? tm.value : ""); t.value = ""; if (tm) tm.value = ""; });
     const planLockBtn = document.getElementById("planLockBtn");
     if (planLockBtn) planLockBtn.addEventListener("click", () => { state.groupDone.itinerary = !state.groupDone.itinerary; if (state.groupDone.itinerary) celebrate(); saveState(); renderAll(); toast(state.groupDone.itinerary ? "Itinerary locked 🔒" : "Itinerary unlocked"); });
     const planCopyBtn = document.getElementById("planCopyBtn");
     if (planCopyBtn) planCopyBtn.addEventListener("click", async () => {
-      const lines = ["Korea Boys Trip — Draft Itinerary", "23 Oct to 2 Nov 2026", ""];
-      const arrivals = state.players.filter(p => p.arrival && p.arrival.date)
-        .sort((a, b) => (a.arrival.date + (a.arrival.time || "99:99")).localeCompare(b.arrival.date + (b.arrival.time || "99:99")));
-      if (arrivals.length) {
-        lines.push("Arrivals:");
-        arrivals.forEach(p => lines.push(`  • ${p.name}: ${arrivalWhen(p.arrival)}`));
-        lines.push("");
-      }
+      const lines = ["Korea Boys Trip — Draft Itinerary", "Out 23 Oct 2026 · trip ends ~Sat 31 Oct (return flights TBC)", ""];
+      const sortByWhen = key => (a, b) => (a[key].date + (a[key].time || "99:99")).localeCompare(b[key].date + (b[key].time || "99:99"));
+      const arrs = state.players.filter(p => p.arrival && p.arrival.date).sort(sortByWhen("arrival"));
+      const deps = state.players.filter(p => p.departure && p.departure.date).sort(sortByWhen("departure"));
+      if (arrs.length) { lines.push("Arrivals:"); arrs.forEach(p => lines.push(`  🛬 ${p.name}: ${arrivalWhen(p.arrival)}`)); lines.push(""); }
+      if (deps.length) { lines.push("Departures:"); deps.forEach(p => lines.push(`  🛫 ${p.name}: ${arrivalWhen(p.departure)}`)); lines.push(""); }
       TRIP_DAYS.forEach(d => {
-        const its = state.plan.items.filter(it => it.dayId === d.id);
-        const arr = arrivalsForDay(d.iso);
-        lines.push(`${d.date} — ${d.city}${d.note ? ` (${d.note})` : ""}`);
-        if (arr.length) lines.push(`  ✈️ Arrivals: ${arr.map(x => `${x.p.name}${x.a.time ? " " + x.a.time : ""}`).join(", ")}`);
-        if (its.length) its.forEach(it => lines.push(`  • ${it.title}`)); else if (!arr.length) lines.push("  • —");
+        if (dayIsOff(d.id)) return;
+        const its = state.plan.items.filter(it => it.dayId === d.id).slice().sort((a, b) => (a.time || "99:99").localeCompare(b.time || "99:99"));
+        const arr = arrivalsForDay(d.iso), dep = departuresForDay(d.iso);
+        const note = dayNote(d);
+        lines.push(`${d.date} — ${d.city}${note ? ` (${note})` : ""}`);
+        if (arr.length) lines.push(`  🛬 In: ${arr.map(x => `${x.p.name}${x.a.time ? " " + x.a.time : ""}`).join(", ")}`);
+        if (dep.length) lines.push(`  🛫 Out: ${dep.map(x => `${x.p.name}${x.a.time ? " " + x.a.time : ""}`).join(", ")}`);
+        if (its.length) its.forEach(it => lines.push(`  • ${it.time ? it.time + " — " : ""}${it.title}`));
+        else if (!arr.length && !dep.length) lines.push("  • —");
       });
       await navigator.clipboard.writeText(lines.join("\n")); toast("Itinerary copied");
     });
