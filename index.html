@@ -473,6 +473,16 @@
     .nav button.plan-tab.active { color:#0c1430; background:linear-gradient(90deg,#8fa9ff,#72f4ff); }
 
     .desk-list { display:grid; gap:14px; }
+    .task-block { display:grid; gap:0; }
+    .task-expand { display:flex; align-items:center; gap:7px; width:fit-content; margin:6px 0 0 52px; border:1px solid rgba(255,255,255,0.12); border-radius:999px; background:rgba(0,0,0,0.18); color:var(--muted); padding:6px 12px; font-size:11px; font-weight:850; transition:border-color 0.15s ease, color 0.15s ease; }
+    .task-expand:hover { border-color:rgba(255,255,255,0.28); color:var(--ink); }
+    .task-expand.open { color:#c8ffe6; border-color:rgba(139,232,212,0.34); background:rgba(139,232,212,0.08); }
+    .te-arrow { font-size:10px; }
+    .te-meta { color:var(--subtle); font-weight:800; }
+    .task-expand.open .te-meta { color:rgba(200,255,230,0.7); }
+    .task-rooms { display:grid; gap:12px; margin:10px 0 4px 26px; padding-left:14px; border-left:2px solid rgba(139,232,212,0.22); }
+    .task-rooms > .btn { justify-self:start; }
+    @media (max-width:620px){ .task-expand { margin-left:0; } .task-rooms { margin-left:0; padding-left:10px; } }
     .desk-room { position:relative; overflow:hidden; border:1px solid rgba(255,255,255,0.14); border-radius:24px; background:linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.045)); padding:16px; display:grid; gap:13px; box-shadow:0 14px 34px rgba(24,7,49,0.12); }
     .desk-room.is-decided { border-color:rgba(139,232,212,0.32); background:linear-gradient(180deg, rgba(139,232,212,0.10), rgba(255,255,255,0.03)); }
     .desk-head { display:grid; grid-template-columns:auto 1fr auto; gap:12px; align-items:start; }
@@ -814,7 +824,7 @@
             <div class="panel-head">
               <div>
                 <h2>Group tasks</h2>
-                <p class="panel-sub">The shared to-do list. Tick a boss and the whole crew's tokens move forward on the board.</p>
+                <p class="panel-sub">The shared to-do list. Open <strong>Options &amp; votes</strong> under a task to drop in links and vote right here — then tick the boss and the whole crew's tokens move forward.</p>
               </div>
               <div class="pill-row" style="margin:0">
                 <span class="pill warn" id="groupTasksBadge">0 of 8 done</span>
@@ -1513,15 +1523,59 @@
       document.getElementById("selectedStage").textContent = checkpoints[progress].title;
     }
 
+    // Which Crew Desk rooms belong under which group task. Custom rooms created
+    // from a task carry a taskId field and match that way.
+    const TASK_ROOM_MAP = {
+      accommodation: ["stay_seoul", "stay_jeju"],
+      vehicle: ["car_jeju"],
+      foodBars: ["room_foodnightlife", "dinner_seoul", "dinner_jeju"],
+      itinerary: ["room_jejuplan"]
+    };
+    // Tasks whose "options" live on another tab rather than in desk rooms.
+    const TASK_JUMP = { activityShortlist: { tab: "ideas", label: "🎯 Vote in the Activity Market" }, itinerary: { tab: "plan", label: "🗓️ Open the Itinerary" } };
+    const openTaskPanels = new Set(); // per-device UI state, not synced
+
+    function roomsForTask(taskId) {
+      ensureDesk();
+      const mapped = TASK_ROOM_MAP[taskId] || [];
+      return state.desk.rooms.filter(r => mapped.includes(r.id) || r.taskId === taskId);
+    }
+    function createRoomForTask(taskId) {
+      ensureDesk();
+      const task = groupTasks.find(t => t.id === taskId); if (!task) return;
+      state.desk.rooms.push({ id: `room_task_${taskId}`, taskId, emoji: task.icon, kind: "custom", title: task.title, desc: `Options and votes for: ${task.desc}`, owners: [], options: [], status: "open", chosen: null });
+      openTaskPanels.add(taskId);
+      saveState(); renderAll(); toast("Decision room opened — drop the first option in");
+    }
+
     function renderTasks() {
       const groupHolder = document.getElementById("groupTasks");
       groupHolder.innerHTML = groupTasks.map(task => {
         const done = !!state.groupDone[task.id];
-        return `<label class="task-card ${done ? "group-done" : ""}">
-          <div class="task-icon">${task.icon}</div>
-          <div><div class="task-title">${task.title}</div><div class="task-desc">${task.desc}</div><div class="task-tags"><span class="tag ${task.priority.toLowerCase()}">${task.priority}</span><span class="tag">Group boss</span></div></div>
-          <input class="toggle group-toggle" type="checkbox" data-task="${task.id}" ${done ? "checked" : ""}/>
-        </label>`;
+        const rooms = roomsForTask(task.id);
+        const optCount = rooms.reduce((s, r) => s + (r.options ? r.options.length : 0), 0);
+        const voteCount = rooms.reduce((s, r) => s + (r.options || []).reduce((x, o) => x + optVotes(o), 0), 0);
+        const open = openTaskPanels.has(task.id);
+        const jump = TASK_JUMP[task.id];
+        const summary = rooms.length
+          ? `${rooms.length > 1 ? rooms.length + " rooms · " : ""}${optCount} option${optCount === 1 ? "" : "s"} · ${voteCount} vote${voteCount === 1 ? "" : "s"}`
+          : (jump ? "vote on its tab" : "no options yet");
+        let panel = "";
+        if (open) {
+          const roomCards = rooms.map(deskRoomCard).join("");
+          const jumpBtn = jump ? `<button class="btn small secondary" data-taskjump="${jump.tab}">${jump.label}</button>` : "";
+          const createBtn = (!rooms.length && !jump) ? `<button class="btn small" data-taskroom="${task.id}">➕ Start a decision room for this</button>` : "";
+          panel = `<div class="task-rooms">${roomCards}${jumpBtn}${createBtn}</div>`;
+        }
+        return `<div class="task-block">
+          <label class="task-card ${done ? "group-done" : ""}">
+            <div class="task-icon">${task.icon}</div>
+            <div><div class="task-title">${task.title}</div><div class="task-desc">${task.desc}</div><div class="task-tags"><span class="tag ${task.priority.toLowerCase()}">${task.priority}</span><span class="tag">Group boss</span></div></div>
+            <input class="toggle group-toggle" type="checkbox" data-task="${task.id}" ${done ? "checked" : ""}/>
+          </label>
+          <button class="task-expand ${open ? "open" : ""}" data-taskpanel="${task.id}"><span class="te-arrow">${open ? "▾" : "▸"}</span> Options &amp; votes <span class="te-meta">${summary}</span></button>
+          ${panel}
+        </div>`;
       }).join("");
       groupHolder.querySelectorAll(".group-toggle").forEach(toggle => {
         toggle.addEventListener("change", e => {
@@ -1532,6 +1586,19 @@
           toast(e.target.checked ? "Group boss cleared" : "Group boss reopened");
         });
       });
+      groupHolder.querySelectorAll("[data-taskpanel]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = btn.dataset.taskpanel;
+          if (openTaskPanels.has(id)) openTaskPanels.delete(id); else openTaskPanels.add(id);
+          renderTasks();
+        });
+      });
+      groupHolder.querySelectorAll("[data-taskroom]").forEach(btn => btn.addEventListener("click", () => createRoomForTask(btn.dataset.taskroom)));
+      groupHolder.querySelectorAll("[data-taskjump]").forEach(btn => btn.addEventListener("click", () => {
+        const nav = document.querySelector(`.nav button[data-tab='${btn.dataset.taskjump}']`);
+        if (nav) { nav.click(); document.getElementById(btn.dataset.taskjump).scrollIntoView({ behavior: "smooth", block: "start" }); }
+      }));
+      bindDeskActions(groupHolder);
     }
 
 
@@ -2077,16 +2144,13 @@
       saveState(); renderAll(); toast("Room removed");
     }
 
-    function renderDesk() {
-      ensureDesk();
-      const holder = document.getElementById("deskList");
-      if (!holder) return;
+    // Builds one decision-room card. Used by the Crew Desk tab AND inline
+    // under matching group tasks — same state, two views.
+    function deskRoomCard(r) {
       const idx = state.selectedPlayer;
       const avatar = i => { const p = state.players[i]; return p ? `<span class="avatar-dot" style="background:${p.colour}">${p.piece ? escapeHtml(p.piece) : escapeHtml(p.initials)}</span>` : ""; };
       const nameOf = i => { const p = state.players[i]; return p ? escapeHtml(p.name) : "—"; };
-
-      holder.innerHTML = state.desk.rooms.map(r => {
-        const decided = r.status === "decided";
+      const decided = r.status === "decided";
         const opts = (r.options || []).slice().sort((a, b) => optVotes(b) - optVotes(a));
         const topVotes = opts.length ? optVotes(opts[0]) : 0;
         const ownerChips = r.owners.length
@@ -2153,9 +2217,10 @@
           ${addForm}
           ${footer}
         </article>`;
-      }).join("");
+    }
 
-      holder.querySelectorAll("[data-desk]").forEach(btn => {
+    function bindDeskActions(container) {
+      container.querySelectorAll("[data-desk]").forEach(btn => {
         btn.addEventListener("click", () => {
           const act = btn.dataset.desk, room = btn.dataset.room, opt = btn.dataset.opt;
           if (act === "hand") toggleOwner(room);
@@ -2166,11 +2231,19 @@
           else if (act === "delopt") removeDeskOption(room, opt);
           else if (act === "delroom") { if (confirm("Remove this whole decision room for everyone?")) removeDeskRoom(room); }
           else if (act === "addopt") {
-            const get = f => { const el = holder.querySelector(`input[data-room="${room}"][data-f="${f}"]`); return el ? el.value : ""; };
+            const get = f => { const el = container.querySelector(`input[data-room="${room}"][data-f="${f}"]`); return el ? el.value : ""; };
             addDeskOption(room, { title: get("title"), link: get("link"), price: get("price"), notes: get("notes") });
           }
         });
       });
+    }
+
+    function renderDesk() {
+      ensureDesk();
+      const holder = document.getElementById("deskList");
+      if (!holder) return;
+      holder.innerHTML = state.desk.rooms.map(deskRoomCard).join("");
+      bindDeskActions(holder);
 
       const decidedCount = state.desk.rooms.filter(r => r.status === "decided").length;
       const openCount = state.desk.rooms.length - decidedCount;
