@@ -531,6 +531,26 @@
     .plan-add select { width:auto; }
     @media (max-width:620px){ .add-opt, .plan-add { grid-template-columns:1fr; } .plan-add select { width:100%; } .plan-item { grid-template-columns:auto 1fr; } }
 
+    /* Crew arrivals */
+    .arrival-editor { border:1px solid rgba(255,255,255,0.12); border-radius:16px; background:rgba(0,0,0,0.18); padding:12px; display:grid; gap:10px; }
+    .arr-editor-head { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--muted); font-weight:800; }
+    .arr-editor-head .avatar-dot { width:22px; height:22px; border-radius:8px; font-size:11px; }
+    .arr-fields { display:grid; gap:8px; }
+    .arr-fields input { width:100%; border:1px solid rgba(255,255,255,0.14); border-radius:12px; background:rgba(0,0,0,0.25); color:var(--ink); padding:10px 11px; outline:none; }
+    .arr-fields input::-webkit-calendar-picker-indicator { filter:invert(1); opacity:0.6; cursor:pointer; }
+    .arrival-list { display:grid; gap:8px; }
+    .arrival-row { display:grid; grid-template-columns:auto 1fr; gap:10px; align-items:center; padding:8px 10px; border:1px solid rgba(255,255,255,0.1); border-radius:14px; background:rgba(255,255,255,0.05); }
+    .arrival-row.me { border-color:rgba(114,244,255,0.4); background:rgba(114,244,255,0.08); }
+    .arrival-row .avatar-dot { width:26px; height:26px; border-radius:9px; font-size:11px; }
+    .arr-name { font-weight:850; font-size:13px; }
+    .arr-when { color:var(--muted); font-size:11px; margin-top:2px; line-height:1.35; }
+    .arr-when.unset { color:var(--subtle); font-style:italic; }
+    .arr-foot { color:var(--subtle); font-size:11px; font-weight:800; }
+    .day-arrivals { display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin:0 0 8px; padding:8px 10px; border:1px dashed rgba(114,244,255,0.28); border-radius:12px; background:rgba(114,244,255,0.06); }
+    .day-arrivals .da-label { font-size:11px; font-weight:900; color:#d4f9ff; letter-spacing:0.03em; }
+    .arr-chip { display:inline-flex; align-items:center; gap:5px; border:1px solid rgba(255,255,255,0.16); border-radius:999px; padding:4px 9px; font-size:11px; font-weight:850; background:rgba(0,0,0,0.22); }
+    .arr-chip .ac-dot { width:9px; height:9px; border-radius:50%; flex:none; }
+
     /* Photo gallery (Korea in pictures) */
     .photo-gallery { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
     .photo-card { position: relative; border-radius: var(--radius-lg); overflow: hidden; min-height: 190px; border: 1px solid rgba(255,255,255,0.14); display: flex; align-items: flex-end; }
@@ -940,6 +960,13 @@
           </div>
           <aside class="side-stack">
             <div class="panel pad">
+              <div class="label">✈️ Crew arrivals</div>
+              <p class="panel-sub" style="margin-top:4px">Set when you land — it shows up on the day. Pick yourself on the Board tab first.</p>
+              <div id="arrivalMe" style="margin-top:12px"></div>
+              <div class="arrival-list" id="arrivalList" style="margin-top:12px"></div>
+              <div class="arr-foot" id="arrivalsBadge" style="margin-top:10px"></div>
+            </div>
+            <div class="panel pad">
               <div class="label">Feeding the plan</div>
               <p class="panel-sub" style="margin-top:4px">Shortlisted activities + decided dinners.</p>
               <div class="mini-idea-list" id="planFeed" style="margin-top:12px"></div>
@@ -1164,16 +1191,16 @@
 
     // Itinerary builder — fixed trip skeleton; activities auto-slot onto these days.
     const TRIP_DAYS = [
-      { id: "d24", date: "Sat 24 Oct", city: "Seoul", logistics: true, note: "Land in Seoul late — easy arrival night." },
-      { id: "d25", date: "Sun 25 Oct", city: "Seoul" },
-      { id: "d26", date: "Mon 26 Oct", city: "Seoul" },
-      { id: "d27", date: "Tue 27 Oct", city: "Seoul → Jeju", logistics: true, note: "Fly ICN/GMP → CJU. Afternoon and evening on the island." },
-      { id: "d28", date: "Wed 28 Oct", city: "Jeju" },
-      { id: "d29", date: "Thu 29 Oct", city: "Jeju" },
-      { id: "d30", date: "Fri 30 Oct", city: "Jeju" },
-      { id: "d31", date: "Sat 31 Oct", city: "Jeju" },
-      { id: "d1", date: "Sun 1 Nov", city: "Seoul", note: "Back to Seoul — last night." },
-      { id: "d2", date: "Mon 2 Nov", city: "Home", logistics: true, note: "Fly home." }
+      { id: "d24", iso: "2026-10-24", date: "Sat 24 Oct", city: "Seoul", logistics: true, note: "Land in Seoul late — easy arrival night." },
+      { id: "d25", iso: "2026-10-25", date: "Sun 25 Oct", city: "Seoul" },
+      { id: "d26", iso: "2026-10-26", date: "Mon 26 Oct", city: "Seoul" },
+      { id: "d27", iso: "2026-10-27", date: "Tue 27 Oct", city: "Seoul → Jeju", logistics: true, note: "Fly ICN/GMP → CJU. Afternoon and evening on the island." },
+      { id: "d28", iso: "2026-10-28", date: "Wed 28 Oct", city: "Jeju" },
+      { id: "d29", iso: "2026-10-29", date: "Thu 29 Oct", city: "Jeju" },
+      { id: "d30", iso: "2026-10-30", date: "Fri 30 Oct", city: "Jeju" },
+      { id: "d31", iso: "2026-10-31", date: "Sat 31 Oct", city: "Jeju" },
+      { id: "d1", iso: "2026-11-01", date: "Sun 1 Nov", city: "Seoul", note: "Back to Seoul — last night." },
+      { id: "d2", iso: "2026-11-02", date: "Mon 2 Nov", city: "Home", logistics: true, note: "Fly home." }
     ];
 
     const defaultState = {
@@ -2216,12 +2243,17 @@
             <button class="pi-x" data-plan="del" data-item="${it.id}" aria-label="Remove">✕</button>
           </div>`;
         }).join("") || `<div class="plan-empty-day">${d.logistics ? "Travel / logistics day." : "Open — drop an activity here."}</div>`;
+        const dayArr = arrivalsForDay(d.iso);
+        const arrHtml = dayArr.length
+          ? `<div class="day-arrivals"><span class="da-label">✈️ Arrivals</span>${dayArr.map(x => `<span class="arr-chip" title="${escapeAttr(x.p.name + (x.a.info ? " · " + x.a.info : ""))}"><span class="ac-dot" style="background:${x.p.colour}"></span>${escapeHtml(x.p.initials)}${x.a.time ? ` · ${escapeHtml(x.a.time)}` : ""}</span>`).join("")}</div>`
+          : "";
         return `<div class="plan-day ${d.logistics ? "is-logistics" : ""}">
           <div class="plan-day-head">
             <span class="plan-date">${d.date}</span>
             <span class="plan-citytag ${tagCls}">${escapeHtml(d.city)}</span>
             ${d.note ? `<span class="plan-daynote">${escapeHtml(d.note)}</span>` : ""}
           </div>
+          ${arrHtml}
           ${itemsHtml}
         </div>`;
       }).join("");
@@ -2244,9 +2276,70 @@
       if (addDay && !addDay.dataset.filled) { addDay.innerHTML = TRIP_DAYS.map(d => `<option value="${d.id}">${d.date}</option>`).join(""); addDay.dataset.filled = "1"; }
     }
 
+    // ---- Crew arrivals: each traveller sets their own date/time/flight ----
+    function ensureArrival(p) { if (!p.arrival || typeof p.arrival !== "object") p.arrival = { date: "", time: "", info: "" }; return p.arrival; }
+    function tripDayByIso(iso) { return TRIP_DAYS.find(d => d.iso === iso); }
+    function fmtArrivalDate(iso) {
+      if (!iso) return "";
+      const d = tripDayByIso(iso); if (d) return d.date;
+      const dt = new Date(iso + "T00:00:00");
+      return isNaN(dt) ? iso : dt.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
+    }
+    function arrivalWhen(a) {
+      if (!a || !a.date) return "";
+      let s = fmtArrivalDate(a.date);
+      if (a.time) s += " · " + a.time;
+      if (a.info) s += " · " + a.info;
+      return s;
+    }
+    function setMyArrival(field, value) {
+      const a = ensureArrival(selectedPlayer());
+      a[field] = value;
+      saveState(); renderAll();
+    }
+    function arrivalsForDay(iso) {
+      if (!iso) return [];
+      return state.players.map((p, i) => ({ i, p, a: p.arrival })).filter(x => x.a && x.a.date === iso)
+        .sort((x, y) => (x.a.time || "99:99").localeCompare(y.a.time || "99:99"));
+    }
+    function renderArrivals() {
+      const me = document.getElementById("arrivalMe");
+      const list = document.getElementById("arrivalList");
+      const badge = document.getElementById("arrivalsBadge");
+      if (!me || !list) return;
+      const p = selectedPlayer(); const a = ensureArrival(p);
+      me.innerHTML = `<div class="arrival-editor">
+        <div class="arr-editor-head"><span class="avatar-dot" style="background:${p.colour}">${escapeHtml(p.initials)}</span> Your arrival, <strong>${escapeHtml(p.name)}</strong></div>
+        <div class="arr-fields">
+          <input type="date" id="arrDate" min="2026-10-22" max="2026-11-03" value="${escapeAttr(a.date || "")}" aria-label="Arrival date" />
+          <input type="time" id="arrTime" value="${escapeAttr(a.time || "")}" aria-label="Arrival time" />
+          <input type="text" id="arrInfo" placeholder="Flight / terminal (optional)" value="${escapeAttr(a.info || "")}" aria-label="Flight or terminal" />
+        </div>
+      </div>`;
+      document.getElementById("arrDate").addEventListener("change", e => setMyArrival("date", e.target.value));
+      document.getElementById("arrTime").addEventListener("change", e => setMyArrival("time", e.target.value));
+      document.getElementById("arrInfo").addEventListener("change", e => setMyArrival("info", e.target.value.trim()));
+
+      const rows = state.players.map((pl, i) => ({ i, pl, a: pl.arrival || {} }));
+      rows.sort((x, y) => {
+        const kx = x.a.date ? (x.a.date + (x.a.time || "99:99")) : "9999";
+        const ky = y.a.date ? (y.a.date + (y.a.time || "99:99")) : "9999";
+        return kx.localeCompare(ky);
+      });
+      list.innerHTML = rows.map(r => {
+        const when = arrivalWhen(r.a);
+        return `<div class="arrival-row ${r.i === state.selectedPlayer ? "me" : ""}">
+          <span class="avatar-dot" style="background:${r.pl.colour}">${escapeHtml(r.pl.initials)}</span>
+          <div><div class="arr-name">${escapeHtml(r.pl.name)}</div><div class="arr-when ${when ? "" : "unset"}">${when ? escapeHtml(when) : "Arrival not set"}</div></div>
+        </div>`;
+      }).join("");
+      const setCount = state.players.filter(pl => pl.arrival && pl.arrival.date).length;
+      if (badge) badge.textContent = `${setCount} of ${state.players.length} arrivals set`;
+    }
+
     function renderAll() {
       ensureBookie(); ensureDesk(); ensurePlan();
-      renderNodes(); renderTokens(); renderPlayerSelect(); renderTravellerGrid(); renderSelectedPanel(); renderVibePicker(); renderPiecePicker(); renderTasks(); renderIdeas(); renderBoardIdeaPreview(); renderNextActions(); renderBadges(); renderRosterEditor(); renderHero(); renderBookie(); renderDesk(); renderPlan();
+      renderNodes(); renderTokens(); renderPlayerSelect(); renderTravellerGrid(); renderSelectedPanel(); renderVibePicker(); renderPiecePicker(); renderTasks(); renderIdeas(); renderBoardIdeaPreview(); renderNextActions(); renderBadges(); renderRosterEditor(); renderHero(); renderBookie(); renderDesk(); renderPlan(); renderArrivals();
     }
 
     function toast(message) {
@@ -2407,10 +2500,19 @@
     const planCopyBtn = document.getElementById("planCopyBtn");
     if (planCopyBtn) planCopyBtn.addEventListener("click", async () => {
       const lines = ["Korea Boys Trip — Draft Itinerary", "23 Oct to 2 Nov 2026", ""];
+      const arrivals = state.players.filter(p => p.arrival && p.arrival.date)
+        .sort((a, b) => (a.arrival.date + (a.arrival.time || "99:99")).localeCompare(b.arrival.date + (b.arrival.time || "99:99")));
+      if (arrivals.length) {
+        lines.push("Arrivals:");
+        arrivals.forEach(p => lines.push(`  • ${p.name}: ${arrivalWhen(p.arrival)}`));
+        lines.push("");
+      }
       TRIP_DAYS.forEach(d => {
         const its = state.plan.items.filter(it => it.dayId === d.id);
+        const arr = arrivalsForDay(d.iso);
         lines.push(`${d.date} — ${d.city}${d.note ? ` (${d.note})` : ""}`);
-        if (its.length) its.forEach(it => lines.push(`  • ${it.title}`)); else lines.push("  • —");
+        if (arr.length) lines.push(`  ✈️ Arrivals: ${arr.map(x => `${x.p.name}${x.a.time ? " " + x.a.time : ""}`).join(", ")}`);
+        if (its.length) its.forEach(it => lines.push(`  • ${it.title}`)); else if (!arr.length) lines.push("  • —");
       });
       await navigator.clipboard.writeText(lines.join("\n")); toast("Itinerary copied");
     });
