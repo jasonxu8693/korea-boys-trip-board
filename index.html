@@ -583,6 +583,48 @@
     .photo-card .cap strong { display: block; font-size: 16px; letter-spacing: -0.02em; }
     .photo-card .cap span { display: block; color: rgba(245,248,255,0.85); font-size: 12px; margin-top: 3px; line-height: 1.4; }
 
+    /* ---- Futurist pass (2026-06-10): pulse feed, ring, dock, micro-motion ---- */
+    @keyframes aurora { 0%, 100% { transform: translate3d(-1.5%, -1%, 0) scale(1); opacity: 0.8; } 50% { transform: translate3d(1.5%, 1.5%, 0) scale(1.05); opacity: 1; } }
+    body:after { animation: aurora 22s ease-in-out infinite; }
+    .hero h1 .shine { background-size: 220% 100%; animation: shineSweep 7s ease-in-out infinite; }
+    @keyframes shineSweep { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+    @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+    .section.active .layout > .panel, .section.active > .panel { animation: rise 0.45s cubic-bezier(.2,.8,.2,1) both; }
+    .section.active .layout > .side-stack { animation: rise 0.45s cubic-bezier(.2,.8,.2,1) 0.08s both; }
+    .btn:active, .vote-btn:active, .runner-btn:active, .hand-btn:active, .vote-up:active, .vibe-chip:active, .piece-chip:active, .hub-card:active { transform: scale(0.96); }
+    .idea-card, .bet-card, .desk-room { transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; }
+    .idea-card:hover, .bet-card:hover, .desk-room:hover { transform: translateY(-3px); border-color: rgba(114,244,255,0.28); box-shadow: 0 22px 50px rgba(5,9,18,0.35), 0 0 0 1px rgba(114,244,255,0.10); }
+
+    /* Live countdown digits */
+    .cd-unit { font-size: 0.48em; opacity: 0.8; margin: 0 9px 0 2px; }
+    @property --ang { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+    .countdown-card { position: relative; }
+    .countdown-card:after { content: ""; position: absolute; inset: -1px; border-radius: var(--radius-lg); padding: 1.5px; background: conic-gradient(from var(--ang), transparent 0 72%, rgba(114,244,255,0.85) 86%, rgba(255,151,202,0.5) 93%, transparent 100%); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; animation: orbit 7s linear infinite; pointer-events: none; }
+    @keyframes orbit { to { --ang: 360deg; } }
+
+    /* Group progress ring */
+    .ring-row { display: flex; gap: 16px; align-items: center; margin-top: 10px; }
+    .ring-wrap { position: relative; width: 96px; height: 96px; flex: none; }
+    .ring { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .ring-bg { fill: none; stroke: rgba(255,255,255,0.09); stroke-width: 10; }
+    .ring-fill { fill: none; stroke: url(#ringGrad); stroke-width: 10; stroke-linecap: round; stroke-dasharray: 326.73; stroke-dashoffset: 326.73; transition: stroke-dashoffset 0.9s cubic-bezier(.2,.8,.2,1); filter: drop-shadow(0 0 7px rgba(119,240,168,0.45)); }
+    .ring-center { position: absolute; inset: 0; display: grid; place-items: center; font-weight: 1000; font-size: 21px; letter-spacing: -0.04em; }
+
+    /* Crew pulse feed */
+    .pulse-feed { display: grid; gap: 8px; margin-top: 12px; max-height: 340px; overflow: auto; }
+    .pulse-row { display: grid; grid-template-columns: auto 1fr; gap: 9px; align-items: start; padding: 9px 10px; border: 1px solid rgba(255,255,255,0.09); border-radius: 14px; background: rgba(255,255,255,0.04); }
+    .pulse-row.fresh { border-color: rgba(114,244,255,0.35); background: rgba(114,244,255,0.07); box-shadow: 0 0 18px rgba(114,244,255,0.10); }
+    .pulse-ico { width: 26px; height: 26px; border-radius: 9px; display: grid; place-items: center; font-size: 13px; border: 1px solid rgba(255,255,255,0.3); }
+    .pulse-msg { font-size: 12.5px; line-height: 1.4; }
+    .pulse-time { color: var(--subtle); font-size: 10px; font-weight: 800; margin-top: 2px; }
+
+    /* Mobile bottom dock */
+    .dock { display: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+    }
+
     @media (max-width: 980px) {
       .hero-content { grid-template-columns: 1fr; align-items: end; }
       .layout { grid-template-columns: 1fr; }
@@ -609,6 +651,13 @@
       .add-market-form { grid-template-columns: 1fr; }
       .bet-head { grid-template-columns: auto 1fr; }
       .bet-tags { grid-column: 1 / -1; justify-items: start; }
+      .dock { position: fixed; left: 10px; right: 10px; bottom: 10px; z-index: 60; display: flex; gap: 4px; padding: 8px; padding-bottom: calc(8px + env(safe-area-inset-bottom)); border: 1px solid rgba(255,255,255,0.16); border-radius: 24px; background: rgba(11,15,24,0.90); backdrop-filter: blur(20px); box-shadow: 0 18px 50px rgba(0,0,0,0.5); overflow-x: auto; scrollbar-width: none; }
+      .dock::-webkit-scrollbar { display: none; }
+      .dock button { flex: 1 0 auto; min-width: 54px; display: grid; justify-items: center; gap: 3px; border: 0; background: transparent; color: var(--subtle); border-radius: 16px; padding: 7px 6px; font-size: 9.5px; font-weight: 850; }
+      .dock button .d-ico { font-size: 18px; line-height: 1; }
+      .dock button.active { color: #0d1621; background: linear-gradient(135deg, rgba(247,251,255,0.98), rgba(189,245,255,0.96)); }
+      .app { padding-bottom: 104px; }
+      .toast { bottom: 88px; }
     }
   </style>
 </head>
@@ -643,14 +692,23 @@
             <div class="micro" id="countdownSub">Seoul + Jeju · 23 Oct → ~31 Oct 2026</div>
             <div class="pill-row">
               <span class="pill hot">🍁 Autumn in Korea</span>
+              <span class="pill" id="seoulNowPill">🇰🇷 Seoul</span>
               <span class="pill" id="travellerCountPill">7 travellers</span>
             </div>
           </div>
           <div class="glass">
             <div class="label">Group progress</div>
-            <div class="big"><span id="heroProgressPct">0%</span></div>
-            <div class="progress-bar" style="margin-top:12px"><div class="progress-fill" id="heroProgressFill"></div></div>
-            <div class="micro" id="heroProgressSub" style="margin-top:10px">Group bosses cleared together.</div>
+            <div class="ring-row">
+              <div class="ring-wrap">
+                <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+                  <defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5fe6ff"/><stop offset="0.55" stop-color="#77f0a8"/><stop offset="1" stop-color="#ffd15c"/></linearGradient></defs>
+                  <circle class="ring-bg" cx="60" cy="60" r="52"/>
+                  <circle class="ring-fill" id="heroRing" cx="60" cy="60" r="52"/>
+                </svg>
+                <div class="ring-center"><span id="heroProgressPct">0%</span></div>
+              </div>
+              <div class="micro" id="heroProgressSub">Group bosses cleared together.</div>
+            </div>
           </div>
         </aside>
       </div>
@@ -809,6 +867,11 @@
             <div class="panel pad">
               <div class="label">Roster</div>
               <div class="traveller-grid" id="travellerGrid"></div>
+            </div>
+
+            <div class="panel pad">
+              <div class="label" style="display:flex; align-items:center; gap:8px">📡 Crew pulse <span class="pill" id="pulseBadge">live</span></div>
+              <div class="pulse-feed" id="pulseFeed"></div>
             </div>
 
             <div class="panel pad activity-spotlight">
@@ -1142,6 +1205,17 @@
     </main>
   </div>
 
+  <nav class="dock" aria-label="Quick navigation">
+    <button data-tab="board" class="active"><span class="d-ico">🗺️</span>Board</button>
+    <button data-tab="tasks"><span class="d-ico">🎬</span>Tasks</button>
+    <button data-tab="ideas"><span class="d-ico">🎯</span>Market</button>
+    <button data-tab="desk"><span class="d-ico">🛎️</span>Desk</button>
+    <button data-tab="plan"><span class="d-ico">🗓️</span>Plan</button>
+    <button data-tab="bookie"><span class="d-ico">🎲</span>Bookies</button>
+    <button data-tab="intel"><span class="d-ico">🧭</span>Pack</button>
+    <button data-tab="settings"><span class="d-ico">⚙️</span>Roster</button>
+  </nav>
+
   <div class="toast" id="toast"></div>
 
   <script>
@@ -1264,7 +1338,8 @@
       },
       bookie: structuredClone(defaultBookie),
       desk: structuredClone(defaultDesk),
-      plan: { generatedAt: null, items: [] }
+      plan: { generatedAt: null, items: [] },
+      feed: []
     };
 
     const groupTasks = [
@@ -1294,7 +1369,8 @@
           ideaVotes: parsed.ideaVotes || {},
           bookie: parsed.bookie || structuredClone(defaultBookie),
           desk: parsed.desk || structuredClone(defaultDesk),
-          plan: parsed.plan || { generatedAt: null, items: [] }
+          plan: parsed.plan || { generatedAt: null, items: [] },
+          feed: Array.isArray(parsed.feed) ? parsed.feed : []
         };
       } catch (e) {
         return structuredClone(defaultState);
@@ -1323,7 +1399,8 @@
         ideaVotes: remote.ideaVotes || {},
         bookie: remote.bookie || structuredClone(defaultBookie),
         desk: remote.desk || structuredClone(defaultDesk),
-        plan: remote.plan || { generatedAt: null, items: [] }
+        plan: remote.plan || { generatedAt: null, items: [] },
+        feed: Array.isArray(remote.feed) ? remote.feed : []
       };
       if (typeof localSelected === "number" && state.players[localSelected]) {
         state.selectedPlayer = localSelected;
@@ -1344,29 +1421,24 @@
     function setSyncChip(kind) {
       const chip = document.getElementById("syncChip");
       const textEl = document.getElementById("syncChipText");
-      const stamp = document.getElementById("syncTabStamp");
       if (chip) chip.classList.remove("syncing", "offline");
       if (kind === "disabled") {
         if (chip) chip.classList.add("offline");
         if (textEl) textEl.textContent = "Local only";
-        if (stamp) stamp.textContent = "Live sync is not configured on this copy of the board.";
         return;
       }
       if (kind === "syncing") {
         if (chip) chip.classList.add("syncing");
         if (textEl) textEl.textContent = "Syncing…";
-        if (stamp) stamp.textContent = "Checking the group sheet…";
         return;
       }
       if (kind === "offline") {
         if (chip) chip.classList.add("offline");
         if (textEl) textEl.textContent = "Offline";
-        if (stamp) stamp.textContent = "Could not reach the sheet. Your changes are still saved on this device.";
         return;
       }
       const rel = lastSyncedAt ? relTime(lastSyncedAt) : null;
       if (textEl) textEl.textContent = rel ? `Live · ${rel}` : "Live";
-      if (stamp) stamp.textContent = rel ? `Last synced ${rel}.` : "Connected to the group sheet.";
     }
 
     function remotePull(opts) {
@@ -1596,6 +1668,9 @@
       groupHolder.querySelectorAll(".group-toggle").forEach(toggle => {
         toggle.addEventListener("change", e => {
           state.groupDone[e.target.dataset.task] = e.target.checked;
+          const task = groupTasks.find(t => t.id === e.target.dataset.task);
+          logEvent(e.target.checked ? "🏆" : "↩️", `${selectedPlayer().name} ${e.target.checked ? "cleared" : "reopened"} the boss “${task ? task.title : "a task"}”`);
+          buzz(e.target.checked ? 12 : 6);
           saveState();
           renderAll();
           if (e.target.checked) celebrate();
@@ -1680,9 +1755,18 @@
         btn.addEventListener("click", () => {
           const ideaId = btn.dataset.idea;
           const vote = btn.dataset.vote;
+          const idea = allIdeas().find(i => i.id === ideaId);
+          const title = idea ? idea.title : "an idea";
           state.ideaVotes[ideaId] = state.ideaVotes[ideaId] || {};
-          if (state.ideaVotes[ideaId][state.selectedPlayer] === vote) delete state.ideaVotes[ideaId][state.selectedPlayer];
-          else state.ideaVotes[ideaId][state.selectedPlayer] = vote;
+          if (state.ideaVotes[ideaId][state.selectedPlayer] === vote) {
+            delete state.ideaVotes[ideaId][state.selectedPlayer];
+            logEvent("🗳️", `${selectedPlayer().name} took back their vote on “${title}”`);
+          } else {
+            state.ideaVotes[ideaId][state.selectedPlayer] = vote;
+            const word = vote === "keen" ? "✅ keen on" : vote === "maybe" ? "🤷 maybe on" : "❌ a no on";
+            logEvent("🗳️", `${selectedPlayer().name} is ${word} “${title}”`);
+          }
+          buzz(6);
           saveState(); renderAll(); toast(`${selectedPlayer().name} voted on an idea`);
         });
       });
@@ -1736,23 +1820,41 @@
       if (gtb) gtb.textContent = `${groupDone} of ${groupTotal} done`;
     }
 
-    function renderHero() {
-      const days = Math.ceil((TRIP_START - new Date()) / 86400000);
+    function renderCountdown() {
+      const now = new Date();
+      const ms = TRIP_START - now;
       const daysEl = document.getElementById("countdownDays");
       const subEl = document.getElementById("countdownSub");
       if (daysEl) {
-        if (days > 1) { daysEl.textContent = `${days} days`; if (subEl) subEl.textContent = "until you land in Seoul · 23 Oct 2026"; }
-        else if (days === 1) { daysEl.textContent = "1 day"; if (subEl) subEl.textContent = "Seoul tomorrow — pack the bags"; }
-        else if (days === 0) { daysEl.textContent = "Today ✈️"; if (subEl) subEl.textContent = "Departure day"; }
-        else { daysEl.textContent = "In Korea 🇰🇷"; if (subEl) subEl.textContent = "Seoul + Jeju · 23 Oct → ~31 Oct 2026"; }
+        if (ms > 0) {
+          const mins = Math.floor(ms / 60000);
+          const d = Math.floor(mins / 1440), h = Math.floor((mins % 1440) / 60), m = mins % 60;
+          daysEl.innerHTML = `${d}<span class="cd-unit">d</span>${h}<span class="cd-unit">h</span>${m}<span class="cd-unit">m</span>`;
+          if (subEl) subEl.textContent = d >= 1 ? "until you land in Seoul · 23 Oct 2026" : "Seoul is basically today — pack ✈️";
+        } else {
+          daysEl.textContent = "In Korea 🇰🇷";
+          if (subEl) subEl.textContent = "Seoul + Jeju · 23 Oct → ~31 Oct 2026";
+        }
       }
-      const groupDone = Object.values(state.groupDone).filter(Boolean).length;
+      const pill = document.getElementById("seoulNowPill");
+      if (pill) {
+        try {
+          const hm = new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Seoul", hour: "2-digit", minute: "2-digit", hour12: false }).format(now);
+          const hr = Number(hm.split(":")[0]);
+          const ico = hr >= 6 && hr < 17 ? "☀️" : hr < 21 ? "🌆" : "🌙";
+          pill.textContent = `${ico} ${hm} in Seoul`;
+        } catch (e) { pill.textContent = "🇰🇷 Seoul"; }
+      }
+    }
+
+    function renderHero() {
+      renderCountdown();
+      const groupDone = groupTasks.filter(t => state.groupDone[t.id]).length;
       const pct = Math.round(groupDone / groupTasks.length * 100);
-      const pctEl = document.getElementById("heroProgressPct");
-      const fillEl = document.getElementById("heroProgressFill");
+      tweenNum(document.getElementById("heroProgressPct"), pct, n => `${Math.round(n)}%`);
+      const ring = document.getElementById("heroRing");
+      if (ring) { const C = 2 * Math.PI * 52; ring.style.strokeDashoffset = (C * (1 - pct / 100)).toFixed(1); }
       const subP = document.getElementById("heroProgressSub");
-      if (pctEl) pctEl.textContent = `${pct}%`;
-      if (fillEl) fillEl.style.width = `${pct}%`;
       if (subP) subP.textContent = `${groupDone} of ${groupTasks.length} group bosses cleared together.`;
       const tcp = document.getElementById("travellerCountPill");
       if (tcp) tcp.textContent = `${state.players.length} travellers`;
@@ -1770,9 +1872,10 @@
         btn.addEventListener("click", () => {
           const player = selectedPlayer();
           player.vibe = player.vibe === btn.dataset.vibe ? null : btn.dataset.vibe;
+          const chosen = vibeById(player.vibe);
+          if (chosen) logEvent(chosen.emoji, `${player.name} set their vibe: ${chosen.name}`);
           saveState();
           renderAll();
-          const chosen = vibeById(player.vibe);
           toast(chosen ? `${player.name}: ${chosen.name} ${chosen.emoji}` : `${player.name} cleared their vibe`);
         });
       });
@@ -1788,6 +1891,7 @@
         btn.addEventListener("click", () => {
           const player = selectedPlayer();
           player.piece = player.piece === btn.dataset.piece ? null : btn.dataset.piece;
+          if (player.piece) logEvent("♟️", `${player.name} picked ${player.piece} as their board piece`);
           saveState();
           renderAll();
           toast(player.piece ? `${player.name}'s piece: ${player.piece}` : `${player.name} cleared their piece`);
@@ -1844,6 +1948,58 @@
     function escapeHtml(str) { return String(str || "").replace(/[&<>"]/g, s => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[s])); }
     function escapeAttr(str) { return escapeHtml(str).replace(/'/g, "&#039;"); }
 
+    // ---- Crew pulse: a lightweight synced activity feed ----
+    // Every meaningful mutation appends an event (capped at 40) so the group can
+    // see "what happened since I last looked". Synced via the same state blob.
+    const PULSE_SEEN_KEY = "koreaPulseSeenV1";
+    const pulseSeenAt = Number(localStorage.getItem(PULSE_SEEN_KEY) || 0);
+    function logEvent(emoji, msg) {
+      if (!Array.isArray(state.feed)) state.feed = [];
+      state.feed.unshift({ t: Date.now(), by: state.selectedPlayer, emoji, msg });
+      if (state.feed.length > 40) state.feed.length = 40;
+    }
+    function renderPulse() {
+      const holder = document.getElementById("pulseFeed");
+      if (!holder) return;
+      const feed = (Array.isArray(state.feed) ? state.feed : []).filter(e => e && e.t);
+      // "New" = things OTHER people did since you last looked at the board.
+      const isFresh = e => e.t > pulseSeenAt && e.by !== state.selectedPlayer;
+      const freshCount = feed.filter(isFresh).length;
+      const badge = document.getElementById("pulseBadge");
+      if (badge) {
+        badge.textContent = freshCount ? `${freshCount} new` : "live";
+        badge.className = freshCount ? "pill hot" : "pill";
+      }
+      holder.innerHTML = feed.length ? feed.slice(0, 14).map(e => {
+        const p = state.players[e.by];
+        return `<div class="pulse-row ${isFresh(e) ? "fresh" : ""}">
+          <span class="pulse-ico" style="background:${p ? p.colour : "rgba(255,255,255,0.15)"}">${e.emoji || "✨"}</span>
+          <div><div class="pulse-msg">${escapeHtml(e.msg)}</div><div class="pulse-time">${relTime(e.t)}</div></div>
+        </div>`;
+      }).join("") : `<div class="micro">Quiet so far — votes, locks, bets and plan changes will show up here.</div>`;
+      // Only mark the feed "seen" while the Board tab is actually on screen.
+      const boardEl = document.getElementById("board");
+      if (boardEl && boardEl.classList.contains("active") && feed.length) {
+        localStorage.setItem(PULSE_SEEN_KEY, String(feed[0].t));
+      }
+    }
+
+    // Count-up animation for stat numbers (skips the very first paint).
+    function tweenNum(el, to, fmt) {
+      if (!el) return;
+      const from = el.__num != null ? el.__num : to;
+      el.__num = to;
+      if (from === to) { el.textContent = fmt(to); return; }
+      const t0 = performance.now(), dur = 650;
+      (function step(now) {
+        const k = Math.min(1, (now - t0) / dur);
+        el.textContent = fmt(from + (to - from) * (1 - Math.pow(1 - k, 3)));
+        if (k < 1) requestAnimationFrame(step);
+      })(performance.now());
+    }
+
+    function buzz(ms) { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {} }
+
     // ---- The Bookies: betting + prizes (no real money, chips only) ----
     const DEFAULT_MARKET_IDS = defaultBookie.markets.map(m => m.id);
 
@@ -1895,8 +2051,10 @@
       const stake = existing && existing.stake ? existing.stake : Math.min(50, free);
       if (stake <= 0) { toast("You're out of chips"); return; }
       m.bets[idx] = { runner: String(runnerId), stake };
-      saveState(); renderAll();
       const r = runnerById(m, runnerId);
+      logEvent("🎲", `${selectedPlayer().name} backed ${r ? r.label : "a runner"} in “${m.title}”`);
+      buzz(6);
+      saveState(); renderAll();
       toast(`${selectedPlayer().name} backed ${r ? r.label : "a runner"}`);
     }
     function setBetStake(marketId, stake) {
@@ -1924,8 +2082,10 @@
     function settleMarket(marketId, runnerId) {
       const m = market(marketId); if (!m) return;
       m.status = "settled"; m.winner = String(runnerId);
-      saveState(); renderAll(); celebrate();
       const r = runnerById(m, runnerId);
+      logEvent("🏁", `Bet settled — ${r ? r.label : "result in"} takes “${m.title}”${m.type !== "yesno" && m.prize ? ` (${m.prize})` : ""}`);
+      buzz(14);
+      saveState(); renderAll(); celebrate();
       toast(`Settled: ${r ? r.label : "result in"}`);
     }
     function reopenMarket(marketId) {
@@ -1969,8 +2129,7 @@
           </div>`;
         }).join("");
       }
-      const myBalEl = document.getElementById("myChipBal");
-      if (myBalEl) myBalEl.textContent = `${playerBalance(idx).toLocaleString()} chips`;
+      tweenNum(document.getElementById("myChipBal"), playerBalance(idx), n => `${Math.round(n).toLocaleString()} chips`);
 
       // Prize shelf
       const upForGrabs = state.bookie.markets.filter(m => m.status !== "settled" && m.type !== "yesno" && m.prize);
@@ -2096,6 +2255,7 @@
       const idx = state.selectedPlayer;
       const on = r.owners.includes(idx);
       r.owners = on ? r.owners.filter(x => x !== idx) : [...r.owners, idx];
+      logEvent("🙋", on ? `${selectedPlayer().name} stepped off “${r.title}”` : `${selectedPlayer().name} is on “${r.title}”`);
       saveState(); renderAll();
       toast(on ? `${selectedPlayer().name} stepped off ${r.title}` : `${selectedPlayer().name} is on ${r.title} 🙋`);
     }
@@ -2105,6 +2265,7 @@
       const on = r.drivers.includes(idx);
       r.drivers = on ? r.drivers.filter(x => x !== idx) : [...r.drivers, idx];
       if (!on && !r.owners.includes(idx)) r.owners.push(idx); // a driver is on the job too
+      logEvent("🚗", on ? `${selectedPlayer().name} is off driving duty` : `${selectedPlayer().name} will drive in Jeju`);
       saveState(); renderAll();
       toast(on ? `${selectedPlayer().name} is off driving` : `${selectedPlayer().name} will drive in Jeju 🚗`);
     }
@@ -2114,6 +2275,7 @@
       let link = (data.link || "").trim();
       if (link && !/^https?:\/\//i.test(link)) link = "https://" + link;
       r.options.push({ id: `op_${Date.now()}_${Math.floor(Math.random() * 1000)}`, by: state.selectedPlayer, title: data.title.trim(), link, price: (data.price || "").trim(), notes: (data.notes || "").trim(), votes: { [state.selectedPlayer]: true } });
+      logEvent("📋", `${selectedPlayer().name} shared “${data.title.trim()}” in ${r.title}`);
       saveState(); renderAll(); toast(`${selectedPlayer().name} shared an option`);
     }
     function removeDeskOption(roomId, optId) {
@@ -2126,19 +2288,24 @@
       const r = deskRoom(roomId); if (!r) return;
       const o = r.options.find(x => x.id === optId); if (!o) return;
       const idx = state.selectedPlayer;
-      if (o.votes[idx]) delete o.votes[idx]; else o.votes[idx] = true;
+      if (o.votes[idx]) { delete o.votes[idx]; }
+      else { o.votes[idx] = true; logEvent("👍", `${selectedPlayer().name} backed “${o.title}” in ${r.title}`); }
+      buzz(6);
       saveState(); renderAll();
     }
     function decideRoom(roomId, optId) {
       const r = deskRoom(roomId); if (!r) return;
       r.status = "decided"; r.chosen = optId;
-      syncDeskTasks(); saveState(); renderAll(); celebrate();
       const o = r.options.find(x => x.id === optId);
+      logEvent("🔒", `${r.title} locked in: “${o ? o.title : r.title}”`);
+      buzz(14);
+      syncDeskTasks(); saveState(); renderAll(); celebrate();
       toast(`Locked: ${o ? o.title : r.title}`);
     }
     function reopenRoom(roomId) {
       const r = deskRoom(roomId); if (!r) return;
       r.status = "open"; r.chosen = null;
+      logEvent("🔓", `${selectedPlayer().name} reopened “${r.title}”`);
       syncDeskTasks(); saveState(); renderAll(); toast(`${r.title} reopened`);
     }
     function syncDeskTasks() {
@@ -2152,6 +2319,7 @@
       ensureDesk();
       if (!(title || "").trim()) { toast("Name the decision first"); return; }
       state.desk.rooms.push({ id: `room_${Date.now()}`, emoji: "📌", kind: "custom", title: title.trim(), desc: (desc || "Group decision — put your hand up, share options, vote.").trim(), owners: [], options: [], status: "open", chosen: null });
+      logEvent("🛎️", `${selectedPlayer().name} opened a decision room: “${title.trim()}”`);
       saveState(); renderAll(); toast("Decision room added");
     }
     function removeDeskRoom(roomId) {
@@ -2323,7 +2491,7 @@
       if (/(check.?in|check.?out|hotel|villa|accom)/.test(t)) return "🏨";
       return "📍";
     }
-    function addPlanItem(dayId, title, time) { ensurePlan(); if (!(title || "").trim()) { toast("Type something to add"); return; } state.plan.items.push({ id: `pl_x_${Date.now()}`, dayId, title: title.trim(), emoji: guessEmoji(title), city: "", kind: "activity", note: "", time: time || "" }); saveState(); renderAll(); toast("Added to the day"); }
+    function addPlanItem(dayId, title, time) { ensurePlan(); if (!(title || "").trim()) { toast("Type something to add"); return; } state.plan.items.push({ id: `pl_x_${Date.now()}`, dayId, title: title.trim(), emoji: guessEmoji(title), city: "", kind: "activity", note: "", time: time || "" }); const d = TRIP_DAYS.find(x => x.id === dayId); logEvent("🗓️", `${selectedPlayer().name} added “${title.trim()}” to ${d ? d.date : "the plan"}`); saveState(); renderAll(); toast("Added to the day"); }
     function changeItemTime(itemId, time) { ensurePlan(); const it = state.plan.items.find(x => x.id === itemId); if (it) { it.time = time || ""; saveState(); renderAll(); } }
     function renamePlanItem(itemId) {
       ensurePlan(); const it = state.plan.items.find(x => x.id === itemId); if (!it) return;
@@ -2508,7 +2676,7 @@
 
     function renderAll() {
       ensureBookie(); ensureDesk(); ensurePlan();
-      renderNodes(); renderTokens(); renderPlayerSelect(); renderTravellerGrid(); renderSelectedPanel(); renderVibePicker(); renderPiecePicker(); renderTasks(); renderIdeas(); renderBoardIdeaPreview(); renderNextActions(); renderBadges(); renderRosterEditor(); renderHero(); renderBookie(); renderDesk(); renderPlan(); renderArrivals();
+      renderNodes(); renderTokens(); renderPlayerSelect(); renderTravellerGrid(); renderSelectedPanel(); renderVibePicker(); renderPiecePicker(); renderTasks(); renderIdeas(); renderBoardIdeaPreview(); renderNextActions(); renderBadges(); renderRosterEditor(); renderHero(); renderBookie(); renderDesk(); renderPlan(); renderArrivals(); renderPulse();
     }
 
     function toast(message) {
@@ -2519,6 +2687,7 @@
     }
 
     function celebrate() {
+      buzz([12, 40, 12]);
       const wrap = document.createElement("div");
       wrap.className = "confetti-wrap";
       const cols = ["#72f4ff", "#ff97ca", "#8be8d4", "#ffd15c", "#8fa9ff", "#f7fbff"];
@@ -2536,13 +2705,20 @@
       setTimeout(() => wrap.remove(), 2600);
     }
 
-    document.querySelectorAll(".nav button").forEach(btn => {
+    function setActiveTab(tab) {
+      document.querySelectorAll(".nav button[data-tab], .dock button[data-tab]").forEach(b => {
+        const on = b.dataset.tab === tab;
+        b.classList.toggle("active", on);
+        if (on) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
+      });
+      document.querySelectorAll(".section").forEach(s => s.classList.toggle("active", s.id === tab));
+      if (tab === "board") renderPulse(); // marks the crew pulse as seen
+    }
+    document.querySelectorAll(".nav button, .dock button").forEach(btn => {
       btn.addEventListener("click", () => {
         if (!btn.dataset.tab) return; // the sync chip is a nav button with no tab
-        document.querySelectorAll(".nav button").forEach(x => x.classList.remove("active"));
-        document.querySelectorAll(".section").forEach(x => x.classList.remove("active"));
-        btn.classList.add("active");
-        document.getElementById(btn.dataset.tab).classList.add("active");
+        setActiveTab(btn.dataset.tab);
+        if (btn.closest(".dock")) document.getElementById(btn.dataset.tab).scrollIntoView({ behavior: "smooth", block: "start" });
       });
     });
 
@@ -2565,6 +2741,7 @@
       if (!title) { toast("Add an idea name first"); return; }
       state.ideas = allIdeas();
       state.ideas.push({ id: `custom_${Date.now()}`, emoji: "💡", title, city, desc });
+      logEvent("💡", `${selectedPlayer().name} pitched a new idea: “${title}”`);
       document.getElementById("newIdeaTitle").value = "";
       document.getElementById("newIdeaCity").value = "";
       document.getElementById("newIdeaDesc").value = "";
@@ -2646,6 +2823,7 @@
         m.runners = raw.map((label, i) => ({ id: String(i), label, emoji: "🎯" }));
       }
       ensureBookie(); state.bookie.markets.push(m);
+      logEvent("🎲", `${selectedPlayer().name} started a bet: “${title}”`);
       ["newMkTitle", "newMkDesc", "newMkPrize", "newMkRunners"].forEach(id => { const el = document.getElementById(id); if (el) el.value = ""; });
       saveState(); renderAll(); toast("Bet added");
     });
@@ -2663,7 +2841,7 @@
     const planAddBtn = document.getElementById("planAddBtn");
     if (planAddBtn) planAddBtn.addEventListener("click", () => { const t = document.getElementById("planAddTitle"), tm = document.getElementById("planAddTime"), dsel = document.getElementById("planAddDay"); addPlanItem(dsel.value || "d25", t.value, tm ? tm.value : ""); t.value = ""; if (tm) tm.value = ""; });
     const planLockBtn = document.getElementById("planLockBtn");
-    if (planLockBtn) planLockBtn.addEventListener("click", () => { state.groupDone.itinerary = !state.groupDone.itinerary; if (state.groupDone.itinerary) celebrate(); saveState(); renderAll(); toast(state.groupDone.itinerary ? "Itinerary locked 🔒" : "Itinerary unlocked"); });
+    if (planLockBtn) planLockBtn.addEventListener("click", () => { state.groupDone.itinerary = !state.groupDone.itinerary; logEvent(state.groupDone.itinerary ? "🔒" : "🔓", `${selectedPlayer().name} ${state.groupDone.itinerary ? "locked" : "unlocked"} the itinerary`); if (state.groupDone.itinerary) { celebrate(); buzz(14); } saveState(); renderAll(); toast(state.groupDone.itinerary ? "Itinerary locked 🔒" : "Itinerary unlocked"); });
     const planCopyBtn = document.getElementById("planCopyBtn");
     if (planCopyBtn) planCopyBtn.addEventListener("click", async () => {
       const lines = ["Korea Boys Trip — Draft Itinerary", "Out 23 Oct 2026 · trip ends ~Sat 31 Oct (return flights TBC)", ""];
@@ -2687,15 +2865,13 @@
     });
 
     document.getElementById("syncChip").addEventListener("click", () => remotePull({ manual: true }));
-    const syncRefreshBtn = document.getElementById("syncRefreshBtn");
-    if (syncRefreshBtn) syncRefreshBtn.addEventListener("click", () => remotePull({ manual: true }));
 
     spawnLeaves();
     renderAll();
     setSyncChip(hasRemoteSync() ? "syncing" : "disabled");
     remotePull({ initial: true });
     startSyncLoops();
-    setInterval(renderHero, 3600000); // refresh the countdown hourly
+    setInterval(renderCountdown, 30000); // keep the countdown + Seoul clock ticking
   </script>
 </body>
 </html>
