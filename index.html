@@ -536,6 +536,9 @@
     .pd-btn { border:1px solid rgba(255,255,255,0.14); border-radius:10px; background:rgba(0,0,0,0.22); color:var(--muted); padding:5px 9px; font-size:11px; font-weight:850; transition:border-color 0.15s ease, color 0.15s ease; }
     .pd-btn:hover { border-color:rgba(255,255,255,0.3); color:var(--ink); }
     .plan-day.is-off { opacity:0.55; border-style:dashed; }
+    .day-add { display:grid; grid-template-columns:1fr auto auto; gap:7px; margin-top:8px; }
+    .day-add input[type="text"] { padding:8px 10px; font-size:12px; border-radius:12px; background:rgba(0,0,0,0.14); border-style:dashed; }
+    .day-add input[type="text"]:focus { border-style:solid; }
     .arr-sub { font-size:10px; font-weight:900; letter-spacing:0.07em; text-transform:uppercase; color:var(--subtle); }
     .plan-item.dinner { border-color:rgba(255,209,92,0.3); background:rgba(255,209,92,0.08); }
     .plan-item .pi-emoji { font-size:18px; }
@@ -1092,9 +1095,9 @@
           <h3 style="margin:24px 0 12px">Draft rhythm</h3>
           <div class="timeline">
             <div class="timeline-item"><div class="timeline-date">23 Oct</div><div><div class="timeline-title">Jason departs London</div><div class="timeline-body">LHR T3 · QW901 · 22:05 departure · e-ticket and PNR pending.</div></div></div>
-            <div class="timeline-item"><div class="timeline-date">24 Oct</div><div><div class="timeline-title">Arrive Seoul late</div><div class="timeline-body">ICN T1 · 21:35 arrival · light arrival night.</div></div></div>
-            <div class="timeline-item"><div class="timeline-date">25 to 27 Oct</div><div><div class="timeline-title">Seoul opening arc</div><div class="timeline-body">Food, nightlife, shopping, recovery and group arrivals.</div></div></div>
-            <div class="timeline-item"><div class="timeline-date">27 to 31 Oct</div><div><div class="timeline-title">Jeju main quest</div><div class="timeline-body">Island base, scenic drives, Hallasan or viewpoints, seafood and group adventure day.</div></div></div>
+            <div class="timeline-item"><div class="timeline-date">24 Oct</div><div><div class="timeline-title">Everyone lands Saturday night</div><div class="timeline-body">Whole crew arrives Sat evening (Jason ICN T1 · 21:35) · easy first night.</div></div></div>
+            <div class="timeline-item"><div class="timeline-date">25 to 27 Oct</div><div><div class="timeline-title">Seoul opening arc</div><div class="timeline-body">Three full Seoul days — food, nightlife, shopping. Fly to Jeju ~21:00 Tuesday night.</div></div></div>
+            <div class="timeline-item"><div class="timeline-date">28 to 31 Oct</div><div><div class="timeline-title">Jeju main quest</div><div class="timeline-body">Island base, scenic drives, Hallasan or viewpoints, seafood and group adventure day.</div></div></div>
             <div class="timeline-item"><div class="timeline-date">~31 Oct</div><div><div class="timeline-title">Fly home (TBC)</div><div class="timeline-body">Trip likely ends around Sat 31 Oct — return via Seoul or connect CJU → Seoul → London if timings work. Lock flights, then set your departure on the Itinerary tab.</div></div></div>
           </div>
 
@@ -1211,10 +1214,10 @@
 
     // Itinerary builder — fixed trip skeleton; activities auto-slot onto these days.
     const TRIP_DAYS = [
-      { id: "d24", iso: "2026-10-24", date: "Sat 24 Oct", city: "Seoul", logistics: true, note: "Land in Seoul late — easy arrival night." },
+      { id: "d24", iso: "2026-10-24", date: "Sat 24 Oct", city: "Seoul", logistics: true, note: "Everyone lands tonight — easy arrival night." },
       { id: "d25", iso: "2026-10-25", date: "Sun 25 Oct", city: "Seoul" },
       { id: "d26", iso: "2026-10-26", date: "Mon 26 Oct", city: "Seoul" },
-      { id: "d27", iso: "2026-10-27", date: "Tue 27 Oct", city: "Seoul → Jeju", logistics: true, note: "Fly ICN/GMP → CJU. Afternoon and evening on the island." },
+      { id: "d27", iso: "2026-10-27", date: "Tue 27 Oct", city: "Seoul → Jeju", note: "Full Seoul day — fly to Jeju ~21:00 tonight." },
       { id: "d28", iso: "2026-10-28", date: "Wed 28 Oct", city: "Jeju" },
       { id: "d29", iso: "2026-10-29", date: "Thu 29 Oct", city: "Jeju" },
       { id: "d30", iso: "2026-10-30", date: "Fri 30 Oct", city: "Jeju" },
@@ -2298,7 +2301,7 @@
     function generatePlan() {
       ensurePlan(); ensureDesk();
       const winners = planWinners();
-      const seoulDays = ["d25", "d26", "d1"].filter(id => !dayIsOff(id)), jejuDays = ["d28", "d29", "d30", "d31"].filter(id => !dayIsOff(id));
+      const seoulDays = ["d25", "d26", "d27", "d1"].filter(id => !dayIsOff(id)), jejuDays = ["d28", "d29", "d30", "d31"].filter(id => !dayIsOff(id));
       if (!seoulDays.length) seoulDays.push("d25");
       if (!jejuDays.length) jejuDays.push("d28");
       const buckets = { seoul: [], jeju: [] };
@@ -2315,10 +2318,13 @@
         const o = (r.options || []).find(x => x.id === r.chosen);
         items.push({ id: `pl_${r.id}`, dayId: r.id === "dinner_jeju" ? "d28" : "d25", title: `Group dinner — ${o ? o.title : r.title}`, emoji: r.emoji || "🍽️", city: "", kind: "dinner", note: (o && o.link) ? o.link : "" });
       });
-      state.plan = { generatedAt: new Date().toISOString(), items };
+      // Re-drafting only replaces auto-drafted items (ids pl_<idea>/pl_<room>).
+      // Manual additions (pl_x_*) and day edits (dayMeta) always survive.
+      const manual = state.plan.items.filter(it => String(it.id).startsWith("pl_x_"));
+      state.plan = { generatedAt: new Date().toISOString(), dayMeta: state.plan.dayMeta, items: [...manual, ...items] };
       saveState(); renderAll();
       if (items.length) celebrate();
-      toast(items.length ? `Drafted ${items.length} item${items.length > 1 ? "s" : ""} across the trip` : "No shortlisted activities yet — vote first");
+      toast(items.length ? `Drafted ${items.length} item${items.length > 1 ? "s" : ""} — your manual items kept` : "No shortlisted activities yet — vote first");
     }
     function changeItemDay(itemId, dayId) { ensurePlan(); const it = state.plan.items.find(x => x.id === itemId); if (it) { it.dayId = dayId; saveState(); renderAll(); } }
     function removePlanItem(itemId) { ensurePlan(); state.plan.items = state.plan.items.filter(x => x.id !== itemId); saveState(); renderAll(); toast("Removed from itinerary"); }
@@ -2399,9 +2405,23 @@
           </div>
           ${flightsHtml}
           ${itemsHtml}
+          <div class="day-add">
+            <input type="text" data-dayadd="${d.id}" data-f="title" placeholder="＋ Add to ${d.date}…" />
+            <input type="time" class="pi-time" data-dayadd="${d.id}" data-f="time" aria-label="Time (optional)" />
+            <button class="pd-btn" data-plan="dayadd" data-day="${d.id}">Add</button>
+          </div>
         </div>`;
       }).join("");
 
+      holder.querySelectorAll('[data-plan="dayadd"]').forEach(b => b.addEventListener("click", () => {
+        const day = b.dataset.day;
+        const tEl = holder.querySelector(`input[data-dayadd="${day}"][data-f="title"]`);
+        const tmEl = holder.querySelector(`input[data-dayadd="${day}"][data-f="time"]`);
+        addPlanItem(day, tEl ? tEl.value : "", tmEl ? tmEl.value : "");
+      }));
+      holder.querySelectorAll('input[data-dayadd][data-f="title"]').forEach(inp => inp.addEventListener("keydown", e => {
+        if (e.key === "Enter") { const btn = holder.querySelector(`[data-plan="dayadd"][data-day="${inp.dataset.dayadd}"]`); if (btn) btn.click(); }
+      }));
       holder.querySelectorAll('[data-plan="move"]').forEach(sel => sel.addEventListener("change", () => changeItemDay(sel.dataset.item, sel.value)));
       holder.querySelectorAll('[data-plan="del"]').forEach(b => b.addEventListener("click", () => removePlanItem(b.dataset.item)));
       holder.querySelectorAll('[data-plan="time"]').forEach(inp => inp.addEventListener("change", () => changeItemTime(inp.dataset.item, inp.value)));
@@ -2652,7 +2672,7 @@
     });
 
     const planGenBtn = document.getElementById("planGenBtn");
-    if (planGenBtn) planGenBtn.addEventListener("click", () => { if (state.plan.items.length && !confirm("Re-draft the itinerary? This replaces the current day plan.")) return; generatePlan(); });
+    if (planGenBtn) planGenBtn.addEventListener("click", () => { if (state.plan.items.length && !confirm("Re-draft from the votes? Auto-drafted items are replaced — anything you added manually (and your day edits) stays.")) return; generatePlan(); });
     const planClearBtn = document.getElementById("planClearBtn");
     if (planClearBtn) planClearBtn.addEventListener("click", () => { if (state.plan.items.length && confirm("Clear the whole itinerary?")) clearPlan(); });
     const planAddBtn = document.getElementById("planAddBtn");
