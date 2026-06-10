@@ -712,7 +712,7 @@
               <button class="hub-card" data-jump="plan">
                 <span class="hub-icon">🗓️</span>
                 <span class="hub-title">Itinerary</span>
-                <span class="hub-copy">Auto-draft the days from the winning activities.</span>
+                <span class="hub-copy">Build the day-by-day plan and set flight times.</span>
                 <span class="hub-status" id="boardPlanStatus">Not drafted yet</span>
               </button>
               <button class="hub-card" data-jump="bookie">
@@ -961,17 +961,16 @@
             <div class="panel-head" style="padding:0 0 18px; border-bottom:0">
               <div>
                 <h2>Itinerary</h2>
-                <p class="panel-sub">Auto-draft a day-by-day plan from the winning activities, then tweak it together.</p>
+                <p class="panel-sub">Build it by hand — add items to any day, set times, drag with the day dropdown.</p>
               </div>
               <div class="pill-row" style="margin:0">
                 <span class="pill hot" id="planCountBadge">0 placed</span>
               </div>
             </div>
-            <div class="idea-help" id="planSummary" style="margin-bottom:14px">Shortlist some activities in the Activity Market first, then draft the days here.</div>
+            <div class="idea-help" id="planSummary" style="margin-bottom:14px">Add things to each day below. Use the shortlisted-ideas list on the right for inspiration.</div>
             <div class="plan-toolbar">
-              <button class="btn small" id="planGenBtn">✨ Auto-draft from the votes</button>
               <button class="btn small secondary" id="planCopyBtn">Copy itinerary</button>
-              <button class="btn small ghost" id="planClearBtn">Clear</button>
+              <button class="btn small ghost" id="planClearBtn">Clear all</button>
             </div>
             <div class="plan-days" id="planDays"></div>
             <div class="plan-add">
@@ -990,15 +989,15 @@
               <div class="arr-foot" id="arrivalsBadge" style="margin-top:10px"></div>
             </div>
             <div class="panel pad">
-              <div class="label">Feeding the plan</div>
-              <p class="panel-sub" style="margin-top:4px">Shortlisted activities + decided dinners.</p>
+              <div class="label">💡 Shortlisted ideas</div>
+              <p class="panel-sub" style="margin-top:4px">Won the vote in the Activity Market + decided dinners — add the ones you want to a day yourself.</p>
               <div class="mini-idea-list" id="planFeed" style="margin-top:12px"></div>
               <button class="btn small ghost" id="planLockBtn" style="margin-top:6px">🔒 Lock this itinerary</button>
             </div>
             <div class="info-card">
               <div class="emoji">🧭</div>
-              <h3>How the draft works</h3>
-              <p>Activities are bucketed by city — Seoul ideas land on Seoul days, Jeju ideas on Jeju days — and spread ~2 per day. A smart starting point, not gospel: shuffle freely with each item's day dropdown.</p>
+              <h3>How to build it</h3>
+              <p>Type into the <strong>＋ Add</strong> row on any day (set a time to order things). Tap an item's title to rename, ✎ a day's note, 🚫 to drop a day. Nothing auto-generates — it's all yours to shape.</p>
             </div>
           </aside>
         </div>
@@ -1078,7 +1077,7 @@
           </div>
           <div class="grid-3">
             <div class="info-card"><div class="emoji">📅</div><h3>Dates</h3><p>Out Fri 23 Oct 2026. Trip ends ~Sat 31 Oct — return flights TBC. Seoul and Jeju split TBC.</p></div>
-            <div class="info-card"><div class="emoji">✈️</div><h3>Route</h3><p>Likely London → Seoul → Jeju via ICN or GMP to CJU.</p></div>
+            <div class="info-card"><div class="emoji">✈️</div><h3>Route</h3><p>London → Seoul (ICN) → Jeju (GMP → CJU, ~21:00 Tue 27 Oct).</p></div>
             <div class="info-card"><div class="emoji">🏝️</div><h3>Why Jeju</h3><p>Volcanic island, scenic drives, hiking, seafood, golf and Jeju City bars.</p></div>
           </div>
 
@@ -2298,34 +2297,8 @@
       if (w.length === 0) w = ideas.filter(i => tallyIdea(i.id).score > 0);
       return w.slice().sort((a, b) => tallyIdea(b.id).score - tallyIdea(a.id).score);
     }
-    function generatePlan() {
-      ensurePlan(); ensureDesk();
-      const winners = planWinners();
-      const seoulDays = ["d25", "d26", "d27", "d1"].filter(id => !dayIsOff(id)), jejuDays = ["d28", "d29", "d30", "d31"].filter(id => !dayIsOff(id));
-      if (!seoulDays.length) seoulDays.push("d25");
-      if (!jejuDays.length) jejuDays.push("d28");
-      const buckets = { seoul: [], jeju: [] };
-      winners.forEach(i => {
-        const c = cityBucket(i.city);
-        if (c === "jeju") buckets.jeju.push(i);
-        else if (c === "seoul") buckets.seoul.push(i);
-        else (buckets.seoul.length <= buckets.jeju.length ? buckets.seoul : buckets.jeju).push(i);
-      });
-      const items = [];
-      const spread = (arr, days) => arr.forEach((i, n) => items.push({ id: `pl_${i.id}`, dayId: days[n % days.length], title: i.title, emoji: i.emoji || "📍", city: i.city || "", kind: "activity", note: "" }));
-      spread(buckets.seoul, seoulDays); spread(buckets.jeju, jejuDays);
-      state.desk.rooms.filter(r => r.kind === "dinner" && r.status === "decided" && r.chosen).forEach(r => {
-        const o = (r.options || []).find(x => x.id === r.chosen);
-        items.push({ id: `pl_${r.id}`, dayId: r.id === "dinner_jeju" ? "d28" : "d25", title: `Group dinner — ${o ? o.title : r.title}`, emoji: r.emoji || "🍽️", city: "", kind: "dinner", note: (o && o.link) ? o.link : "" });
-      });
-      // Re-drafting only replaces auto-drafted items (ids pl_<idea>/pl_<room>).
-      // Manual additions (pl_x_*) and day edits (dayMeta) always survive.
-      const manual = state.plan.items.filter(it => String(it.id).startsWith("pl_x_"));
-      state.plan = { generatedAt: new Date().toISOString(), dayMeta: state.plan.dayMeta, items: [...manual, ...items] };
-      saveState(); renderAll();
-      if (items.length) celebrate();
-      toast(items.length ? `Drafted ${items.length} item${items.length > 1 ? "s" : ""} — your manual items kept` : "No shortlisted activities yet — vote first");
-    }
+    // (Auto-draft removed — the itinerary is built manually. planWinners() still
+    // powers the "Shortlisted ideas" reference list in the side panel.)
     function changeItemDay(itemId, dayId) { ensurePlan(); const it = state.plan.items.find(x => x.id === itemId); if (it) { it.dayId = dayId; saveState(); renderAll(); } }
     function removePlanItem(itemId) { ensurePlan(); state.plan.items = state.plan.items.filter(x => x.id !== itemId); saveState(); renderAll(); toast("Removed from itinerary"); }
     function guessEmoji(title) {
@@ -2357,8 +2330,8 @@
 
       const ps = document.getElementById("planSummary");
       if (ps) ps.textContent = items.length
-        ? `${items.length} item${items.length > 1 ? "s" : ""} placed${state.plan.generatedAt ? ` · drafted ${relTime(new Date(state.plan.generatedAt).getTime())}` : ""}. Move anything with its day dropdown.`
-        : (winners.length ? `${winners.length} activit${winners.length > 1 ? "ies" : "y"} ready — tap “Auto-draft from the votes”.` : "Shortlist some activities in the Activity Market first, then draft the days here.");
+        ? `${items.length} item${items.length > 1 ? "s" : ""} on the plan. Add more with the ＋ row on any day; set times to order them.`
+        : (winners.length ? `${winners.length} idea${winners.length > 1 ? "s" : ""} won the vote — add the ones you want to a day below.` : "Add items to each day below. Vote on ideas in the Activity Market for inspiration.");
 
       const dayOpts = sel => TRIP_DAYS.map(d => `<option value="${d.id}" ${d.id === sel ? "selected" : ""}>${d.date}${dayIsOff(d.id) ? " · off" : ""}</option>`).join("");
       const flightChip = x => `<span class="arr-chip" title="${escapeAttr(x.p.name + (x.a.info ? " · " + x.a.info : ""))}"><span class="ac-dot" style="background:${x.p.colour}"></span>${escapeHtml(x.p.initials)}${x.a.time ? ` · ${escapeHtml(x.a.time)}` : ""}</span>`;
@@ -2671,8 +2644,6 @@
       addDeskRoom(t.value, d.value); t.value = ""; d.value = "";
     });
 
-    const planGenBtn = document.getElementById("planGenBtn");
-    if (planGenBtn) planGenBtn.addEventListener("click", () => { if (state.plan.items.length && !confirm("Re-draft from the votes? Auto-drafted items are replaced — anything you added manually (and your day edits) stays.")) return; generatePlan(); });
     const planClearBtn = document.getElementById("planClearBtn");
     if (planClearBtn) planClearBtn.addEventListener("click", () => { if (state.plan.items.length && confirm("Clear the whole itinerary?")) clearPlan(); });
     const planAddBtn = document.getElementById("planAddBtn");
