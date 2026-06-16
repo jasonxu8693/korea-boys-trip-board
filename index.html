@@ -1353,6 +1353,43 @@
       { id: "offlinePack", icon: "📲", title: "Generate the offline pack", desc: "Tickets, accommodation, transport, insurance, maps and emergency contacts saved.", priority: "P3" }
     ];
 
+    // Always use the current default activity set (keep any group-added "custom_" ideas), and refresh
+    // default Crew Desk rooms / Bookies markets to the latest labels while preserving live data
+    // (owners, options, votes, bets, status). Without these, edits to the code defaults never reach a
+    // board whose state is already cached in the synced sheet.
+    function normalizeIdeas(stored) {
+      const base = structuredClone(defaultIdeas);
+      if (!Array.isArray(stored)) return base;
+      const custom = stored.filter(i => i && typeof i.id === "string" && i.id.indexOf("custom_") === 0);
+      return [...base, ...custom];
+    }
+    function normalizeDeskRooms(stored) {
+      const base = structuredClone(defaultDesk.rooms);
+      if (!Array.isArray(stored)) return base;
+      const byId = {}; stored.forEach(r => { if (r && r.id) byId[r.id] = r; });
+      const baseIds = base.map(r => r.id);
+      const merged = base.map(d => {
+        const s = byId[d.id]; if (!s) return d;
+        const out = { ...d, owners: Array.isArray(s.owners) ? s.owners : [], options: Array.isArray(s.options) ? s.options : [], status: s.status || "open", chosen: s.chosen != null ? s.chosen : null };
+        if (d.kind === "car") out.drivers = Array.isArray(s.drivers) ? s.drivers : [];
+        return out;
+      });
+      const custom = stored.filter(r => r && typeof r.id === "string" && !baseIds.includes(r.id));
+      return [...merged, ...custom];
+    }
+    function normalizeBookieMarkets(stored) {
+      const base = structuredClone(defaultBookie.markets);
+      if (!Array.isArray(stored)) return base;
+      const byId = {}; stored.forEach(m => { if (m && m.id) byId[m.id] = m; });
+      const baseIds = base.map(m => m.id);
+      const merged = base.map(d => {
+        const s = byId[d.id]; if (!s) return d;
+        return { ...d, status: s.status || "open", winner: s.winner != null ? s.winner : null, bets: (s.bets && typeof s.bets === "object") ? s.bets : {} };
+      });
+      const custom = stored.filter(m => m && typeof m.id === "string" && !baseIds.includes(m.id));
+      return [...merged, ...custom];
+    }
+
     let state = loadState();
 
     function loadState() {
@@ -1365,10 +1402,10 @@
           ...parsed,
           players: parsed.players || structuredClone(defaultState.players),
           groupDone: { ...defaultState.groupDone, ...(parsed.groupDone || {}) },
-          ideas: parsed.ideas || structuredClone(defaultIdeas),
+          ideas: normalizeIdeas(parsed.ideas),
           ideaVotes: parsed.ideaVotes || {},
-          bookie: parsed.bookie || structuredClone(defaultBookie),
-          desk: parsed.desk || structuredClone(defaultDesk),
+          bookie: parsed.bookie ? { startingChips: parsed.bookie.startingChips || 1000, markets: normalizeBookieMarkets(parsed.bookie.markets) } : structuredClone(defaultBookie),
+          desk: parsed.desk ? { rooms: normalizeDeskRooms(parsed.desk.rooms) } : structuredClone(defaultDesk),
           plan: parsed.plan || { generatedAt: null, items: [] },
           feed: Array.isArray(parsed.feed) ? parsed.feed : []
         };
@@ -1395,10 +1432,10 @@
         ...remote,
         players: remote.players || structuredClone(defaultState.players),
         groupDone: { ...defaultState.groupDone, ...(remote.groupDone || {}) },
-        ideas: remote.ideas || structuredClone(defaultIdeas),
+        ideas: normalizeIdeas(remote.ideas),
         ideaVotes: remote.ideaVotes || {},
-        bookie: remote.bookie || structuredClone(defaultBookie),
-        desk: remote.desk || structuredClone(defaultDesk),
+        bookie: remote.bookie ? { startingChips: remote.bookie.startingChips || 1000, markets: normalizeBookieMarkets(remote.bookie.markets) } : structuredClone(defaultBookie),
+        desk: remote.desk ? { rooms: normalizeDeskRooms(remote.desk.rooms) } : structuredClone(defaultDesk),
         plan: remote.plan || { generatedAt: null, items: [] },
         feed: Array.isArray(remote.feed) ? remote.feed : []
       };
