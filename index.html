@@ -170,7 +170,7 @@
     .board-shell { position: relative; padding: 16px; }
     .board {
       position: relative;
-      min-height: 660px;
+      min-height: 780px;
       border-radius: 30px;
       overflow: hidden;
       border: 1px solid rgba(255,255,255,0.16);
@@ -201,11 +201,11 @@
     .route-line { fill: none; stroke: rgba(215, 230, 255, 0.72); stroke-width: 8; stroke-linecap: round; stroke-dasharray: 2 18; filter: drop-shadow(0 0 8px rgba(114,244,255,0.34)); }
     .route-shadow { fill: none; stroke: rgba(0, 0, 0, 0.28); stroke-width: 14; stroke-linecap: round; stroke-dasharray: 2 18; }
 
-    .node { position: absolute; z-index: 5; width: 118px; min-height: 112px; transform: translate(-50%, -50%); display: grid; justify-items: center; gap: 7px; text-align: center; }
-    .node-core { width: 62px; height: 62px; border-radius: 22px; display: grid; place-items: center; font-size: 30px; color: #071226; background: var(--ink); border: 2px solid rgba(255,255,255,0.4); box-shadow: 0 18px 36px rgba(0,0,0,0.3), 0 0 0 6px rgba(255,255,255,0.08); transition: transform 0.2s ease; }
+    .node { position: absolute; z-index: 5; width: 200px; min-height: 190px; transform: translate(-50%, -50%); display: grid; justify-items: center; gap: 9px; text-align: center; }
+    .node-core { width: 122px; height: 122px; border-radius: 40px; display: grid; place-items: center; font-size: 54px; color: #071226; background: var(--ink); border: 3px solid rgba(255,255,255,0.4); box-shadow: 0 20px 40px rgba(0,0,0,0.32), 0 0 0 8px rgba(255,255,255,0.08); transition: transform 0.2s ease; }
     .node:hover .node-core { transform: translateY(-4px) rotate(-3deg); }
-    .node-title { font-size: 12px; line-height: 1.15; font-weight: 900; text-shadow: 0 2px 6px rgba(0,0,0,0.6); }
-    .node-meta { font-size: 10px; color: var(--muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; }
+    .node-title { font-size: 15px; line-height: 1.15; font-weight: 900; text-shadow: 0 2px 6px rgba(0,0,0,0.6); }
+    .node-meta { font-size: 12.5px; color: var(--muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; }
     .node.group .node-core { background: linear-gradient(135deg, #eef6ff, #8defff); }
     .node.boss .node-core { background: linear-gradient(135deg, #1c2434, #4e6480); color: white; animation: bossPulse 3s ease-in-out infinite; }
     .node.personal .node-core { background: linear-gradient(135deg, #f7fbff, #d1e6ff); }
@@ -264,6 +264,16 @@
     .idea-title { font-weight: 1000; letter-spacing: -0.03em; font-size: 17px; }
     .idea-desc { color: var(--muted); font-size: 13px; line-height: 1.45; margin-top: 4px; }
     .idea-city { align-self: start; white-space: nowrap; }
+    .idea-card.is-longshot { opacity: 0.52; filter: grayscale(0.55); }
+    .idea-card.is-longshot:hover { opacity: 0.85; filter: grayscale(0.15); }
+    .idea-card.is-longshot .idea-status { background: rgba(255,255,255,0.10); color: var(--muted); border-color: rgba(255,255,255,0.14); }
+    .ls-toggle { justify-self: start; margin-top: 2px; border: 1px solid rgba(255,255,255,0.14); border-radius: 999px; background: rgba(0,0,0,0.18); color: var(--muted); padding: 6px 11px; font-weight: 900; font-size: 11.5px; letter-spacing: -0.01em; transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease; }
+    .ls-toggle:hover { border-color: rgba(255,255,255,0.28); color: #fff; }
+    .ls-toggle.on { background: rgba(255,209,92,0.16); color: #ffe7ae; border-color: rgba(255,209,92,0.34); }
+    .longshot-divider { grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; margin: 8px 0 2px; color: var(--muted); font-weight: 950; font-size: 12.5px; letter-spacing: 0.02em; text-transform: uppercase; }
+    .longshot-divider:before, .longshot-divider:after { content: ""; flex: 1; height: 1px; background: rgba(255,255,255,0.14); }
+    .board-itin { margin-top: 18px; }
+    .board-itin .plan-days { margin-top: 4px; }
     .vote-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; position: relative; }
     .vote-btn { border: 1px solid rgba(255,255,255,0.13); border-radius: 14px; background: rgba(0,0,0,0.18); color: var(--muted); padding: 10px 8px; font-weight: 950; font-size: 12px; transition: transform 0.16s ease, background 0.16s ease, border-color 0.16s ease; }
     .vote-btn:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.24); }
@@ -629,10 +639,10 @@
       .hero-content { grid-template-columns: 1fr; align-items: end; }
       .layout { grid-template-columns: 1fr; }
       .grid-3, .grid-2, .sync-diagram, .idea-grid, .idea-summary-grid, .add-idea-form, .planning-hub, .flow-steps, .photo-gallery { grid-template-columns: 1fr; }
-      .board { min-height: 720px; }
+      .board { min-height: 820px; }
       .personality-grid { grid-template-columns: repeat(2, 1fr); }
-      .node { width: 94px; }
-      .node-core { width: 54px; height: 54px; border-radius: 19px; font-size: 26px; }
+      .node { width: 112px; }
+      .node-core { width: 62px; height: 62px; border-radius: 21px; font-size: 33px; }
     }
 
     @media (max-width: 620px) {
@@ -642,8 +652,8 @@
       .panel, .board { border-radius: 24px; }
       .panel-head { display: grid; }
       .board-shell { padding: 8px; }
-      .board { min-height: 780px; }
-      .node-title { font-size: 10px; }
+      .board { min-height: 860px; }
+      .node-title { font-size: 12.5px; }
       .node-meta { display: none; }
       .token { width: 32px; height: 32px; border-radius: 13px 13px 13px 5px; font-size: 13px; }
       .timeline-item { grid-template-columns: 1fr; }
@@ -679,7 +689,7 @@
           <p>Votes, flights, bookings and group progress.</p>
           <div class="hero-actions">
             <button class="btn" data-jump="board">Open board</button>
-            <button class="btn secondary" data-jump="tasks">Boss tasks</button>
+            <button class="btn secondary" data-jump="desk">🛎️ Crew Desk</button>
             <button class="btn ghost" data-jump="ideas">Activity Market</button>
             <button class="btn ghost" data-jump="bookie">🎲 The Bookies</button>
             <button class="btn ghost" data-jump="settings">Set your vibe</button>
@@ -716,7 +726,6 @@
 
     <nav class="nav" aria-label="App sections">
       <button class="active" data-tab="board">🗺️ Board</button>
-      <button data-tab="tasks">🎬 Group tasks</button>
       <button class="market-tab" data-tab="ideas">🎯 Activity Market</button>
       <button class="desk-tab" data-tab="desk">🛎️ Crew Desk</button>
       <button class="plan-tab" data-tab="plan">🗓️ Itinerary</button>
@@ -749,12 +758,6 @@
                 <span class="hub-copy">Vote on Seoul and Jeju ideas.</span>
                 <span class="hub-status" id="boardVoteStatus">0 votes cast</span>
               </button>
-              <button class="hub-card" data-jump="tasks">
-                <span class="hub-icon">🐉</span>
-                <span class="hub-title">Group tasks</span>
-                <span class="hub-copy">Flights, budget, accommodation, transport and itinerary.</span>
-                <span class="hub-status">Shared progress</span>
-              </button>
               <button class="hub-card" data-jump="settings">
                 <span class="hub-icon">👥</span>
                 <span class="hub-title">Roster</span>
@@ -763,8 +766,8 @@
               </button>
               <button class="hub-card" data-jump="desk">
                 <span class="hub-icon">🛎️</span>
-                <span class="hub-title">Crew Desk</span>
-                <span class="hub-copy">Own a job, share options, vote: accom, car, dinners.</span>
+                <span class="hub-title">Crew Desk &amp; tasks</span>
+                <span class="hub-copy">The group checklist + decision rooms: flights, accom, car, dinners, itinerary.</span>
                 <span class="hub-status" id="boardDeskStatus">0 open · 0 decided</span>
               </button>
               <button class="hub-card" data-jump="plan">
@@ -888,47 +891,21 @@
             </div>
           </aside>
         </div>
-      </section>
 
-      <section id="tasks" class="section">
-        <div class="layout">
-          <div class="panel">
-            <div class="panel-head">
-              <div>
-                <h2>Group tasks</h2>
-                <p class="panel-sub">The shared to-do list. Open <strong>Options &amp; votes</strong> under a task to drop in links and vote right here — then tick the boss and the whole crew's tokens move forward.</p>
-              </div>
-              <div class="pill-row" style="margin:0">
-                <span class="pill warn" id="groupTasksBadge">0 of 8 done</span>
-              </div>
+        <div class="panel pad board-itin">
+          <div class="panel-head" style="padding:0 0 16px">
+            <div>
+              <h2>🗓️ Itinerary</h2>
+              <p class="panel-sub">The day-by-day plan — build it right here. Add to any day, set times, drop days you don't need.</p>
             </div>
-            <div style="padding:20px">
-              <div class="task-list" id="groupTasks"></div>
+            <div class="pill-row" style="margin:0">
+              <span class="pill hot" id="boardItinCountBadge">Build it below</span>
+              <button class="btn small secondary" data-jump="plan">Full itinerary view →</button>
             </div>
           </div>
-          <aside class="side-stack">
-            <div class="panel pad">
-              <div class="label">Why these matter</div>
-              <div class="info-card" style="margin-top:12px">
-                <div class="emoji">🐉</div>
-                <h3>Route lock</h3>
-                <p>Lock dates and Jeju flight logic before accommodation.</p>
-              </div>
-              <div class="info-card" style="margin-top:12px">
-                <div class="emoji">🚐</div>
-                <h3>Ride plan</h3>
-                <p>Decide early: van, two cars, transfers or taxis.</p>
-              </div>
-              <div class="info-card" style="margin-top:12px">
-                <div class="emoji">🛂</div>
-                <h3>Entry check</h3>
-                <p>K-ETA exemption currently runs to 31 Dec 2026. Recheck passports and entry rules before departure.</p>
-              </div>
-            </div>
-          </aside>
+          <div class="plan-days" id="boardPlanDays"></div>
         </div>
       </section>
-
 
       <section id="ideas" class="section">
         <div class="layout">
@@ -990,15 +967,17 @@
             <div class="panel-head" style="padding:0 0 18px; border-bottom:0">
               <div>
                 <h2>Crew Desk</h2>
-                <p class="panel-sub">Put your hand up, share options, vote. Where group jobs get owned and decisions get made.</p>
+                <p class="panel-sub">The group's shared checklist and decision rooms. Tick a boss and everyone's tokens move forward on the board.</p>
               </div>
               <div class="pill-row" style="margin:0">
+                <span class="pill warn" id="groupTasksBadge">0 of 8 done</span>
                 <span class="pill done" id="deskDecidedBadge">0 decided</span>
-                <span class="pill warn" id="deskOpenBadge">0 open</span>
                 <span class="pill hot" id="deskOptionsBadge">0 options shared</span>
               </div>
             </div>
-            <div class="idea-help" style="margin-bottom:14px">🙋 Tap <strong>“I'll look into this”</strong> to own a job · 📋 share options with a link + price · 👍 the group votes on the best one · ✔️ an owner locks the pick. Pick yourself with the player dropdown on the Board tab first.</div>
+            <div class="idea-help" style="margin-bottom:14px">🙋 Own a job with <strong>“I'll look into this”</strong> · 📋 share options with a link + price · 👍 the group votes · ✔️ an owner locks the pick and the matching boss ticks off. Pick yourself with the player dropdown on the Board tab first.</div>
+            <div class="task-list" id="deskBosses" style="margin-bottom:8px"></div>
+            <h3 style="margin:26px 0 10px" id="otherDecisionsHead" hidden>➕ Other decisions</h3>
             <div class="desk-list" id="deskList"></div>
             <h3 style="margin:26px 0 4px">Start a new decision room</h3>
             <p class="panel-sub">Anything the group needs to sort — a day trip, a SIM plan, airport transfers.</p>
@@ -1207,7 +1186,6 @@
 
   <nav class="dock" aria-label="Quick navigation">
     <button data-tab="board" class="active"><span class="d-ico">🗺️</span>Board</button>
-    <button data-tab="tasks"><span class="d-ico">🎬</span>Tasks</button>
     <button data-tab="ideas"><span class="d-ico">🎯</span>Market</button>
     <button data-tab="desk"><span class="d-ico">🛎️</span>Desk</button>
     <button data-tab="plan"><span class="d-ico">🗓️</span>Plan</button>
@@ -1317,6 +1295,7 @@
       selectedPlayer: 0,
       ideas: structuredClone(defaultIdeas),
       ideaVotes: {},
+      longShots: { hanokStay: true },
       players: [
         { name: "Jason", initials: "J", colour: colours[0], vibe: "foodie", piece: "🎤" },
         { name: "Traveller 2", initials: "T2", colour: colours[1], vibe: null, piece: null },
@@ -1674,7 +1653,8 @@
     }
 
     function renderTasks() {
-      const groupHolder = document.getElementById("groupTasks");
+      const groupHolder = document.getElementById("deskBosses");
+      if (!groupHolder) return;
       groupHolder.innerHTML = groupTasks.map(task => {
         const done = !!state.groupDone[task.id];
         const rooms = roomsForTask(task.id);
@@ -1735,6 +1715,29 @@
       return state.ideas;
     }
 
+    // "Long shots" — ideas the group is keeping on the table but probably won't do.
+    // Stored as a synced map of ideaId -> true so it works for custom ideas too.
+    function isLongShot(id) { return !!(state.longShots && state.longShots[id]); }
+    function toggleLongShot(id) {
+      if (!state.longShots || typeof state.longShots !== "object") state.longShots = {};
+      const idea = allIdeas().find(i => i.id === id);
+      const title = idea ? idea.title : "an idea";
+      if (state.longShots[id]) {
+        delete state.longShots[id];
+        logEvent("🎯", `${selectedPlayer().name} put “${title}” back in the running`);
+      } else {
+        state.longShots[id] = true;
+        logEvent("💤", `${selectedPlayer().name} marked “${title}” a long shot`);
+      }
+      saveState(); renderAll();
+    }
+    // Ideas in the running first, long shots sunk to the bottom (stable otherwise).
+    function orderedIdeas() {
+      return allIdeas().map((idea, i) => ({ idea, i }))
+        .sort((a, b) => (isLongShot(a.idea.id) - isLongShot(b.idea.id)) || (a.i - b.i))
+        .map(x => x.idea);
+    }
+
     function tallyIdea(ideaId) {
       const votes = state.ideaVotes?.[ideaId] || {};
       const tally = { keen: 0, maybe: 0, no: 0, total: 0 };
@@ -1757,17 +1760,20 @@
     function renderIdeas() {
       const holder = document.getElementById("ideaGrid");
       if (!holder) return;
-      const ideas = allIdeas();
+      const ideas = orderedIdeas();
+      let dividerShown = false;
       holder.innerHTML = ideas.map(idea => {
         const tally = tallyIdea(idea.id);
-        const status = ideaStatus(tally);
+        const longShot = isLongShot(idea.id);
+        const status = longShot ? { label: "Long shot", cls: "" } : ideaStatus(tally);
         const selectedVote = state.ideaVotes?.[idea.id]?.[state.selectedPlayer] || "";
         const denom = Math.max(tally.total, 1);
         const imgSrc = idea.img || IDEA_IMG[idea.id];
         const photo = imgSrc
           ? `<img class="idea-photo" src="images/${escapeAttr(imgSrc)}" alt="${escapeAttr(idea.title)}" loading="lazy" onerror="this.outerHTML='<div class=\\'idea-photo-fallback\\'>${idea.emoji || "💡"}</div>'">`
           : `<div class="idea-photo-fallback">${idea.emoji || "💡"}</div>`;
-        return `<article class="idea-card">
+        const divider = (longShot && !dividerShown) ? (dividerShown = true, `<div class="longshot-divider">💤 Long shots · probably not, but on the table</div>`) : "";
+        return `${divider}<article class="idea-card ${longShot ? "is-longshot" : ""}">
           ${photo}
           <div class="idea-body">
           <div class="idea-top">
@@ -1785,9 +1791,11 @@
             <div class="meter-track"><div class="meter-keen" style="width:${tally.keen / denom * 100}%"></div><div class="meter-maybe" style="width:${tally.maybe / denom * 100}%"></div><div class="meter-no" style="width:${tally.no / denom * 100}%"></div></div>
             <div class="vote-counts"><span>✅ ${tally.keen} keen</span><span>🤷 ${tally.maybe} maybe</span><span>❌ ${tally.no} no</span></div>
           </div>
+          <button class="ls-toggle ${longShot ? "on" : ""}" data-ls="${idea.id}" title="${longShot ? "Put this back in the running" : "Grey this out as a probably-not"}">${longShot ? "💤 Long shot — tap to revive" : "🎯 In the running"}</button>
           </div>
         </article>`;
       }).join("");
+      holder.querySelectorAll(".ls-toggle").forEach(btn => btn.addEventListener("click", () => toggleLongShot(btn.dataset.ls)));
       holder.querySelectorAll(".vote-btn").forEach(btn => {
         btn.addEventListener("click", () => {
           const ideaId = btn.dataset.idea;
@@ -1808,7 +1816,7 @@
         });
       });
       const tallies = ideas.map(i => tallyIdea(i.id));
-      const hot = tallies.filter(t => t.keen >= 4 && t.no <= 1).length;
+      const hot = ideas.filter(i => !isLongShot(i.id)).map(i => tallyIdea(i.id)).filter(t => t.keen >= 4 && t.no <= 1).length;
       const maybe = tallies.filter(t => t.total > 0 && !(t.keen >= 4 && t.no <= 1) && t.no < 2).length;
       const blocked = tallies.filter(t => t.no >= 2).length;
       const totalVotes = tallies.reduce((sum, t) => sum + t.total, 0);
@@ -1828,7 +1836,7 @@
       const totalVotes = ideas.reduce((sum, idea) => sum + tallyIdea(idea.id).total, 0);
       const selectedVotes = selectedPlayerVoteCount(state.selectedPlayer);
       status.textContent = `${totalVotes} votes cast · ${selectedVotes} by selected player`;
-      holder.innerHTML = ideas.slice(0, 4).map(idea => {
+      holder.innerHTML = orderedIdeas().slice(0, 4).map(idea => {
         const tally = tallyIdea(idea.id);
         const status = ideaStatus(tally);
         return `<div class="mini-idea-row">
@@ -2463,8 +2471,14 @@
       ensureDesk();
       const holder = document.getElementById("deskList");
       if (!holder) return;
-      holder.innerHTML = state.desk.rooms.map(deskRoomCard).join("");
+      // Rooms mapped to a group boss already show under that boss in the bosses
+      // list, so the flat list only carries standalone / custom decisions.
+      const mappedIds = new Set(Object.values(TASK_ROOM_MAP).flat());
+      const otherRooms = state.desk.rooms.filter(r => !mappedIds.has(r.id) && !r.taskId);
+      holder.innerHTML = otherRooms.map(deskRoomCard).join("");
       bindDeskActions(holder);
+      const otherHead = document.getElementById("otherDecisionsHead");
+      if (otherHead) otherHead.hidden = otherRooms.length === 0;
 
       const decidedCount = state.desk.rooms.filter(r => r.status === "decided").length;
       const openCount = state.desk.rooms.length - decidedCount;
@@ -2511,7 +2525,7 @@
       toast("Day note updated");
     }
     function planWinners() {
-      const ideas = allIdeas();
+      const ideas = allIdeas().filter(i => !isLongShot(i.id));
       let w = ideas.filter(i => ideaStatus(tallyIdea(i.id)).label === "Shortlist");
       if (w.length === 0) w = ideas.filter(i => tallyIdea(i.id).score > 0);
       return w.slice().sort((a, b) => tallyIdea(b.id).score - tallyIdea(a.id).score);
@@ -2540,18 +2554,9 @@
     }
     function clearPlan() { state.plan = { generatedAt: null, items: [] }; saveState(); renderAll(); toast("Itinerary cleared"); }
 
-    function renderPlan() {
-      ensurePlan();
-      const holder = document.getElementById("planDays");
+    function renderPlanDays(holder) {
       if (!holder) return;
       const items = state.plan.items;
-      const winners = planWinners();
-
-      const ps = document.getElementById("planSummary");
-      if (ps) ps.textContent = items.length
-        ? `${items.length} item${items.length > 1 ? "s" : ""} on the plan. Add more with the ＋ row on any day; set times to order them.`
-        : (winners.length ? `${winners.length} idea${winners.length > 1 ? "s" : ""} won the vote — add the ones you want to a day below.` : "Add items to each day below. Vote on ideas in the Activity Market for inspiration.");
-
       const dayOpts = sel => TRIP_DAYS.map(d => `<option value="${d.id}" ${d.id === sel ? "selected" : ""}>${d.date}${dayIsOff(d.id) ? " · off" : ""}</option>`).join("");
       const flightChip = x => `<span class="arr-chip" title="${escapeAttr(x.p.name + (x.a.info ? " · " + x.a.info : ""))}"><span class="ac-dot" style="background:${x.p.colour}"></span>${escapeHtml(x.p.initials)}${x.a.time ? ` · ${escapeHtml(x.a.time)}` : ""}</span>`;
 
@@ -2621,6 +2626,22 @@
       holder.querySelectorAll('[data-plan="dayoff"]').forEach(b => b.addEventListener("click", () => toggleDayOff(b.dataset.day, true)));
       holder.querySelectorAll('[data-plan="dayon"]').forEach(b => b.addEventListener("click", () => toggleDayOff(b.dataset.day, false)));
       holder.querySelectorAll('[data-plan="note"]').forEach(b => b.addEventListener("click", () => editDayNote(b.dataset.day)));
+    }
+
+    function renderPlan() {
+      ensurePlan();
+      renderPlanDays(document.getElementById("planDays"));
+      renderPlanDays(document.getElementById("boardPlanDays"));
+      const items = state.plan.items;
+      const winners = planWinners();
+
+      const ps = document.getElementById("planSummary");
+      if (ps) ps.textContent = items.length
+        ? `${items.length} item${items.length > 1 ? "s" : ""} on the plan. Add more with the ＋ row on any day; set times to order them.`
+        : (winners.length ? `${winners.length} idea${winners.length > 1 ? "s" : ""} won the vote — add the ones you want to a day below.` : "Add items to each day below. Vote on ideas in the Activity Market for inspiration.");
+
+      const bic = document.getElementById("boardItinCountBadge");
+      if (bic) bic.textContent = items.length ? `${items.length} placed` : "Build it below";
 
       const feed = document.getElementById("planFeed");
       if (feed) {
