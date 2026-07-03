@@ -721,6 +721,16 @@
     .vp-dots { display: flex; gap: 8px; align-items: center; }
     .vp-dot { width: 9px; height: 9px; border-radius: 50%; border: 0; background: rgba(245,248,255,0.28); cursor: pointer; padding: 0; transition: width .2s, background .2s; }
     .vp-dot.on { background: #f4d9a8; width: 24px; border-radius: 5px; }
+    /* Photo-forward day gallery — big 3:2 photos, responsive auto-fill grid */
+    .vpa { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-top: 18px; }
+    .vpa-card { display: flex; flex-direction: column; border: 1px solid rgba(245,248,255,0.12); border-radius: 18px; background: rgba(13,18,28,0.5); overflow: hidden; }
+    .vpa-img { width: 100%; aspect-ratio: 3/2; height: auto; object-fit: cover; display: block; transition: transform .4s ease; }
+    .vpa-card:hover .vpa-img { transform: scale(1.05); }
+    .vpa-imgfb { width: 100%; aspect-ratio: 3/2; display: grid; place-items: center; font-size: 54px; background: linear-gradient(135deg, rgba(245,248,255,0.12), rgba(13,18,28,0.5)); }
+    .vpa-txt { padding: 12px 15px 15px; }
+    .vpa-txt h4 { margin: 0 0 4px; font-size: 16px; font-weight: 800; letter-spacing: -0.01em; color: #f6efe6; }
+    .vpa-when { font-size: 11.5px; font-weight: 800; color: var(--subtle); letter-spacing: .02em; }
+    .vpa-txt p { margin: 4px 0 0; font-size: 13px; color: var(--muted); line-height: 1.5; }
     @keyframes vpPop { to { opacity: 1; transform: scale(1); } }
     @keyframes vpGrow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
     @keyframes vpTravel { 0% { top: 14px; } 45% { top: calc(100% - 30px); } 55% { top: calc(100% - 30px); } 100% { top: 14px; } }
@@ -2776,16 +2786,16 @@
         } else if (!dayItems.length) {
           body = `<div class="vp-empty">${hero ? `<img src="${hero}" alt="" loading="lazy">` : ""}<div><b>Nothing planned yet.</b><br>Tap <b>✎ Edit plan</b> to add stops to ${escapeHtml(d.date)}.</div></div>`;
         } else {
-          const stops = dayItems.map((it, si) => {
+          const cards = dayItems.map(it => {
             const fn = sceneForItem(it);
-            const bead = fn
-              ? `<img class="vp-scene" style="color:${ac};animation-delay:${(0.1 + si * 0.12).toFixed(2)}s" src="images/${fn}" alt="${escapeAttr(it.title)}" loading="lazy" onerror="this.outerHTML='<span class=&quot;vp-scene-fallback&quot; style=&quot;color:${ac}&quot;>${it.emoji || "📍"}</span>'">`
-              : `<span class="vp-scene-fallback" style="color:${ac}">${it.emoji || "📍"}</span>`;
-            const when = it.time ? `<span class="vp-when">${escapeHtml(it.time)}</span>` : "";
-            const sub = (it.kind === "dinner") ? `<p>Group dinner</p>` : (it.note ? `<p>${escapeHtml(it.note)}</p>` : "");
-            return `<div class="vp-stop"><span class="vp-num" style="background:${ac}">${si + 1}</span>${bead}<div class="vp-stoptext">${when}<h4>${escapeHtml(it.title)}</h4>${sub}</div></div>`;
+            const img = fn
+              ? `<img class="vpa-img" src="images/${fn}" alt="${escapeAttr(it.title)}" loading="lazy" onerror="this.outerHTML='<div class=&quot;vpa-imgfb&quot;>${it.emoji || "📍"}</div>'">`
+              : `<div class="vpa-imgfb">${it.emoji || "📍"}</div>`;
+            const sub = (it.kind === "dinner") ? "Group dinner" : (it.note || "");
+            const meta = (it.time || sub) ? `<p>${it.time ? `<span class="vpa-when">${escapeHtml(it.time)}</span>` : ""}${it.time && sub ? " · " : ""}${escapeHtml(sub)}</p>` : "";
+            return `<div class="vpa-card">${img}<div class="vpa-txt"><h4>${escapeHtml(it.title)}</h4>${meta}</div></div>`;
           }).join("");
-          body = `<div class="vp-route" style="color:${ac}"><div class="vp-spine"></div><div class="vp-trav"></div>${stops}</div>`;
+          body = `<div class="vpa">${cards}</div>`;
         }
         const note = dayNote(d);
         const noteHtml = (note && !dayIsOff(d.id)) ? `<p class="vp-daynote">${escapeHtml(note)}</p>` : "";
