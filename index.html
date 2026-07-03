@@ -688,11 +688,10 @@
           <h1><span>Korea boys trip</span><span class="shine">tour board</span></h1>
           <p>Votes, flights, bookings and group progress.</p>
           <div class="hero-actions">
-            <button class="btn" data-jump="board">Open board</button>
-            <button class="btn secondary" data-jump="desk">🛎️ Crew Desk</button>
-            <button class="btn ghost" data-jump="ideas">Activity Market</button>
+            <button class="btn" data-jump="plan">🗓️ Itinerary</button>
+            <button class="btn secondary" data-jump="ideas">🎯 Activity Market</button>
+            <button class="btn ghost" data-jump="desk">🛎️ Crew Desk</button>
             <button class="btn ghost" data-jump="bookie">🎲 The Bookies</button>
-            <button class="btn ghost" data-jump="settings">Set your vibe</button>
           </div>
         </div>
         <aside class="stat-card">
@@ -707,7 +706,7 @@
             </div>
           </div>
           <div class="glass">
-            <div class="label">Group progress</div>
+            <div class="label">Crew decisions</div>
             <div class="ring-row">
               <div class="ring-wrap">
                 <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
@@ -725,188 +724,17 @@
     </header>
 
     <nav class="nav" aria-label="App sections">
-      <button class="active" data-tab="board">🗺️ Board</button>
+      <button class="plan-tab active" data-tab="plan">🗓️ Itinerary</button>
       <button class="market-tab" data-tab="ideas">🎯 Activity Market</button>
       <button class="desk-tab" data-tab="desk">🛎️ Crew Desk</button>
-      <button class="plan-tab" data-tab="plan">🗓️ Itinerary</button>
       <button class="casino-tab" data-tab="bookie">🎲 The Bookies</button>
       <button data-tab="intel">🧭 Korea Pack</button>
-      <button data-tab="settings">⚙️ Roster &amp; vibes</button>
       <button class="sync-chip" id="syncChip" title="Tap to pull the latest from the group">
         <span class="dot"></span><span class="ico">↻</span><span id="syncChipText">Live</span>
       </button>
     </nav>
 
     <main>
-      <section id="board" class="section active">
-        <div class="layout">
-          <div class="panel">
-            <div class="panel-head">
-              <div>
-                <h2>Trip board</h2>
-                <p class="panel-sub">Track progress, votes and group decisions.</p>
-              </div>
-              <div class="pill-row" style="margin:0">
-                <span class="pill hot" id="vibeSummaryBadge">0/7 vibes set</span>
-                <span class="pill warn" id="groupProgressBadge">Group bosses 0%</span>
-              </div>
-            </div>
-            <div class="planning-hub" aria-label="Planning shortcuts">
-              <button class="hub-card primary" data-jump="ideas">
-                <span class="hub-icon">🎯</span>
-                <span class="hub-title">Activity Market</span>
-                <span class="hub-copy">Vote on Seoul and Jeju ideas.</span>
-                <span class="hub-status" id="boardVoteStatus">0 votes cast</span>
-              </button>
-              <button class="hub-card" data-jump="settings">
-                <span class="hub-icon">👥</span>
-                <span class="hub-title">Roster</span>
-                <span class="hub-copy">Names, vibes and board pieces.</span>
-                <span class="hub-status">Edit roster</span>
-              </button>
-              <button class="hub-card" data-jump="desk">
-                <span class="hub-icon">🛎️</span>
-                <span class="hub-title">Crew Desk &amp; tasks</span>
-                <span class="hub-copy">The group checklist + decision rooms: flights, accom, car, dinners, itinerary.</span>
-                <span class="hub-status" id="boardDeskStatus">0 open · 0 decided</span>
-              </button>
-              <button class="hub-card" data-jump="plan">
-                <span class="hub-icon">🗓️</span>
-                <span class="hub-title">Itinerary</span>
-                <span class="hub-copy">Build the day-by-day plan and set flight times.</span>
-                <span class="hub-status" id="boardPlanStatus">Nothing added yet</span>
-              </button>
-              <a class="hub-card" href="https://tricount.com/tOqnfHyhVAbKRuJQUk" target="_blank" rel="noopener">
-                <span class="hub-icon">💸</span>
-                <span class="hub-title">Split the costs</span>
-                <span class="hub-copy">Log shared spend and settle up on our group Tricount.</span>
-                <span class="hub-status">Open Tricount ↗</span>
-              </a>
-              <button class="hub-card" data-jump="bookie">
-                <span class="hub-icon">🎲</span>
-                <span class="hub-title">The Bookies</span>
-                <span class="hub-copy">Bet on the boys. Win perks and forfeits.</span>
-                <span class="hub-status" id="boardBookieStatus">0 open markets</span>
-              </button>
-            </div>
-            <div class="board-shell">
-              <div class="board" id="questBoard">
-                <svg class="k-scene" viewBox="0 0 1000 660" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-                  <defs>
-                    <linearGradient id="mtnBack" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6b3f5e"/><stop offset="1" stop-color="#2c1f3c"/></linearGradient>
-                    <linearGradient id="mtnFront" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4670"/><stop offset="1" stop-color="#171f36"/></linearGradient>
-                    <linearGradient id="hanok" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a3550"/><stop offset="1" stop-color="#0f1626"/></linearGradient>
-                    <linearGradient id="volc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a4a5e"/><stop offset="1" stop-color="#241a2c"/></linearGradient>
-                  </defs>
-                  <path fill="url(#mtnBack)" opacity="0.9" d="M0 360 L120 250 L230 330 L330 238 L430 330 L520 268 L620 350 L740 246 L860 332 L1000 268 L1000 660 L0 660 Z"/>
-                  <path fill="url(#mtnFront)" d="M0 444 Q160 360 320 432 T640 432 T1000 420 L1000 660 L0 660 Z"/>
-                  <g transform="translate(150 312)" opacity="0.92">
-                    <rect x="-3" y="-150" width="6" height="150" fill="#cfd9ff" opacity="0.45"/>
-                    <ellipse cx="0" cy="-150" rx="15" ry="8" fill="#9fb4e6"/>
-                    <rect x="-2" y="-188" width="4" height="38" fill="#cfd9ff" opacity="0.7"/>
-                    <circle cx="0" cy="-191" r="3.4" fill="#ffd15c"><animate attributeName="opacity" values="0.5;1;0.5" dur="3s" repeatCount="indefinite"/></circle>
-                  </g>
-                  <g fill="url(#hanok)" stroke="rgba(255,255,255,0.12)" stroke-width="1">
-                    <path d="M250 500 C268 470 300 463 318 465 C350 469 392 474 416 500 C392 493 366 491 333 491 C300 491 276 493 250 500 Z"/>
-                    <path d="M300 472 C320 432 360 422 380 424 C420 428 470 434 500 472 C470 464 440 462 400 462 C360 462 330 464 300 472 Z"/>
-                    <path d="M420 488 C440 452 480 444 500 446 C540 450 590 456 620 488 C590 480 560 478 520 478 C480 478 450 480 420 488 Z"/>
-                  </g>
-                  <g fill="#ffce6b"><rect x="352" y="474" width="9" height="9" rx="2" opacity="0.85"/><rect x="476" y="490" width="9" height="9" rx="2" opacity="0.8"/><rect x="318" y="497" width="9" height="9" rx="2" opacity="0.7"/></g>
-                  <path fill="url(#volc)" d="M690 480 L772 318 Q790 298 810 318 L892 480 Z"/>
-                  <path fill="#0f1626" opacity="0.55" d="M772 320 Q790 300 810 320 Q794 334 791 334 Q788 334 772 320 Z"/>
-                  <g transform="translate(905 548)">
-                    <ellipse cx="0" cy="22" rx="20" ry="9" fill="#241a2c" opacity="0.6"/>
-                    <path d="M-15 22 Q-18 -8 0 -14 Q18 -8 15 22 Z" fill="#6f6e7e"/>
-                    <path d="M-16 -7 Q0 -23 16 -7 Q0 -15 -16 -7 Z" fill="#54535f"/>
-                    <circle cx="-6" cy="2" r="3" fill="#241a2c"/><circle cx="6" cy="2" r="3" fill="#241a2c"/>
-                    <path d="M-5 11 Q0 15 5 11" stroke="#241a2c" stroke-width="2" fill="none"/>
-                  </g>
-                </svg>
-                <div class="taegeuk" aria-hidden="true"></div>
-                <div class="cloud c1"></div><div class="cloud c2"></div>
-                <div class="lantern l1"></div><div class="lantern l2"></div><div class="lantern l3"></div>
-                <div class="sea"></div>
-                <div class="leaves" id="leaves" aria-hidden="true"></div>
-                <svg class="route-svg" viewBox="0 0 1000 660" preserveAspectRatio="none" aria-hidden="true">
-                  <path class="route-shadow" d="M105 540 C145 410 255 455 255 342 C255 230 385 248 420 150 C460 42 640 98 655 220 C672 356 765 298 835 390 C900 475 850 560 745 555" />
-                  <path class="route-line" d="M105 540 C145 410 255 455 255 342 C255 230 385 248 420 150 C460 42 640 98 655 220 C672 356 765 298 835 390 C900 475 850 560 745 555" />
-                </svg>
-                <div id="nodes"></div>
-                <div class="token-layer" id="tokens"></div>
-              </div>
-            </div>
-            <div class="quest-controls">
-              <button class="btn small ghost" id="copySummaryBtn">Copy summary</button>
-              <button class="btn small danger" id="resetBtn">Reset board</button>
-            </div>
-            <div class="source-note">Live group sync is on — your changes save to the shared Google Sheet automatically. Tap the <strong>Live</strong> chip at the top to pull in what the others have done. Everyone should use the same GitHub Pages link.</div>
-          </div>
-
-          <aside class="side-stack">
-            <div class="panel player-card">
-              <div class="label">Selected player</div>
-              <div class="select-row">
-                <select id="playerSelect" aria-label="Selected traveller"></select>
-                <button class="btn small secondary" id="focusPlayerBtn">Focus</button>
-              </div>
-              <div class="progress-wrap">
-                <div class="progress-head"><span id="selectedName">Jason</span><span id="selectedProgress">0%</span></div>
-                <div class="progress-bar"><div class="progress-fill" id="selectedProgressFill"></div></div>
-              </div>
-              <div class="pill-row">
-                <span class="pill" id="selectedRole">Pick a vibe</span>
-                <span class="pill" id="selectedStage">Spawn point</span>
-              </div>
-              <div class="vibe-block">
-                <div class="label">Their vibe</div>
-                <div class="vibe-picker" id="vibePicker"></div>
-              </div>
-              <div class="vibe-block">
-                <div class="label">Their board piece</div>
-                <div class="piece-picker" id="piecePicker"></div>
-              </div>
-            </div>
-
-            <div class="panel pad">
-              <div class="label">Roster</div>
-              <div class="traveller-grid" id="travellerGrid"></div>
-            </div>
-
-            <div class="panel pad">
-              <div class="label" style="display:flex; align-items:center; gap:8px">📡 Crew pulse <span class="pill" id="pulseBadge">live</span></div>
-              <div class="pulse-feed" id="pulseFeed"></div>
-            </div>
-
-            <div class="panel pad activity-spotlight">
-              <div class="label">Next thing</div>
-              <h3>Vote first. Lock it later.</h3>
-              <p>Keep the good ideas alive until the group picks a shortlist.</p>
-              <div class="mini-idea-list" id="boardIdeaPreview"></div>
-              <button class="btn small" data-jump="ideas">Activity Market</button>
-            </div>
-
-            <div class="panel pad">
-              <div class="label">Next three actions</div>
-              <div id="nextActions" class="task-list" style="margin-top:12px"></div>
-            </div>
-          </aside>
-        </div>
-
-        <div class="panel pad board-itin">
-          <div class="panel-head" style="padding:0 0 16px">
-            <div>
-              <h2>🗓️ Itinerary</h2>
-              <p class="panel-sub">The day-by-day plan — build it right here. Add to any day, set times, drop days you don't need.</p>
-            </div>
-            <div class="pill-row" style="margin:0">
-              <span class="pill hot" id="boardItinCountBadge">Build it below</span>
-              <button class="btn small secondary" data-jump="plan">Full itinerary view →</button>
-            </div>
-          </div>
-          <div class="plan-days" id="boardPlanDays"></div>
-        </div>
-      </section>
-
       <section id="ideas" class="section">
         <div class="layout">
           <div class="panel pad">
@@ -921,7 +749,7 @@
               </div>
             </div>
             <div class="flow-steps">
-              <div class="flow-step"><strong>1. Pick yourself</strong><span>Use the player dropdown.</span></div>
+              <div class="flow-step"><strong>1. Pick yourself</strong><span>In the crew panel →</span></div>
               <div class="flow-step"><strong>2. Vote lightly</strong><span>Keen, maybe or no.</span></div>
               <div class="flow-step"><strong>3. Shortlist later</strong><span>Shortlist the strongest ideas later.</span></div>
             </div>
@@ -929,6 +757,7 @@
               <div class="idea-help">Rule of thumb: 4+ keen = shortlist · 2+ no = discuss · mostly maybe = optional.</div>
               <button class="btn small secondary" id="copyIdeasBtn">Copy vote summary</button>
             </div>
+            <div class="who-bar">🙋 You're voting as <strong id="whoName">—</strong> <button class="btn small ghost" id="changeWhoBtn" style="margin-left:auto">Not you? Pick yourself</button></div>
             <div class="idea-grid" id="ideaGrid"></div>
             <h3 style="margin:24px 0 8px">Add a new idea</h3>
             <div class="add-idea-form">
@@ -939,6 +768,15 @@
             </div>
           </div>
           <aside class="side-stack">
+            <div class="panel pad">
+              <div class="label">👥 The crew</div>
+              <p class="panel-sub" style="margin:6px 0 12px">Pick yourself, then vote — so every vote is attributed to you.</p>
+              <div class="select-row" style="margin-bottom:14px">
+                <select id="playerSelect" aria-label="You are"></select>
+              </div>
+              <div class="traveller-grid" id="travellerGrid"></div>
+              <details style="margin-top:14px"><summary class="label" style="cursor:pointer">✎ Rename crew</summary><div id="rosterEditor" class="task-list" style="margin-top:10px"></div></details>
+            </div>
             <div class="panel pad">
               <div class="label">Decision logic</div>
               <div class="idea-summary-grid">
@@ -967,17 +805,15 @@
             <div class="panel-head" style="padding:0 0 18px; border-bottom:0">
               <div>
                 <h2>Crew Desk</h2>
-                <p class="panel-sub">The group's shared checklist and decision rooms. Tick a boss and everyone's tokens move forward on the board.</p>
+                <p class="panel-sub">Put your hand up, share options, vote. Where group jobs get owned and decisions get booked.</p>
               </div>
               <div class="pill-row" style="margin:0">
-                <span class="pill warn" id="groupTasksBadge">0 of 8 done</span>
-                <span class="pill done" id="deskDecidedBadge">0 decided</span>
+                <span class="pill done" id="deskDecidedBadge">0 booked</span>
+                <span class="pill warn" id="deskOpenBadge">0 open</span>
                 <span class="pill hot" id="deskOptionsBadge">0 options shared</span>
               </div>
             </div>
-            <div class="idea-help" style="margin-bottom:14px">🙋 Own a job with <strong>“I'll look into this”</strong> · 📋 share options with a link + price · 👍 the group votes · ✔️ an owner locks the pick and the matching boss ticks off. Pick yourself with the player dropdown on the Board tab first.</div>
-            <div class="task-list" id="deskBosses" style="margin-bottom:8px"></div>
-            <h3 style="margin:26px 0 10px" id="otherDecisionsHead" hidden>➕ Other decisions</h3>
+            <div class="idea-help" style="margin-bottom:14px">🙋 Tap <strong>“I'll look into this”</strong> to own a job · 📋 share options with a link + price · 👍 the group votes · ✅ an owner marks it <strong>booked</strong>. Pick yourself in the Activity Market's crew panel first.</div>
             <div class="desk-list" id="deskList"></div>
             <h3 style="margin:26px 0 4px">Start a new decision room</h3>
             <p class="panel-sub">Anything the group needs to sort — a day trip, a SIM plan, airport transfers.</p>
@@ -989,21 +825,21 @@
           </div>
           <aside class="side-stack">
             <div class="panel pad">
-              <div class="label">How it flows</div>
-              <div class="flow-step" style="margin-top:12px"><strong>1. Hands up 🙋</strong><span>Someone owns each job — accom, car, dinners.</span></div>
-              <div class="flow-step" style="margin-top:10px"><strong>2. Share options 📋</strong><span>Owner posts links + prices for the group.</span></div>
-              <div class="flow-step" style="margin-top:10px"><strong>3. Vote + lock 👍</strong><span>Group thumbs-up the favourite; an owner locks it.</span></div>
+              <div class="label">✅ Booked</div>
+              <p class="panel-sub" style="margin:6px 0 12px">Locked-in decisions — what's feeding the trip.</p>
+              <div id="deskBooked"></div>
             </div>
-            <div class="info-card">
-              <div class="emoji">🔗</div>
-              <h3>Feeds the board</h3>
-              <p>Locking both stays ticks <strong>Pick the stay</strong>. Locking Jeju car hire ticks <strong>Lock the ride plan</strong>. Decided dinners drop into the Itinerary.</p>
+            <div class="panel pad">
+              <div class="label">How it flows</div>
+              <div class="flow-step" style="margin-top:12px"><strong>1. Own it 🙋</strong><span>Take a job — accom, car, dinners.</span></div>
+              <div class="flow-step" style="margin-top:10px"><strong>2. Share options 📋</strong><span>Post links + prices for the group.</span></div>
+              <div class="flow-step" style="margin-top:10px"><strong>3. Book it ✅</strong><span>Mark it booked once it's sorted.</span></div>
             </div>
           </aside>
         </div>
       </section>
 
-      <section id="plan" class="section">
+      <section id="plan" class="section active">
         <div class="layout">
           <div class="panel pad">
             <div class="panel-head" style="padding:0 0 18px; border-bottom:0">
@@ -1031,7 +867,7 @@
           <aside class="side-stack">
             <div class="panel pad">
               <div class="label">✈️ Crew flights</div>
-              <p class="panel-sub" style="margin-top:4px">Set when you land and when you fly home — both show on the day. Pick yourself on the Board tab first.</p>
+              <p class="panel-sub" style="margin-top:4px">Set when you land and when you fly home — both show on the day. Pick yourself in the Activity Market crew panel first.</p>
               <div id="arrivalMe" style="margin-top:12px"></div>
               <div class="arrival-list" id="arrivalList" style="margin-top:12px"></div>
               <div class="arr-foot" id="arrivalsBadge" style="margin-top:10px"></div>
@@ -1165,33 +1001,15 @@
           </div>
         </div>
       </section>
-
-      <section id="settings" class="section">
-        <div class="layout">
-          <div class="panel pad">
-            <h2>Roster settings</h2>
-            <p class="panel-sub">Rename placeholders once the group is confirmed.</p>
-            <div id="rosterEditor" class="task-list" style="margin-top:18px"></div>
-          </div>
-          <aside class="panel pad">
-            <h3>Export snapshot</h3>
-            <p class="panel-sub">Copy the current board state manually.</p>
-            <button class="btn small" id="exportBtn" style="margin-top:14px">Copy JSON snapshot</button>
-            <button class="btn small secondary" id="importBtn" style="margin-top:14px">Paste JSON snapshot</button>
-          </aside>
-        </div>
-      </section>
     </main>
   </div>
 
   <nav class="dock" aria-label="Quick navigation">
-    <button data-tab="board" class="active"><span class="d-ico">🗺️</span>Board</button>
+    <button data-tab="plan" class="active"><span class="d-ico">🗓️</span>Plan</button>
     <button data-tab="ideas"><span class="d-ico">🎯</span>Market</button>
     <button data-tab="desk"><span class="d-ico">🛎️</span>Desk</button>
-    <button data-tab="plan"><span class="d-ico">🗓️</span>Plan</button>
     <button data-tab="bookie"><span class="d-ico">🎲</span>Bookies</button>
     <button data-tab="intel"><span class="d-ico">🧭</span>Pack</button>
-    <button data-tab="settings"><span class="d-ico">⚙️</span>Roster</button>
   </nav>
 
   <div class="toast" id="toast"></div>
@@ -1291,6 +1109,58 @@
       { id: "d2", iso: "2026-11-02", date: "Mon 2 Nov", city: "Home", logistics: true, note: "Fly home." }
     ];
 
+    // Seeded starter itinerary (Seoul + Jeju). Dropped in once, on first load of a
+    // board with an empty plan; after that the group's edits win (the `seeded` flag
+    // stops it re-seeding even if they clear a day).
+    const KOREA_SEED = [
+      { dayId: "d24", time: "", title: "Land in Seoul — check in, drop bags", emoji: "🛬" },
+      { dayId: "d24", time: "20:00", title: "Easy first night — Hongdae or Myeongdong street food", emoji: "🌙" },
+      { dayId: "d25", time: "10:30", title: "Gyeongbokgung Palace + changing-of-the-guard", emoji: "🏯" },
+      { dayId: "d25", time: "13:00", title: "Bukchon Hanok Village walk", emoji: "🏘️" },
+      { dayId: "d25", time: "15:00", title: "Insadong tea + Ssamziegil", emoji: "🍵" },
+      { dayId: "d25", time: "17:30", title: "N Seoul Tower at sunset (Namsan)", emoji: "🗼" },
+      { dayId: "d25", time: "20:00", title: "Korean BBQ dinner", emoji: "🍖", kind: "dinner" },
+      { dayId: "d26", time: "11:00", title: "Gwangjang Market street-food brunch", emoji: "🥘" },
+      { dayId: "d26", time: "13:00", title: "Changdeokgung + Secret Garden", emoji: "🍁" },
+      { dayId: "d26", time: "16:00", title: "Myeongdong shopping + K-beauty", emoji: "🛍️" },
+      { dayId: "d26", time: "21:00", title: "Hongdae night out", emoji: "🍻" },
+      { dayId: "d27", time: "10:30", title: "Han River park morning / DDP Dongdaemun", emoji: "🚲" },
+      { dayId: "d27", time: "13:00", title: "Last Seoul lunch + pack up", emoji: "🍜" },
+      { dayId: "d27", time: "19:00", title: "Head to Gimpo Airport (GMP)", emoji: "🚕" },
+      { dayId: "d27", time: "21:00", title: "Fly GMP → CJU · Asiana OZ8997 (lands 22:15)", emoji: "✈️", kind: "flight" },
+      { dayId: "d28", time: "09:30", title: "Pick up hire cars", emoji: "🚘" },
+      { dayId: "d28", time: "11:00", title: "Seongsan Ilchulbong (Sunrise Peak)", emoji: "🌋" },
+      { dayId: "d28", time: "13:30", title: "Seopjikoji coast walk + lunch", emoji: "🌊" },
+      { dayId: "d28", time: "15:30", title: "Manjanggul lava tube", emoji: "🕳️" },
+      { dayId: "d28", time: "19:30", title: "Jeju seafood / BBQ dinner", emoji: "🦞", kind: "dinner" },
+      { dayId: "d29", time: "09:00", title: "Hallasan hike (Yeongsil or Eorimok trail)", emoji: "⛰️" },
+      { dayId: "d29", time: "14:00", title: "Jusangjeolli columnar-basalt cliffs", emoji: "🪨" },
+      { dayId: "d29", time: "15:30", title: "Cheonjiyeon Waterfall", emoji: "💦" },
+      { dayId: "d29", time: "19:30", title: "Jeju black-pork dinner", emoji: "🐷", kind: "dinner" },
+      { dayId: "d30", time: "10:30", title: "West coast — Hallim Park / Hyeopjae beach", emoji: "🏖️" },
+      { dayId: "d30", time: "13:00", title: "O'sulloc tea fields + museum", emoji: "🍵" },
+      { dayId: "d30", time: "17:30", title: "Sunset at the Aewol coast cafés", emoji: "🌅" },
+      { dayId: "d30", time: "20:00", title: "Last big group dinner", emoji: "🍶", kind: "dinner" },
+      { dayId: "d31", time: "10:30", title: "Chill morning / souvenirs", emoji: "🎁" },
+      { dayId: "d31", time: "13:00", title: "Return hire cars", emoji: "🚗" },
+      { dayId: "d31", time: "15:00", title: "Return flights home — add your times", emoji: "✈️", kind: "flight" }
+    ];
+    function normalizePlan(plan) {
+      const p = (plan && typeof plan === "object") ? plan : { generatedAt: null, items: [] };
+      if (!Array.isArray(p.items)) p.items = [];
+      // One-time seed: merge the starter Seoul+Jeju itinerary in, skipping any stop
+      // the group already added (matched by title). Runs once, then `seeded` locks it.
+      if (!p.seeded) {
+        const have = new Set(p.items.map(it => (it.title || "").trim().toLowerCase()));
+        const add = KOREA_SEED
+          .filter(s => !have.has(s.title.trim().toLowerCase()))
+          .map((s, i) => ({ id: `seed_${i}`, dayId: s.dayId, title: s.title, emoji: s.emoji || guessEmoji(s.title), city: "", kind: s.kind || "activity", note: "", time: s.time || "" }));
+        p.items = p.items.concat(add);
+        p.seeded = true;
+      }
+      return p;
+    }
+
     const defaultState = {
       selectedPlayer: 0,
       ideas: structuredClone(defaultIdeas),
@@ -1374,7 +1244,7 @@
     function loadState() {
       try {
         const raw = localStorage.getItem(STORE_KEY);
-        if (!raw) return structuredClone(defaultState);
+        if (!raw) { const s = structuredClone(defaultState); s.plan = normalizePlan(s.plan); return s; }
         const parsed = JSON.parse(raw);
         return {
           ...structuredClone(defaultState),
@@ -1385,7 +1255,7 @@
           ideaVotes: parsed.ideaVotes || {},
           bookie: parsed.bookie ? { startingChips: parsed.bookie.startingChips || 1000, markets: normalizeBookieMarkets(parsed.bookie.markets) } : structuredClone(defaultBookie),
           desk: parsed.desk ? { rooms: normalizeDeskRooms(parsed.desk.rooms) } : structuredClone(defaultDesk),
-          plan: parsed.plan || { generatedAt: null, items: [] },
+          plan: normalizePlan(parsed.plan),
           feed: Array.isArray(parsed.feed) ? parsed.feed : []
         };
       } catch (e) {
@@ -1415,7 +1285,7 @@
         ideaVotes: remote.ideaVotes || {},
         bookie: remote.bookie ? { startingChips: remote.bookie.startingChips || 1000, markets: normalizeBookieMarkets(remote.bookie.markets) } : structuredClone(defaultBookie),
         desk: remote.desk ? { rooms: normalizeDeskRooms(remote.desk.rooms) } : structuredClone(defaultDesk),
-        plan: remote.plan || { generatedAt: null, items: [] },
+        plan: normalizePlan(remote.plan),
         feed: Array.isArray(remote.feed) ? remote.feed : []
       };
       if (typeof localSelected === "number" && state.players[localSelected]) {
@@ -1829,6 +1699,7 @@
     }
 
     function renderBoardIdeaPreview() {
+      if (!document.getElementById("boardIdeaPreview")) return; // board tab retired
       const holder = document.getElementById("boardIdeaPreview");
       const status = document.getElementById("boardVoteStatus");
       if (!holder || !status) return;
@@ -1894,13 +1765,16 @@
 
     function renderHero() {
       renderCountdown();
-      const groupDone = groupTasks.filter(t => state.groupDone[t.id]).length;
-      const pct = Math.round(groupDone / groupTasks.length * 100);
-      tweenNum(document.getElementById("heroProgressPct"), pct, n => `${Math.round(n)}%`);
+      ensureDesk();
+      const rooms = (state.desk && state.desk.rooms) ? state.desk.rooms : [];
+      const decided = rooms.filter(r => r.status === "decided").length;
+      const pct = rooms.length ? Math.round(decided / rooms.length * 100) : 0;
+      const pctEl = document.getElementById("heroProgressPct");
+      if (pctEl) tweenNum(pctEl, pct, n => `${Math.round(n)}%`);
       const ring = document.getElementById("heroRing");
       if (ring) { const C = 2 * Math.PI * 52; ring.style.strokeDashoffset = (C * (1 - pct / 100)).toFixed(1); }
       const subP = document.getElementById("heroProgressSub");
-      if (subP) subP.textContent = `${groupDone} of ${groupTasks.length} group bosses cleared together.`;
+      if (subP) subP.textContent = `${decided} of ${rooms.length} crew decisions booked.`;
       const tcp = document.getElementById("travellerCountPill");
       if (tcp) tcp.textContent = `${state.players.length} travellers`;
     }
@@ -1977,7 +1851,7 @@
         state.players[idx][field] = field === "vibe" ? (e.target.value || null) : e.target.value;
         if (field === "name") state.players[idx].initials = makeInitials(e.target.value, idx);
         saveState();
-        renderPlayerSelect(); renderTravellerGrid(); renderTokens(); renderSelectedPanel(); renderVibePicker(); renderPiecePicker(); renderNextActions(); renderBadges();
+        renderWho(); renderPlayerSelect(); renderTravellerGrid(); renderBadges();
       };
       holder.querySelectorAll("input").forEach(el => el.addEventListener("input", onChange));
       holder.querySelectorAll("select").forEach(el => el.addEventListener("change", onChange));
@@ -2471,19 +2345,27 @@
       ensureDesk();
       const holder = document.getElementById("deskList");
       if (!holder) return;
-      // Rooms mapped to a group boss already show under that boss in the bosses
-      // list, so the flat list only carries standalone / custom decisions.
-      const mappedIds = new Set(Object.values(TASK_ROOM_MAP).flat());
-      const otherRooms = state.desk.rooms.filter(r => !mappedIds.has(r.id) && !r.taskId);
-      holder.innerHTML = otherRooms.map(deskRoomCard).join("");
+      const rooms = state.desk.rooms;
+      const open = rooms.filter(r => r.status !== "decided");
+      const booked = rooms.filter(r => r.status === "decided");
+      // Open jobs on the left; booked decisions summarised in the side column.
+      holder.innerHTML = open.length ? open.map(deskRoomCard).join("") : `<p class="panel-sub" style="padding:8px 2px">No open jobs — it's all booked 🎉</p>`;
       bindDeskActions(holder);
-      const otherHead = document.getElementById("otherDecisionsHead");
-      if (otherHead) otherHead.hidden = otherRooms.length === 0;
 
-      const decidedCount = state.desk.rooms.filter(r => r.status === "decided").length;
-      const openCount = state.desk.rooms.length - decidedCount;
-      const optCount = state.desk.rooms.reduce((s, r) => s + (r.options ? r.options.length : 0), 0);
-      const db = document.getElementById("deskDecidedBadge"); if (db) db.textContent = `${decidedCount} decided`;
+      const bookedHolder = document.getElementById("deskBooked");
+      if (bookedHolder) {
+        bookedHolder.innerHTML = booked.length ? booked.map(r => {
+          const o = (r.options || []).find(x => x.id === r.chosen);
+          const meta = escapeHtml(r.title) + (o && o.price ? " · " + escapeHtml(o.price) : "");
+          const link = o && o.url ? ` <a href="${escapeAttr(o.url)}" target="_blank" rel="noopener" class="pi-sub">↗</a>` : "";
+          return `<div class="mini-idea-row"><span>${r.emoji || "✅"}</span><div><div class="mini-idea-name">${escapeHtml(o ? o.title : r.title)}${link}</div><div class="mini-idea-meta">${meta}</div></div><span class="idea-status hot">Booked</span></div>`;
+        }).join("") : `<div class="micro">Nothing booked yet.</div>`;
+      }
+
+      const decidedCount = booked.length;
+      const openCount = open.length;
+      const optCount = rooms.reduce((s, r) => s + (r.options ? r.options.length : 0), 0);
+      const db = document.getElementById("deskDecidedBadge"); if (db) db.textContent = `${decidedCount} booked`;
       const ob = document.getElementById("deskOpenBadge"); if (ob) ob.textContent = `${openCount} open`;
       const opb = document.getElementById("deskOptionsBadge"); if (opb) opb.textContent = `${optCount} option${optCount === 1 ? "" : "s"} shared`;
       const bds = document.getElementById("boardDeskStatus"); if (bds) bds.textContent = `${openCount} open · ${decidedCount} decided`;
@@ -2732,9 +2614,14 @@
       if (badge) badge.textContent = `🛬 ${nA}/${state.players.length} arrivals · 🛫 ${nD}/${state.players.length} departures set`;
     }
 
+    function renderWho() {
+      const el = document.getElementById("whoName");
+      if (el) el.textContent = selectedPlayer().name;
+    }
+
     function renderAll() {
       ensureBookie(); ensureDesk(); ensurePlan();
-      renderNodes(); renderTokens(); renderPlayerSelect(); renderTravellerGrid(); renderSelectedPanel(); renderVibePicker(); renderPiecePicker(); renderTasks(); renderIdeas(); renderBoardIdeaPreview(); renderNextActions(); renderBadges(); renderRosterEditor(); renderHero(); renderBookie(); renderDesk(); renderPlan(); renderArrivals(); renderPulse();
+      renderWho(); renderPlayerSelect(); renderTravellerGrid(); renderIdeas(); renderBadges(); renderRosterEditor(); renderHero(); renderBookie(); renderDesk(); renderPlan(); renderArrivals();
     }
 
     function toast(message) {
@@ -2788,9 +2675,13 @@
       });
     });
 
-    document.getElementById("playerSelect").addEventListener("change", e => { state.selectedPlayer = Number(e.target.value); saveState(); renderAll(); });
-    document.getElementById("focusPlayerBtn").addEventListener("click", () => toast(`${selectedPlayer().name} is selected`));
-    document.getElementById("resetBtn").addEventListener("click", () => { if (confirm("Reset this browser's Korea board state?")) { localStorage.removeItem(STORE_KEY); state = loadState(); renderAll(); toast("Board reset"); } });
+    document.getElementById("playerSelect")?.addEventListener("change", e => { state.selectedPlayer = Number(e.target.value); saveState(); renderAll(); });
+    document.getElementById("changeWhoBtn")?.addEventListener("click", () => {
+      const sel = document.getElementById("playerSelect");
+      if (sel) { sel.scrollIntoView({ behavior: "smooth", block: "center" }); sel.focus(); }
+    });
+    document.getElementById("focusPlayerBtn")?.addEventListener("click", () => toast(`${selectedPlayer().name} is selected`));
+    document.getElementById("resetBtn")?.addEventListener("click", () => { if (confirm("Reset this browser's Korea board state?")) { localStorage.removeItem(STORE_KEY); state = loadState(); renderAll(); toast("Board reset"); } });
 
     document.getElementById("addIdeaBtn").addEventListener("click", () => {
       const title = document.getElementById("newIdeaTitle").value.trim();
@@ -2821,7 +2712,7 @@
     });
 
 
-    document.getElementById("copySummaryBtn").addEventListener("click", async () => {
+    document.getElementById("copySummaryBtn")?.addEventListener("click", async () => {
       const groupDoneCount = groupTasks.filter(t => state.groupDone[t.id]).length;
       const lines = [
         "Korea Boys Trip Quest Summary",
@@ -2857,8 +2748,8 @@
       await navigator.clipboard.writeText(lines.join("\n")); toast("Summary copied");
     });
 
-    document.getElementById("exportBtn").addEventListener("click", async () => { await navigator.clipboard.writeText(JSON.stringify(state, null, 2)); toast("JSON snapshot copied"); });
-    document.getElementById("importBtn").addEventListener("click", async () => {
+    document.getElementById("exportBtn")?.addEventListener("click", async () => { await navigator.clipboard.writeText(JSON.stringify(state, null, 2)); toast("JSON snapshot copied"); });
+    document.getElementById("importBtn")?.addEventListener("click", async () => {
       const raw = prompt("Paste JSON snapshot");
       if (!raw) return;
       try { state = { ...structuredClone(defaultState), ...JSON.parse(raw) }; saveState(); renderAll(); toast("Snapshot imported"); } catch (e) { alert("Invalid JSON snapshot"); }
