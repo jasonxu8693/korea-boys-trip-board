@@ -669,6 +669,69 @@
       .app { padding-bottom: 104px; }
       .toast { bottom: 88px; }
     }
+    /* ---- Visual itinerary poster ---- */
+    .vitin-head { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+    .vitin-modes { display: inline-flex; gap: 6px; padding: 6px; border: 1px solid rgba(245,248,255,0.16); border-radius: 999px; background: rgba(13,18,28,0.55); }
+    .vitin-mode { border: 0; border-radius: 999px; padding: 9px 16px; font-weight: 800; font-size: 13px; color: var(--muted); background: transparent; cursor: pointer; transition: background .2s, color .2s; }
+    .vitin-mode.active { color: #160f0a; background: linear-gradient(135deg, #f6efe6, #f4d9a8); }
+    .vitin-hint { margin: 0; color: var(--subtle); font-size: 12.5px; max-width: 52ch; }
+    .vp-vp { position: relative; overflow: hidden; border-radius: var(--radius-xl); border: 1px solid rgba(245,248,255,0.16); background: linear-gradient(180deg, rgba(22,30,52,0.82), rgba(13,18,28,0.92)); box-shadow: 0 18px 60px rgba(5,9,18,0.34); }
+    .vp-track { display: flex; flex-wrap: nowrap; transition: transform .55s cubic-bezier(.4,0,.2,1); }
+    .vp-slide { min-width: 100%; box-sizing: border-box; padding: 30px 34px 34px; position: relative; overflow: hidden; }
+    .vp-mtn { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 92px; opacity: .28; pointer-events: none; }
+    .vp-title-wrap { position: relative; z-index: 1; text-align: center; margin-bottom: 24px; }
+    .vp-eyebrow { font-size: 12px; letter-spacing: .28em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+    .vp-title { font-family: 'Fraunces', Georgia, serif; font-weight: 900; font-size: clamp(40px, 6vw, 66px); line-height: .95; margin: 8px 0 0; color: #f6efe6; letter-spacing: -0.01em; }
+    .vp-sub { font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: clamp(15px, 2vw, 20px); color: var(--muted); margin-top: 6px; }
+    .vp-themes { font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--subtle); margin-top: 10px; font-weight: 700; }
+    .vp-days { position: relative; z-index: 1; display: flex; justify-content: space-between; gap: 8px; padding: 8px 4px 0; }
+    .vp-days:before { content: ""; position: absolute; left: 10%; right: 10%; top: 72px; border-top: 2px dashed rgba(245,248,255,0.22); }
+    .vp-daynode { position: relative; flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 9px; background: transparent; border: 0; cursor: pointer; color: inherit; }
+    .vp-daybead { width: min(132px, 13.5vw); aspect-ratio: 1; height: auto; border-radius: 50%; object-fit: cover; border: 3px solid currentColor; box-shadow: 0 10px 24px -10px rgba(5,9,18,0.75); background: #16213a; transition: transform .25s; }
+    .vp-daynode:hover .vp-daybead { transform: translateY(-3px) scale(1.04); }
+    .vp-daynum { font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+    .vp-dayname { font-size: 12.5px; font-weight: 600; color: var(--ink); line-height: 1.25; }
+    .vp-daycount { font-size: 11px; color: var(--subtle); }
+    .vp-swipe { position: relative; z-index: 1; text-align: center; margin-top: 22px; font-family: 'Fraunces', Georgia, serif; font-style: italic; color: var(--subtle); font-size: 13px; }
+    .vp-dayhead { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; }
+    .vp-dayeyebrow { font-size: 11.5px; letter-spacing: .16em; text-transform: uppercase; font-weight: 800; }
+    .vp-daytitle { font-family: 'Fraunces', Georgia, serif; font-weight: 900; font-size: clamp(24px, 3.4vw, 32px); line-height: 1.04; margin: 4px 0 0; color: #f6efe6; }
+    .vp-daynote { position: relative; z-index: 1; color: var(--muted); font-size: 12.5px; margin: 10px 0 0; max-width: 64ch; line-height: 1.5; }
+    .vp-route { position: relative; z-index: 1; margin-top: 16px; }
+    .vp-spine { position: absolute; left: 30px; top: 16px; bottom: 16px; width: 3px; border-radius: 3px; background: currentColor; filter: drop-shadow(0 0 7px currentColor); transform-origin: top; animation: vpGrow .9s ease forwards; }
+    .vp-trav { position: absolute; left: 25.5px; width: 12px; height: 12px; border-radius: 50%; background: #f6efe6; border: 2px solid currentColor; box-shadow: 0 0 0 3px rgba(13,18,28,0.65); animation: vpTravel 7s ease-in-out infinite; }
+    .vp-stop { position: relative; display: flex; align-items: center; gap: 16px; padding: 11px 0 11px 64px; min-height: 86px; }
+    .vp-num { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 14px; color: #160f0a; background: #f4d9a8; box-shadow: 0 0 0 4px rgba(13,18,28,0.72); z-index: 1; }
+    .vp-scene { flex: none; width: 116px; height: 116px; border-radius: 50%; object-fit: cover; border: 3px solid currentColor; box-shadow: 0 10px 22px -10px rgba(5,9,18,0.75); background: #16213a; opacity: 0; transform: scale(.7); animation: vpPop .5s ease forwards; }
+    .vp-scene-fallback { flex: none; width: 116px; height: 116px; border-radius: 50%; display: grid; place-items: center; font-size: 44px; border: 3px solid currentColor; background: linear-gradient(135deg, rgba(245,248,255,0.14), rgba(13,18,28,0.42)); }
+    .vp-stoptext h4 { margin: 0 0 3px; font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 18px; color: var(--ink); }
+    .vp-stoptext .vp-when { font-size: 12px; color: var(--subtle); font-weight: 800; letter-spacing: .02em; }
+    .vp-stoptext p { margin: 3px 0 0; font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+    .vp-empty { position: relative; z-index: 1; display: flex; align-items: center; gap: 16px; margin-top: 12px; padding: 18px; border: 1px dashed rgba(245,248,255,0.22); border-radius: 18px; background: rgba(13,18,28,0.4); }
+    .vp-empty img { width: 116px; height: 116px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(245,248,255,0.5); flex: none; }
+    .vp-empty div { color: var(--muted); font-size: 13.5px; line-height: 1.55; }
+    .vp-empty b { color: var(--ink); }
+    .vp-jump { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 14px; }
+    .vp-jbtn { border: 1px solid rgba(245,248,255,0.18); background: rgba(13,18,28,0.5); color: var(--muted); border-radius: 999px; padding: 7px 13px; font-size: 12.5px; font-weight: 800; cursor: pointer; white-space: nowrap; transition: color .15s, border-color .15s, background .15s; }
+    .vp-jbtn:hover { color: var(--ink); border-color: rgba(245,248,255,0.42); }
+    .vp-jbtn.on { background: linear-gradient(100deg, #e07a3f, #d64545); color: #fff; border-color: transparent; }
+    .vp-nav { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 16px; }
+    .vp-arrow { width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(245,248,255,0.2); background: rgba(13,18,28,0.6); color: var(--ink); font-size: 17px; cursor: pointer; }
+    .vp-arrow:hover { background: rgba(245,248,255,0.1); }
+    .vp-dots { display: flex; gap: 8px; align-items: center; }
+    .vp-dot { width: 9px; height: 9px; border-radius: 50%; border: 0; background: rgba(245,248,255,0.28); cursor: pointer; padding: 0; transition: width .2s, background .2s; }
+    .vp-dot.on { background: #f4d9a8; width: 24px; border-radius: 5px; }
+    @keyframes vpPop { to { opacity: 1; transform: scale(1); } }
+    @keyframes vpGrow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+    @keyframes vpTravel { 0% { top: 14px; } 45% { top: calc(100% - 30px); } 55% { top: calc(100% - 30px); } 100% { top: 14px; } }
+    @media (max-width: 620px) {
+      .vp-slide { padding: 22px 16px 26px; }
+      .vp-days { flex-wrap: wrap; gap: 16px 8px; }
+      .vp-days:before { display: none; }
+      .vp-daynode { flex: 0 0 30%; }
+      .vp-daybead { width: min(112px, 26vw); }
+    }
+    @media (prefers-reduced-motion: reduce) { .vp-scene, .vp-spine, .vp-trav { animation: none !important; opacity: 1 !important; transform: none !important; } }
   </style>
 </head>
 <body>
@@ -840,7 +903,15 @@
       </section>
 
       <section id="plan" class="section active">
-        <div class="layout">
+        <div class="vitin-head">
+          <div class="vitin-modes">
+            <button class="vitin-mode active" data-vitin="poster" type="button">🗺️ Visual itinerary</button>
+            <button class="vitin-mode" data-vitin="edit" type="button">✎ Edit plan</button>
+          </div>
+          <p class="vitin-hint" id="vitinHint">An illustrated day-by-day — swipe through the days or tap a day on the overview. Use “Edit plan” to add or change stops.</p>
+        </div>
+        <div id="vitinPoster" class="vitin-poster" aria-live="polite"></div>
+        <div class="layout" id="planEditor" style="display:none">
           <div class="panel pad">
             <div class="panel-head" style="padding:0 0 18px; border-bottom:0">
               <div>
@@ -2619,9 +2690,132 @@
       if (el) el.textContent = selectedPlayer().name;
     }
 
+    // ---- Visual itinerary: illustrated poster carousel (overview + per-day slides) ----
+    const DAY_ACCENT = { d24: "#e07a3f", d25: "#d64545", d26: "#f4b942", d27: "#e07a3f", d28: "#6aa392", d29: "#4a9d8f", d30: "#5a8fc2", d31: "#6aa392", d1: "#d64545", d2: "#e07a3f" };
+    const DAY_SCENE = { d24: "scene-namsan.jpg", d25: "scene-gyeongbok.jpg", d26: "scene-myeongdong.jpg", d27: "scene-flight.jpg", d28: "scene-seongsan.jpg", d29: "scene-hallasan.jpg", d30: "scene-jusangjeolli.jpg", d31: "scene-jeju-waterfall.jpg", d1: "scene-hongdae.jpg", d2: "scene-flight.jpg" };
+    const VP_MTN = `<svg class="vp-mtn" viewBox="0 0 800 90" preserveAspectRatio="none" aria-hidden="true"><path d="M0 90 L90 34 L170 64 L270 24 L360 60 L470 30 L560 60 L650 26 L740 56 L800 40 L800 90Z" fill="rgba(120,140,175,0.42)"/><path d="M0 90 L140 58 L280 76 L420 50 L560 76 L680 54 L800 68 L800 90Z" fill="rgba(90,105,140,0.5)"/></svg>`;
+    let vitinIdx = 0, vitinPosterMode = true, vitinSig = "";
+
+    function sceneForItem(it) {
+      const t = (it.title || "").toLowerCase();
+      if (/(gyeongbok|changdeok|palace|secret garden|guard)/.test(t)) return "scene-gyeongbok.jpg";
+      if (/(bukchon|hanok|insadong|\btea\b)/.test(t)) return "scene-bukchon.jpg";
+      if (/(namsan|n seoul tower|n tower)/.test(t)) return "scene-namsan.jpg";
+      if (/(myeongdong|shopping|k-beauty|beauty)/.test(t)) return "scene-myeongdong.jpg";
+      if (/(hongdae|night out|club\b|first night)/.test(t)) return "scene-hongdae.jpg";
+      if (/(gwangjang|market|street food|brunch)/.test(t)) return "scene-gwangjang.jpg";
+      if (/(han river|hangang|ddp|dongdaemun|picnic|bike|cycl)/.test(t)) return "scene-hanriver.jpg";
+      if (/(seongsan|sunrise peak|ilchulbong|seopjikoji)/.test(t)) return "scene-seongsan.jpg";
+      if (/(hallasan|\bhike\b|summit)/.test(t)) return "scene-hallasan.jpg";
+      if (/(manjanggul|lava|\bcave\b)/.test(t)) return "scene-manjanggul.jpg";
+      if (/(jusangjeolli|basalt|cliff|\bcoast\b|udo)/.test(t)) return "scene-jusangjeolli.jpg";
+      if (/(waterfall|cheonjiyeon|jeongbang)/.test(t)) return "scene-jeju-waterfall.jpg";
+      if (/(hallim|hyeopjae|beach|osulloc|o'sulloc|tea field|aewol|west coast)/.test(t)) return "scene-drive.jpg";
+      if (/(dinner|lunch|breakfast|bbq|pork|seafood|soju|\bfood\b|eat\b|restaurant|meal)/.test(t)) return "scene-bbq.jpg";
+      if (/(flight|\bfly\b|airport|gmp|cju|gimpo|oz8997|\bland\b)/.test(t)) return "scene-flight.jpg";
+      if (/(drive|\bcar\b|hire|taxi|transfer|return car|pick up|head to)/.test(t)) return "scene-drive.jpg";
+      if (/(check.?in|check.?out|hotel|villa|\bstay\b|drop bags|souvenir)/.test(t)) return "scene-stay.jpg";
+      return null;
+    }
+
+    function applyVitinMode() {
+      const poster = document.getElementById("vitinPoster"), editor = document.getElementById("planEditor"), hint = document.getElementById("vitinHint");
+      if (poster) poster.style.display = vitinPosterMode ? "" : "none";
+      if (editor) editor.style.display = vitinPosterMode ? "none" : "";
+      document.querySelectorAll(".vitin-mode").forEach(b => b.classList.toggle("active", (b.dataset.vitin === "poster") === vitinPosterMode));
+      if (hint) hint.textContent = vitinPosterMode
+        ? "An illustrated day-by-day — swipe through the days or tap a day on the overview. Use “Edit plan” to add or change stops."
+        : "Build it by hand — add stops to any day, set times, rename, or drop a day.";
+    }
+
+    function renderVisualItinerary() {
+      const host = document.getElementById("vitinPoster");
+      if (!host) return;
+      ensurePlan();
+      const items = state.plan.items || [];
+      applyVitinMode();
+      const sig = JSON.stringify({ i: items.map(it => [it.dayId, it.title, it.time, it.emoji, it.kind]), m: state.plan.dayMeta });
+      if (sig === vitinSig && host.children.length) return;
+      vitinSig = sig;
+      const total = 1 + TRIP_DAYS.length;
+
+      const overviewNodes = TRIP_DAYS.map((d, idx) => {
+        const ac = DAY_ACCENT[d.id] || "#f4d9a8";
+        const scene = DAY_SCENE[d.id] ? `images/${DAY_SCENE[d.id]}` : "";
+        const n = items.filter(it => it.dayId === d.id).length;
+        const cnt = dayIsOff(d.id) ? "Not in the trip" : (n ? `${n} stop${n > 1 ? "s" : ""}` : "Tap to plan");
+        return `<button class="vp-daynode" style="color:${ac}" data-goslide="${idx + 1}">
+          ${scene ? `<img class="vp-daybead" src="${scene}" alt="${escapeAttr(d.city)}" loading="lazy" onerror="this.outerHTML='<span class=&quot;vp-daybead&quot; style=&quot;display:grid;place-items:center;font-size:30px&quot;>📍</span>'">` : `<span class="vp-daybead" style="display:grid;place-items:center;font-size:30px">📍</span>`}
+          <span class="vp-daynum">Day ${idx + 1} · ${escapeHtml(d.date.split(" ")[0])}</span>
+          <span class="vp-dayname">${escapeHtml(d.city)}</span>
+          <span class="vp-daycount">${cnt}</span>
+        </button>`;
+      }).join("");
+      const overview = `<section class="vp-slide">${VP_MTN}
+        <div class="vp-title-wrap">
+          <div class="vp-eyebrow">The boys · 24 Oct – 2 Nov 2026</div>
+          <div class="vp-title">Korea</div>
+          <div class="vp-sub">Seoul city + Jeju island</div>
+          <div class="vp-themes">Palaces · Street food · Nightlife · Volcano · Coast</div>
+        </div>
+        <div class="vp-days">${overviewNodes}</div>
+        <div class="vp-swipe">Swipe through for each day →</div>
+      </section>`;
+
+      const daySlides = TRIP_DAYS.map((d, idx) => {
+        const ac = DAY_ACCENT[d.id] || "#f4d9a8";
+        const hero = DAY_SCENE[d.id] ? `images/${DAY_SCENE[d.id]}` : "";
+        const dayItems = items.filter(it => it.dayId === d.id).slice().sort((a, b) => (a.time || "99:99").localeCompare(b.time || "99:99"));
+        const head = `<div class="vp-dayhead"><div>
+            <div class="vp-dayeyebrow" style="color:${ac}">Day ${idx + 1} · ${escapeHtml(d.date)}</div>
+            <div class="vp-daytitle">${escapeHtml(d.city)}</div>
+          </div></div>`;
+        let body;
+        if (dayIsOff(d.id)) {
+          body = `<div class="vp-empty"><div><b>${escapeHtml(d.date)} isn't in the trip.</b><br>Re-add it from “✎ Edit plan”.</div></div>`;
+        } else if (!dayItems.length) {
+          body = `<div class="vp-empty">${hero ? `<img src="${hero}" alt="" loading="lazy">` : ""}<div><b>Nothing planned yet.</b><br>Tap <b>✎ Edit plan</b> to add stops to ${escapeHtml(d.date)}.</div></div>`;
+        } else {
+          const stops = dayItems.map((it, si) => {
+            const fn = sceneForItem(it);
+            const bead = fn
+              ? `<img class="vp-scene" style="color:${ac};animation-delay:${(0.1 + si * 0.12).toFixed(2)}s" src="images/${fn}" alt="${escapeAttr(it.title)}" loading="lazy" onerror="this.outerHTML='<span class=&quot;vp-scene-fallback&quot; style=&quot;color:${ac}&quot;>${it.emoji || "📍"}</span>'">`
+              : `<span class="vp-scene-fallback" style="color:${ac}">${it.emoji || "📍"}</span>`;
+            const when = it.time ? `<span class="vp-when">${escapeHtml(it.time)}</span>` : "";
+            const sub = (it.kind === "dinner") ? `<p>Group dinner</p>` : (it.note ? `<p>${escapeHtml(it.note)}</p>` : "");
+            return `<div class="vp-stop"><span class="vp-num" style="background:${ac}">${si + 1}</span>${bead}<div class="vp-stoptext">${when}<h4>${escapeHtml(it.title)}</h4>${sub}</div></div>`;
+          }).join("");
+          body = `<div class="vp-route" style="color:${ac}"><div class="vp-spine"></div><div class="vp-trav"></div>${stops}</div>`;
+        }
+        const note = dayNote(d);
+        const noteHtml = (note && !dayIsOff(d.id)) ? `<p class="vp-daynote">${escapeHtml(note)}</p>` : "";
+        return `<section class="vp-slide">${VP_MTN}${head}${noteHtml}${body}</section>`;
+      }).join("");
+
+      const dotsHtml = Array.from({ length: total }, (_, k) => `<button class="vp-dot${k === 0 ? " on" : ""}" data-goslide="${k}" aria-label="Slide ${k + 1}"></button>`).join("");
+      const jumpHtml = `<button class="vp-jbtn${vitinIdx === 0 ? " on" : ""}" data-goslide="0">🗺 Overview</button>` + TRIP_DAYS.map((d, idx) => `<button class="vp-jbtn${vitinIdx === idx + 1 ? " on" : ""}" data-goslide="${idx + 1}">${escapeHtml(d.date.split(" ").slice(0, 2).join(" "))}</button>`).join("");
+      host.innerHTML = `<div class="vp-jump" id="vpJump">${jumpHtml}</div><div class="vp-vp"><div class="vp-track" id="vpTrack">${overview}${daySlides}</div></div>
+        <div class="vp-nav"><button class="vp-arrow" id="vpPrev" aria-label="Previous day">‹</button><div class="vp-dots" id="vpDots">${dotsHtml}</div><button class="vp-arrow" id="vpNext" aria-label="Next day">›</button></div>`;
+
+      const track = host.querySelector("#vpTrack"), dotsWrap = host.querySelector("#vpDots");
+      function go(n) {
+        vitinIdx = Math.max(0, Math.min(total - 1, n));
+        track.style.transform = `translateX(-${vitinIdx * 100}%)`;
+        dotsWrap.querySelectorAll(".vp-dot").forEach((dn, k) => dn.classList.toggle("on", k === vitinIdx));
+        host.querySelectorAll(".vp-jump .vp-jbtn").forEach((jb, k) => jb.classList.toggle("on", k === vitinIdx));
+      }
+      host.querySelectorAll("[data-goslide]").forEach(b => b.addEventListener("click", () => go(parseInt(b.dataset.goslide, 10))));
+      host.querySelector("#vpPrev").addEventListener("click", () => go(vitinIdx - 1));
+      host.querySelector("#vpNext").addEventListener("click", () => go(vitinIdx + 1));
+      let x0 = null;
+      track.addEventListener("touchstart", e => { x0 = e.touches[0].clientX; }, { passive: true });
+      track.addEventListener("touchend", e => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) go(vitinIdx + (dx < 0 ? 1 : -1)); x0 = null; });
+      go(Math.min(vitinIdx, total - 1));
+    }
+
     function renderAll() {
       ensureBookie(); ensureDesk(); ensurePlan();
-      renderWho(); renderPlayerSelect(); renderTravellerGrid(); renderIdeas(); renderBadges(); renderRosterEditor(); renderHero(); renderBookie(); renderDesk(); renderPlan(); renderArrivals();
+      renderWho(); renderPlayerSelect(); renderTravellerGrid(); renderIdeas(); renderBadges(); renderRosterEditor(); renderHero(); renderBookie(); renderDesk(); renderPlan(); renderVisualItinerary(); renderArrivals();
     }
 
     function toast(message) {
@@ -2680,6 +2874,11 @@
       const sel = document.getElementById("playerSelect");
       if (sel) { sel.scrollIntoView({ behavior: "smooth", block: "center" }); sel.focus(); }
     });
+    document.querySelectorAll(".vitin-mode").forEach(b => b.addEventListener("click", () => {
+      vitinPosterMode = b.dataset.vitin === "poster";
+      applyVitinMode();
+      if (vitinPosterMode) renderVisualItinerary();
+    }));
     document.getElementById("focusPlayerBtn")?.addEventListener("click", () => toast(`${selectedPlayer().name} is selected`));
     document.getElementById("resetBtn")?.addEventListener("click", () => { if (confirm("Reset this browser's Korea board state?")) { localStorage.removeItem(STORE_KEY); state = loadState(); renderAll(); toast("Board reset"); } });
 
