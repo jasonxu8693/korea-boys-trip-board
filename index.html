@@ -684,10 +684,13 @@
     .vp-title { font-family: 'Fraunces', Georgia, serif; font-weight: 900; font-size: clamp(40px, 6vw, 66px); line-height: .95; margin: 8px 0 0; color: #f6efe6; letter-spacing: -0.01em; }
     .vp-sub { font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: clamp(15px, 2vw, 20px); color: var(--muted); margin-top: 6px; }
     .vp-themes { font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--subtle); margin-top: 10px; font-weight: 700; }
-    .vp-days { position: relative; z-index: 1; display: flex; justify-content: space-between; gap: 8px; padding: 8px 4px 0; }
-    .vp-days:before { content: ""; position: absolute; left: 10%; right: 10%; top: 72px; border-top: 2px dashed rgba(245,248,255,0.22); }
-    .vp-daynode { position: relative; flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 9px; background: transparent; border: 0; cursor: pointer; color: inherit; }
-    .vp-daybead { width: min(132px, 13.5vw); aspect-ratio: 1; height: auto; border-radius: 50%; object-fit: cover; border: 3px solid currentColor; box-shadow: 0 10px 24px -10px rgba(5,9,18,0.75); background: #16213a; transition: transform .25s; }
+    .vp-overview-groups { position: relative; z-index: 1; display: grid; gap: 18px; }
+    .vp-phase { position: relative; overflow: hidden; border-radius: 20px; border: 1px solid rgba(245,248,255,0.12); background: rgba(13,18,28,0.34); padding: 13px 14px 16px; }
+    .vp-phase-title { display: flex; justify-content: space-between; gap: 12px; margin: 0 0 12px; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .14em; color: var(--subtle); }
+    .vp-days { position: relative; display: grid; grid-template-columns: repeat(var(--phase-count, 4), minmax(0, 1fr)); gap: 12px; align-items: start; padding: 4px 2px 0; }
+    .vp-days:before { content: ""; position: absolute; left: 9%; right: 9%; top: 58px; border-top: 2px dashed rgba(245,248,255,0.18); }
+    .vp-daynode { position: relative; min-width: 0; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 9px; background: transparent; border: 0; cursor: pointer; color: inherit; }
+    .vp-daybead { width: min(112px, 100%); max-width: 112px; aspect-ratio: 1; height: auto; border-radius: 50%; object-fit: cover; border: 3px solid currentColor; box-shadow: 0 10px 24px -10px rgba(5,9,18,0.75); background: #16213a; transition: transform .25s; }
     .vp-daynode:hover .vp-daybead { transform: translateY(-3px) scale(1.04); }
     .vp-daynum { font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
     .vp-dayname { font-size: 12.5px; font-weight: 600; color: var(--ink); line-height: 1.25; }
@@ -697,6 +700,10 @@
     .vp-dayeyebrow { font-size: 11.5px; letter-spacing: .16em; text-transform: uppercase; font-weight: 800; }
     .vp-daytitle { font-family: 'Fraunces', Georgia, serif; font-weight: 900; font-size: clamp(24px, 3.4vw, 32px); line-height: 1.04; margin: 4px 0 0; color: #f6efe6; }
     .vp-daynote { position: relative; z-index: 1; color: var(--muted); font-size: 12.5px; margin: 10px 0 0; max-width: 64ch; line-height: 1.5; }
+    .vp-daydetails { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+    .vp-detail { border: 1px solid rgba(245,248,255,0.12); border-radius: 16px; background: rgba(245,248,255,0.06); padding: 11px 12px; min-height: 76px; }
+    .vp-detail span { display: block; font-size: 10px; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; color: var(--subtle); margin-bottom: 5px; }
+    .vp-detail strong { display: block; color: #f6efe6; font-size: 13px; line-height: 1.35; }
     .vp-route { position: relative; z-index: 1; margin-top: 16px; }
     .vp-spine { position: absolute; left: 30px; top: 16px; bottom: 16px; width: 3px; border-radius: 3px; background: currentColor; filter: drop-shadow(0 0 7px currentColor); transform-origin: top; animation: vpGrow .9s ease forwards; }
     .vp-trav { position: absolute; left: 25.5px; width: 12px; height: 12px; border-radius: 50%; background: #f6efe6; border: 2px solid currentColor; box-shadow: 0 0 0 3px rgba(13,18,28,0.65); animation: vpTravel 7s ease-in-out infinite; }
@@ -736,10 +743,11 @@
     @keyframes vpTravel { 0% { top: 14px; } 45% { top: calc(100% - 30px); } 55% { top: calc(100% - 30px); } 100% { top: 14px; } }
     @media (max-width: 620px) {
       .vp-slide { padding: 22px 16px 26px; }
-      .vp-days { flex-wrap: wrap; gap: 16px 8px; }
+      .vp-phase { padding: 12px 10px 14px; }
+      .vp-days { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px 10px; }
       .vp-days:before { display: none; }
-      .vp-daynode { flex: 0 0 30%; }
-      .vp-daybead { width: min(112px, 26vw); }
+      .vp-daybead { width: min(104px, 36vw); }
+      .vp-daydetails { grid-template-columns: 1fr; }
     }
     @media (prefers-reduced-motion: reduce) { .vp-scene, .vp-spine, .vp-trav { animation: none !important; opacity: 1 !important; transform: none !important; } }
   </style>
@@ -1204,7 +1212,7 @@
       { dayId: "d26", time: "11:00", title: "Gwangjang Market street-food brunch", emoji: "🥘" },
       { dayId: "d26", time: "13:00", title: "Changdeokgung + Secret Garden", emoji: "🍁" },
       { dayId: "d26", time: "16:00", title: "Myeongdong shopping + K-beauty", emoji: "🛍️" },
-      { dayId: "d26", time: "21:00", title: "Hongdae night out", emoji: "🍻" },
+      { dayId: "d26", time: "20:30", title: "Dinner and drinks in Hongdae", emoji: "🍻", kind: "dinner" },
       { dayId: "d27", time: "10:30", title: "Han River park morning / DDP Dongdaemun", emoji: "🚲" },
       { dayId: "d27", time: "13:00", title: "Last Seoul lunch + pack up", emoji: "🍜" },
       { dayId: "d27", time: "19:00", title: "Head to Gimpo Airport (GMP)", emoji: "🚕" },
@@ -1221,7 +1229,7 @@
       { dayId: "d30", time: "10:30", title: "West coast — Hallim Park / Hyeopjae beach", emoji: "🏖️" },
       { dayId: "d30", time: "13:00", title: "O'sulloc tea fields + museum", emoji: "🍵" },
       { dayId: "d30", time: "17:30", title: "Sunset at the Aewol coast cafés", emoji: "🌅" },
-      { dayId: "d30", time: "20:00", title: "Last big group dinner", emoji: "🍶", kind: "dinner" },
+      { dayId: "d30", time: "20:00", title: "Friday dinner and drinks in Jeju", emoji: "🍶", kind: "dinner" },
       { dayId: "d31", time: "10:30", title: "Chill morning / souvenirs", emoji: "🎁" },
       { dayId: "d31", time: "13:00", title: "Return hire cars", emoji: "🚗" },
       { dayId: "d31", time: "15:00", title: "Return flights home — add your times", emoji: "✈️", kind: "flight" }
@@ -1238,6 +1246,27 @@
           .map((s, i) => ({ id: `seed_${i}`, dayId: s.dayId, title: s.title, emoji: s.emoji || guessEmoji(s.title), city: "", kind: s.kind || "activity", note: "", time: s.time || "" }));
         p.items = p.items.concat(add);
         p.seeded = true;
+      }
+      if (!p.koreaDinnerDrinksV2) {
+        const monday = p.items.find(it => it.dayId === "d26" && /hongdae night out/i.test(it.title || ""));
+        if (monday) {
+          monday.title = "Dinner and drinks in Hongdae";
+          monday.time = monday.time || "20:30";
+          monday.kind = "dinner";
+          monday.emoji = monday.emoji || "🍻";
+        } else if (!p.items.some(it => it.dayId === "d26" && /dinner|drinks|hongdae/i.test(it.title || ""))) {
+          p.items.push({ id: `mig_mon_drinks_${Date.now()}`, dayId: "d26", time: "20:30", title: "Dinner and drinks in Hongdae", emoji: "🍻", city: "", kind: "dinner", note: "" });
+        }
+        const friday = p.items.find(it => it.dayId === "d30" && /last big group dinner/i.test(it.title || ""));
+        if (friday) {
+          friday.title = "Friday dinner and drinks in Jeju";
+          friday.time = friday.time || "20:00";
+          friday.kind = "dinner";
+          friday.emoji = friday.emoji || "🍶";
+        } else if (!p.items.some(it => it.dayId === "d30" && /dinner|drinks/i.test(it.title || ""))) {
+          p.items.push({ id: `mig_fri_drinks_${Date.now()}`, dayId: "d30", time: "20:00", title: "Friday dinner and drinks in Jeju", emoji: "🍶", city: "", kind: "dinner", note: "" });
+        }
+        p.koreaDinnerDrinksV2 = true;
       }
       return p;
     }
@@ -2703,6 +2732,18 @@
     // ---- Visual itinerary: illustrated poster carousel (overview + per-day slides) ----
     const DAY_ACCENT = { d24: "#e07a3f", d25: "#d64545", d26: "#f4b942", d27: "#e07a3f", d28: "#6aa392", d29: "#4a9d8f", d30: "#5a8fc2", d31: "#6aa392", d1: "#d64545", d2: "#e07a3f" };
     const DAY_SCENE = { d24: "scene-namsan.jpg", d25: "scene-gyeongbok.jpg", d26: "scene-myeongdong.jpg", d27: "scene-flight.jpg", d28: "scene-seongsan.jpg", d29: "scene-hallasan.jpg", d30: "scene-jusangjeolli.jpg", d31: "scene-jeju-waterfall.jpg", d1: "scene-hongdae.jpg", d2: "scene-flight.jpg" };
+    const DAY_DETAILS = {
+      d24: { sleep: "Seoul hotel or apartment", move: "ICN to Seoul by AREX, airport bus or taxi", prep: "eSIM, T-money card, passport and arrival QR saved" },
+      d25: { sleep: "Seoul", move: "Subway and walking between palace, Bukchon and Namsan", prep: "Book Secret Garden if the group wants it; comfy shoes" },
+      d26: { sleep: "Seoul", move: "Subway by day, taxi/Kakao T after drinks", prep: "Shortlist Monday dinner and drinks; bring ID and appetite" },
+      d27: { sleep: "Jeju", move: "Seoul subway/taxi to GMP, evening flight to CJU", prep: "Domestic flight, baggage allowance and Jeju check-in plan" },
+      d28: { sleep: "Jeju base", move: "Hire cars for east coast loop", prep: "International driving permits, licences, cave/ticket checks" },
+      d29: { sleep: "Jeju base", move: "Hire cars for Hallasan and south coast", prep: "Layers, rain shell, trail snacks and backup low-effort plan" },
+      d30: { sleep: "Jeju base", move: "Hire cars or taxis for west coast and dinner", prep: "Book Friday dinner/drinks and keep a taxi-home plan" },
+      d31: { sleep: "Jeju or in transit", move: "Return cars, CJU/GMP/ICN depending on flights", prep: "Return timing, fuel policy, bags and boarding passes" },
+      d1: { sleep: "Seoul last night if needed", move: "CJU to Seoul, then subway/taxi", prep: "Only use if return route needs an overnight buffer" },
+      d2: { sleep: "Home", move: "Airport transfer", prep: "Claim VAT refunds, final receipts and offline files" }
+    };
     const VP_MTN = `<svg class="vp-mtn" viewBox="0 0 800 90" preserveAspectRatio="none" aria-hidden="true"><path d="M0 90 L90 34 L170 64 L270 24 L360 60 L470 30 L560 60 L650 26 L740 56 L800 40 L800 90Z" fill="rgba(120,140,175,0.42)"/><path d="M0 90 L140 58 L280 76 L420 50 L560 76 L680 54 L800 68 L800 90Z" fill="rgba(90,105,140,0.5)"/></svg>`;
     let vitinIdx = 0, vitinPosterMode = true, vitinSig = "";
 
@@ -2712,10 +2753,11 @@
       if (/(bukchon|hanok|insadong|\btea\b)/.test(t)) return "scene-bukchon.jpg";
       if (/(namsan|n seoul tower|n tower)/.test(t)) return "scene-namsan.jpg";
       if (/(myeongdong|shopping|k-beauty|beauty)/.test(t)) return "scene-myeongdong.jpg";
+      if (/(dinner and drinks|friday dinner|group dinner|korean bbq|black-pork|black pork|seafood|soju)/.test(t)) return "scene-bbq.jpg";
       if (/(hongdae|night out|club\b|first night)/.test(t)) return "scene-hongdae.jpg";
       if (/(gwangjang|market|street food|brunch)/.test(t)) return "scene-gwangjang.jpg";
       if (/(han river|hangang|ddp|dongdaemun|picnic|bike|cycl)/.test(t)) return "scene-hanriver.jpg";
-      if (/(seongsan|sunrise peak|ilchulbong|seopjikoji)/.test(t)) return "scene-seongsan.jpg";
+      if (/(seongsan|sunrise peak|ilchulbong)/.test(t)) return "scene-seongsan.jpg";
       if (/(hallasan|\bhike\b|summit)/.test(t)) return "scene-hallasan.jpg";
       if (/(manjanggul|lava|\bcave\b)/.test(t)) return "scene-manjanggul.jpg";
       if (/(jusangjeolli|basalt|cliff|\bcoast\b|udo)/.test(t)) return "scene-jusangjeolli.jpg";
@@ -2749,7 +2791,7 @@
       vitinSig = sig;
       const total = 1 + TRIP_DAYS.length;
 
-      const overviewNodes = TRIP_DAYS.map((d, idx) => {
+      const overviewNode = (d, idx) => {
         const ac = DAY_ACCENT[d.id] || "#f4d9a8";
         const scene = DAY_SCENE[d.id] ? `images/${DAY_SCENE[d.id]}` : "";
         const n = items.filter(it => it.dayId === d.id).length;
@@ -2760,6 +2802,16 @@
           <span class="vp-dayname">${escapeHtml(d.city)}</span>
           <span class="vp-daycount">${cnt}</span>
         </button>`;
+      };
+      const overviewGroups = [
+        { title: "Seoul opening run", range: "24-27 Oct", ids: ["d24", "d25", "d26", "d27"] },
+        { title: "Jeju island run", range: "28-31 Oct", ids: ["d28", "d29", "d30", "d31"] },
+        { title: "Return buffer", range: "1-2 Nov", ids: ["d1", "d2"] }
+      ].map(group => {
+        const groupDays = group.ids.map(id => ({ d: TRIP_DAYS.find(x => x.id === id), idx: TRIP_DAYS.findIndex(x => x.id === id) })).filter(x => x.d);
+        return `<div class="vp-phase"><div class="vp-phase-title"><span>${escapeHtml(group.title)}</span><span>${escapeHtml(group.range)}</span></div>
+          <div class="vp-days" style="--phase-count:${groupDays.length}">${groupDays.map(x => overviewNode(x.d, x.idx)).join("")}</div>
+        </div>`;
       }).join("");
       const overview = `<section class="vp-slide">${VP_MTN}
         <div class="vp-title-wrap">
@@ -2768,7 +2820,7 @@
           <div class="vp-sub">Seoul city + Jeju island</div>
           <div class="vp-themes">Palaces · Street food · Nightlife · Volcano · Coast</div>
         </div>
-        <div class="vp-days">${overviewNodes}</div>
+        <div class="vp-overview-groups">${overviewGroups}</div>
         <div class="vp-swipe">Swipe through for each day →</div>
       </section>`;
 
@@ -2786,8 +2838,11 @@
         } else if (!dayItems.length) {
           body = `<div class="vp-empty">${hero ? `<img src="${hero}" alt="" loading="lazy">` : ""}<div><b>Nothing planned yet.</b><br>Tap <b>✎ Edit plan</b> to add stops to ${escapeHtml(d.date)}.</div></div>`;
         } else {
+          const usedScenes = new Set();
           const cards = dayItems.map(it => {
-            const fn = sceneForItem(it);
+            let fn = sceneForItem(it);
+            if (fn && usedScenes.has(fn)) fn = null; // never repeat the same photo within a day
+            if (fn) usedScenes.add(fn);
             const img = fn
               ? `<img class="vpa-img" src="images/${fn}" alt="${escapeAttr(it.title)}" loading="lazy" onerror="this.outerHTML='<div class=&quot;vpa-imgfb&quot;>${it.emoji || "📍"}</div>'">`
               : `<div class="vpa-imgfb">${it.emoji || "📍"}</div>`;
@@ -2799,7 +2854,13 @@
         }
         const note = dayNote(d);
         const noteHtml = (note && !dayIsOff(d.id)) ? `<p class="vp-daynote">${escapeHtml(note)}</p>` : "";
-        return `<section class="vp-slide">${VP_MTN}${head}${noteHtml}${body}</section>`;
+        const dd = DAY_DETAILS[d.id];
+        const detailsHtml = (dd && !dayIsOff(d.id)) ? `<div class="vp-daydetails">
+          <div class="vp-detail"><span>Sleep</span><strong>${escapeHtml(dd.sleep)}</strong></div>
+          <div class="vp-detail"><span>Getting around</span><strong>${escapeHtml(dd.move)}</strong></div>
+          <div class="vp-detail"><span>Book / bring</span><strong>${escapeHtml(dd.prep)}</strong></div>
+        </div>` : "";
+        return `<section class="vp-slide">${VP_MTN}${head}${noteHtml}${detailsHtml}${body}</section>`;
       }).join("");
 
       const dotsHtml = Array.from({ length: total }, (_, k) => `<button class="vp-dot${k === 0 ? " on" : ""}" data-goslide="${k}" aria-label="Slide ${k + 1}"></button>`).join("");
