@@ -333,6 +333,16 @@
     .info-card h3 { font-size: 17px; margin: 0 0 8px; }
     .info-card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.48; }
     .info-card ul { margin: 10px 0 0 18px; padding: 0; color: var(--muted); line-height: 1.5; font-size: 13px; }
+    .pack-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin: 28px 0 14px; }
+    .pack-head h3 { margin: 0; font-size: 20px; }
+    .pack-head p { margin: 5px 0 0; color: var(--subtle); font-size: 12px; }
+    .pack-progress { flex: none; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,0.08); color: var(--muted); padding: 8px 12px; font-size: 11px; font-weight: 900; }
+    .pack-card { min-height: 0; }
+    .pack-list { display: grid; gap: 8px; margin-top: 10px; }
+    .pack-item { position: relative; z-index: 1; display: grid; grid-template-columns: auto 1fr; align-items: start; gap: 9px; color: var(--muted); font-size: 12.5px; line-height: 1.42; cursor: pointer; }
+    .pack-item input { width: 17px; height: 17px; margin: 1px 0 0; accent-color: var(--neon); }
+    .pack-item input:checked + span { color: var(--subtle); text-decoration: line-through; text-decoration-thickness: 1px; }
+    .pack-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; color: var(--subtle); font-size: 11px; line-height: 1.45; }
 
     .timeline { display: grid; gap: 10px; }
     .timeline-item { display: grid; grid-template-columns: 92px 1fr; gap: 12px; padding: 14px; border-radius: 18px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); }
@@ -639,6 +649,7 @@
       .hero-content { grid-template-columns: 1fr; align-items: end; }
       .layout { grid-template-columns: 1fr; }
       .grid-3, .grid-2, .sync-diagram, .idea-grid, .idea-summary-grid, .add-idea-form, .planning-hub, .flow-steps, .photo-gallery { grid-template-columns: 1fr; }
+      .pack-head, .pack-foot { align-items: flex-start; flex-direction: column; }
       .board { min-height: 820px; }
       .personality-grid { grid-template-columns: repeat(2, 1fr); }
       .node { width: 112px; }
@@ -1093,6 +1104,42 @@
             <div class="info-card"><div class="emoji">🍻</div><h3>Out &amp; about</h3><ul><li>얼마예요? — <em>eolma-yeyo</em> · how much?</li><li>화장실 어디예요? — <em>hwajangsil eodi-yeyo</em> · where's the toilet?</li><li>건배! — <em>geonbae</em> · cheers!</li><li>한 잔 더! — <em>han jan deo</em> · one more drink!</li></ul></div>
           </div>
 
+          <div class="pack-head">
+            <div><h3>Korea packing checklist</h3><p>Built for late-October Seoul, Hallasan and the Jeju road trip. Your ticks stay on this device and are not shared with the group.</p></div>
+            <span class="pack-progress" id="packingProgress">0 / 0 packed</span>
+          </div>
+          <div class="grid-2" id="packingList">
+            <div class="info-card pack-card"><div class="emoji">🛂</div><h3>Travel admin &amp; money</h3><div class="pack-list">
+              <label class="pack-item"><input type="checkbox" data-pack="passport"><span>Passport plus an offline photo / scan</span></label>
+              <label class="pack-item"><input type="checkbox" data-pack="arrival-card"><span>Korea e-Arrival Card confirmation and hotel address</span></label>
+              <label class="pack-item"><input type="checkbox" data-pack="insurance"><span>Travel-insurance details and emergency contacts</span></label>
+              <label class="pack-item"><input type="checkbox" data-pack="money"><span>Two payment cards plus a small amount of Korean won</span></label>
+              <label class="pack-item"><input type="checkbox" data-pack="driving-docs"><span>Driving licence and International Driving Permit for every Jeju driver</span></label>
+            </div></div>
+            <div class="info-card pack-card"><div class="emoji">🍂</div><h3>Autumn layers &amp; footwear</h3><div class="pack-list">
+              <label class="pack-item"><input type="checkbox" data-pack="warm-layer"><span>Warm mid-layer and a jacket for Seoul evenings</span></label>
+              <label class="pack-item"><input type="checkbox" data-pack="rain-shell"><span>Light waterproof shell or compact umbrella</span></label>
+              <label class="pack-item"><input type="checkbox" data-pack="city-shoes"><span>Comfortable walking trainers for long city days</span></label>
+              <label class="pack-item"><input type="checkbox" data-pack="hallasan-shoes"><span>Grippy trail shoes / boots for Hallasan</span></label>
+              <label class="pack-item"><input type="checkbox" data-pack="cold-extras"><span>Warm socks, light gloves and a beanie for the mountain</span></label>
+            </div></div>
+            <div class="info-card pack-card"><div class="emoji">📱</div><h3>Tech &amp; navigation</h3><div class="pack-list">
+              <label class="pack-item"><input type="checkbox" data-pack="phone-cables"><span>Phone, charging cables and a charged power bank</span></label>
+              <label class="pack-item"><input type="checkbox" data-pack="adapter"><span>UK-to-Type C/F plug adapter</span></label>
+              <label class="pack-item"><input type="checkbox" data-pack="esim"><span>Korea eSIM / roaming plan installed before departure</span></label>
+              <label class="pack-item"><input type="checkbox" data-pack="korea-apps"><span>Naver Map, Kakao T, Papago and KakaoTalk downloaded</span></label>
+              <label class="pack-item"><input type="checkbox" data-pack="offline-bookings"><span>Flights, stays, car-hire details and Korean addresses saved offline</span></label>
+            </div></div>
+            <div class="info-card pack-card"><div class="emoji">🎒</div><h3>Day bag, health &amp; Jeju</h3><div class="pack-list">
+              <label class="pack-item"><input type="checkbox" data-pack="day-bag"><span>Small day bag and a packable tote for shopping</span></label>
+              <label class="pack-item"><input type="checkbox" data-pack="meds"><span>Regular medication plus a small first-aid / blister kit</span></label>
+              <label class="pack-item"><input type="checkbox" data-pack="water-snacks"><span>Refillable bottle and trail snacks for Hallasan</span></label>
+              <label class="pack-item"><input type="checkbox" data-pack="sun-kit"><span>Sun cream, sunglasses and lip balm</span></label>
+              <label class="pack-item"><input type="checkbox" data-pack="car-kit"><span>Car charger, rental reference and return / fuel instructions</span></label>
+            </div></div>
+          </div>
+          <div class="pack-foot"><span>Backpack-first: keep space for shopping and check the confirmed domestic-flight baggage allowance before packing. Hallasan kit should move into the day bag the night before.</span><button class="btn small secondary" id="resetPackingBtn" type="button">Reset my checklist</button></div>
+
           <h3 style="margin:24px 0 12px">📸 Korea in pictures</h3>
           <div class="photo-gallery">
             <div class="photo-card"><img src="images/gyeongbok.jpg" alt="Gyeongbokgung Palace" loading="lazy"><div class="cap"><strong>Gyeongbokgung</strong><span>Seoul's grand palace and the Gyeonghoeru pavilion.</span></div></div>
@@ -1164,14 +1211,14 @@
 
     const defaultIdeas = [
       { id: "colourAnalysis", emoji: "🎨", title: "Colour analysis", city: "Seoul", img: "myeongdong.jpg", desc: "Personal colour consult. Good for shopping and group content." },
-      { id: "skinAnalysis", emoji: "🧴", title: "Skin analysis", city: "Seoul", desc: "K-beauty skin check or clinic consult. Low effort Seoul option." },
+      { id: "skinAnalysis", emoji: "🧴", title: "Skin analysis", city: "Seoul", img: "scene-skin-analysis.jpg", desc: "K-beauty skin check or clinic consult. Low effort Seoul option." },
       { id: "hanokStay", emoji: "🏯", title: "Live in a traditional site", city: "Seoul or Jeju", img: "bukchon.jpg", desc: "Hanok or heritage style stay. Check comfort, bathrooms and location." },
-      { id: "jjimjilbang", emoji: "♨️", title: "Korean bathhouse / jjimjilbang", city: "Seoul or Jeju", desc: "Korean sauna, hot bath and chill zone. Treat this as the Korea version of the onsen idea, but check everyone is comfortable with the bathhouse setup." }
+      { id: "jjimjilbang", emoji: "♨️", title: "Korean bathhouse / jjimjilbang", city: "Seoul or Jeju", img: "scene-jjimjilbang.jpg", desc: "Korean sauna, hot bath and chill zone. Treat this as the Korea version of the onsen idea, but check everyone is comfortable with the bathhouse setup." }
     ];
 
     // Photo per idea by id — applied at render time so it also reaches ideas
     // already saved in the synced state (which predate the img field).
-    const IDEA_IMG = { colourAnalysis: "myeongdong.jpg", hanokStay: "bukchon.jpg" };
+    const IDEA_IMG = { colourAnalysis: "myeongdong.jpg", skinAnalysis: "scene-skin-analysis.jpg", hanokStay: "bukchon.jpg", jjimjilbang: "scene-jjimjilbang.jpg" };
 
     // The Bookies — fun pari-mutuel betting with virtual chips + real trip perks.
     const defaultBookie = {
@@ -1301,6 +1348,24 @@
         const hike = p.items.find(it => /hallasan hike/i.test(it.title || ""));
         if (hike && (!hike.time || hike.time > "08:00")) hike.time = "08:00";
         p.koreaClosureRouteV3 = true;
+      }
+      // Remove legacy itinerary rows that duplicate a more specific confirmed
+      // entry, then collapse exact same-day duplicates while preserving the
+      // group's first version and all genuinely distinct stops.
+      if (!p.koreaPlanDedupV5) {
+        const hasConfirmedGmpFlight = p.items.some(it => /fly\s+gmp.*cju.*(oz8997|asiana|lands)/i.test(it.title || ""));
+        if (hasConfirmedGmpFlight) {
+          p.items = p.items.filter(it => !/^fly\s+seoul\s*.*jeju\s*\(gmp\s*.*cju\)$/i.test((it.title || "").trim()));
+        }
+        const seen = new Set();
+        p.items = p.items.filter(it => {
+          const title = (it.title || "").trim().toLowerCase().replace(/\s+/g, " ");
+          const key = `${it.dayId || ""}|${title}`;
+          if (!title || seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        });
+        p.koreaPlanDedupV5 = true;
       }
       return p;
     }
@@ -3248,8 +3313,38 @@
 
     document.getElementById("syncChip").addEventListener("click", () => remotePull({ manual: true }));
 
+    // Personal packing checklist: device-local by design and never group-synced.
+    const PACK_STORE_KEY = "koreaBoardPackingV1";
+    function initPackingList() {
+      const inputs = Array.from(document.querySelectorAll("[data-pack]"));
+      const progress = document.getElementById("packingProgress");
+      let packed = {};
+      try { packed = JSON.parse(localStorage.getItem(PACK_STORE_KEY) || "{}"); } catch (e) { packed = {}; }
+      const update = () => {
+        const done = inputs.filter(input => input.checked).length;
+        if (progress) progress.textContent = `${done} / ${inputs.length} packed`;
+      };
+      inputs.forEach(input => {
+        input.checked = !!packed[input.dataset.pack];
+        input.addEventListener("change", () => {
+          packed[input.dataset.pack] = input.checked;
+          localStorage.setItem(PACK_STORE_KEY, JSON.stringify(packed));
+          update();
+        });
+      });
+      document.getElementById("resetPackingBtn")?.addEventListener("click", () => {
+        packed = {};
+        inputs.forEach(input => { input.checked = false; });
+        localStorage.removeItem(PACK_STORE_KEY);
+        update();
+        toast("Packing checklist reset");
+      });
+      update();
+    }
+
     spawnLeaves();
     renderAll();
+    initPackingList();
     setSyncChip(hasRemoteSync() ? "syncing" : "disabled");
     remotePull({ initial: true });
     startSyncLoops();
