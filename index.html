@@ -1836,6 +1836,18 @@
       return allIdeas().filter(idea => state.ideaVotes?.[idea.id]?.[playerIdx]).length;
     }
 
+    function ideaImageFor(idea) {
+      if (idea.img || IDEA_IMG[idea.id]) return idea.img || IDEA_IMG[idea.id];
+      const t = (idea.title || "").toLowerCase();
+      if (/(mountain|hike|hallasan|trail)/.test(t)) return "scene-hallasan.jpg";
+      if (/(skin|beauty|clinic)/.test(t)) return "scene-skin-analysis.jpg";
+      if (/(bathhouse|jjimjilbang|sauna|spa)/.test(t)) return "scene-jjimjilbang.jpg";
+      if (/(palace|hanok|heritage|traditional)/.test(t)) return "scene-bukchon.jpg";
+      if (/(food|bbq|pork|dinner|market)/.test(t)) return "scene-bbq.jpg";
+      if (/(beach|coast|sea)/.test(t)) return "scene-aewol.jpg";
+      return "scene-stay.jpg";
+    }
+
     function renderIdeas() {
       const holder = document.getElementById("ideaGrid");
       if (!holder) return;
@@ -1847,7 +1859,7 @@
         const status = longShot ? { label: "Long shot", cls: "" } : ideaStatus(tally);
         const selectedVote = state.ideaVotes?.[idea.id]?.[state.selectedPlayer] || "";
         const denom = Math.max(tally.total, 1);
-        const imgSrc = idea.img || IDEA_IMG[idea.id];
+        const imgSrc = ideaImageFor(idea);
         const photo = imgSrc
           ? `<img class="idea-photo" src="images/${escapeAttr(imgSrc)}" alt="${escapeAttr(idea.title)}" loading="lazy" onerror="this.outerHTML='<div class=\\'idea-photo-fallback\\'>${idea.emoji || "💡"}</div>'">`
           : `<div class="idea-photo-fallback">${idea.emoji || "💡"}</div>`;
