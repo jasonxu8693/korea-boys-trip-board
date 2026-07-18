@@ -1237,8 +1237,15 @@
     // Crew Desk — own a job, share options, group votes, owner locks the pick.
     const defaultDesk = {
       rooms: [
-        { id: "stay_seoul", emoji: "🏨", kind: "accom", title: "Seoul stay", desc: "Where we base in Seoul — hotel rooms or an apartment near the action.", owners: [], options: [], status: "open", chosen: null },
-        { id: "stay_jeju", emoji: "🏝️", kind: "accom", title: "Jeju villa / stay", desc: "The Jeju base — villa, pension or hotel. Pool + space is the dream.", owners: [], options: [], status: "open", chosen: null },
+        { id: "stay_seoul", emoji: "🏨", kind: "accom", title: "Seoul stay", desc: "Daniel's shortlist for 24–27 Oct — four bases for eight people across Hongdae and Bukchon.", owners: [], options: [
+          { id: "stay_seoul_seogyo_huestay", by: null, researcher: "Daniel", title: "Seogyo Huestay", link: "https://www.booking.com/hotel/kr/seogyohuestay.html?checkin=2026-10-24&checkout=2026-10-27&group_adults=8&group_children=0&no_rooms=2", price: "Check live total", notes: "Hongdae / Seogyo option · 24–27 Oct · search set for 8 guests and 2 rooms", votes: {} },
+          { id: "stay_seoul_hongdae_t_house", by: null, researcher: "Daniel", title: "HONGDAE t HOUSE", link: "https://www.booking.com/hotel/kr/hongdae-t-house.html?checkin=2026-10-24&checkout=2026-10-27&group_adults=8&group_children=0&no_rooms=2", price: "Check live total", notes: "Three-bedroom villa near Hongik University Station · 24–27 Oct · search set for 8 guests", votes: {} },
+          { id: "stay_seoul_airbnb_1110018768120035288", by: null, researcher: "Daniel", title: "Daniel's Seoul Airbnb option", link: "https://www.airbnb.com.au/rooms/1110018768120035288?adults=8&check_in=2026-10-24&check_out=2026-10-27", price: "Check live total", notes: "Whole-group Airbnb shortlist · 24–27 Oct · 8 guests", votes: {} },
+          { id: "stay_seoul_bukchon_hanok", by: null, researcher: "Daniel", title: "Seoul Bukchon Homi Hanok", link: "https://www.booking.com/hotel/kr/seoul-bukchon-hanok.html?checkin=2026-10-24&checkout=2026-10-27&group_adults=8&group_children=0&no_rooms=2", price: "Check live total", notes: "Traditional-style Bukchon apartment · 24–27 Oct · search set for 8 guests and 2 rooms", votes: {} }
+        ], status: "open", chosen: null },
+        { id: "stay_jeju", emoji: "🏝️", kind: "accom", title: "Jeju villa / stay", desc: "Daniel's Jeju shortlist for 27–31 Oct — compare a resort stay against villa options.", owners: [], options: [
+          { id: "stay_jeju_goldone_suites", by: null, researcher: "Daniel", title: "GoldOne Hotel & Suites", link: "https://www.booking.com/hotel/kr/gold-one-amp-suites.en-gb.html?checkin=2026-10-27&checkout=2026-10-31&group_adults=8&group_children=0&no_rooms=2", price: "Check live total", notes: "Seogwipo ocean-view hotel · 27–31 Oct · search set for 8 guests and 2 rooms", votes: {} }
+        ], status: "open", chosen: null },
         { id: "car_jeju", emoji: "🚘", kind: "car", title: "Jeju car hire", desc: "Rental cars for the island. Who's driving and who's researching?", owners: [], drivers: [], options: [], status: "open", chosen: null },
         { id: "dinner_seoul", emoji: "🍖", kind: "dinner", title: "Seoul group dinner", desc: "One big group dinner in Seoul — KBBQ, fried chicken, whatever wins.", owners: [], options: [], status: "open", chosen: null },
         { id: "dinner_jeju", emoji: "🦞", kind: "dinner", title: "Jeju group dinner", desc: "Island seafood or BBQ night together.", owners: [], options: [], status: "open", chosen: null }
@@ -1426,9 +1433,21 @@
       if (!Array.isArray(stored)) return base;
       const byId = {}; stored.forEach(r => { if (r && r.id) byId[r.id] = r; });
       const baseIds = base.map(r => r.id);
+      const mergeOptions = (defaults, saved) => {
+        const defaultOptions = Array.isArray(defaults) ? defaults : [];
+        const savedOptions = Array.isArray(saved) ? saved : [];
+        const savedById = {}; savedOptions.forEach(o => { if (o && o.id) savedById[o.id] = o; });
+        const defaultIds = defaultOptions.map(o => o.id);
+        const seeded = defaultOptions.map(d => {
+          const s = savedById[d.id];
+          return s ? { ...d, ...s, votes: (s.votes && typeof s.votes === "object") ? s.votes : {} } : d;
+        });
+        const custom = savedOptions.filter(o => o && typeof o.id === "string" && !defaultIds.includes(o.id));
+        return [...seeded, ...custom];
+      };
       const merged = base.map(d => {
         const s = byId[d.id]; if (!s) return d;
-        const out = { ...d, owners: Array.isArray(s.owners) ? s.owners : [], options: Array.isArray(s.options) ? s.options : [], status: s.status || "open", chosen: s.chosen != null ? s.chosen : null };
+        const out = { ...d, owners: Array.isArray(s.owners) ? s.owners : [], options: mergeOptions(d.options, s.options), status: s.status || "open", chosen: s.chosen != null ? s.chosen : null };
         if (d.kind === "car") out.drivers = Array.isArray(s.drivers) ? s.drivers : [];
         return out;
       });
@@ -2500,7 +2519,7 @@
           const name = o.link ? `<a href="${escapeAttr(o.link)}" target="_blank" rel="noopener">${escapeHtml(o.title)} ↗</a>` : escapeHtml(o.title);
           const meta = [];
           if (o.price) meta.push(`<span class="pill">${escapeHtml(o.price)}</span>`);
-          meta.push(`<span class="pill">by ${nameOf(o.by)}</span>`);
+          meta.push(`<span class="pill">by ${escapeHtml(o.researcher || nameOf(o.by))}</span>`);
           if (leading) meta.push(`<span class="pill warn">👑 Leading</span>`);
           if (chosen) meta.push(`<span class="pill done">✅ Chosen</span>`);
           return `<div class="opt-card ${leading ? "leading" : ""} ${chosen ? "chosen" : ""}">
