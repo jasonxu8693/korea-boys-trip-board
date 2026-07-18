@@ -1364,11 +1364,11 @@
       { dayId: "d25", time: "10:30", title: "Gyeongbokgung Palace + changing-of-the-guard", emoji: "🏯" },
       { dayId: "d25", time: "15:00", title: "Insadong tea + Ssamziegil", emoji: "🍵" },
       { dayId: "d25", time: "17:30", title: "N Seoul Tower at sunset (Namsan)", emoji: "🗼" },
-      { dayId: "d25", time: "20:00", title: "Korean BBQ dinner", emoji: "🍖", kind: "dinner" },
+      { dayId: "d25", time: "20:00", title: "Korean fried chicken + beer (chimaek)", emoji: "🍗", kind: "dinner" },
       { dayId: "d26", time: "11:00", title: "Gwangjang Market street-food brunch", emoji: "🥘" },
       { dayId: "d26", time: "13:00", title: "DDP Dongdaemun + Cheonggyecheon walk", emoji: "🌆" },
       { dayId: "d26", time: "16:00", title: "Myeongdong shopping + K-beauty", emoji: "🛍️" },
-      { dayId: "d26", time: "20:30", title: "Dinner and drinks in Hongdae", emoji: "🍻", kind: "dinner" },
+      { dayId: "d26", time: "20:30", title: "KBBQ + drinks in Hongdae", emoji: "🍖", kind: "dinner" },
       { dayId: "d27", time: "10:00", title: "Changdeokgung + Secret Garden", emoji: "🍁" },
       { dayId: "d27", time: "12:30", title: "Bukchon Hanok Village walk", emoji: "🏘️" },
       { dayId: "d27", time: "14:00", title: "Last Seoul lunch + pack up", emoji: "🍜" },
@@ -1376,11 +1376,11 @@
       { dayId: "d28", time: "09:30", title: "Pick up hire cars → Seongsan Ilchulbong", emoji: "🌋" },
       { dayId: "d28", time: "13:30", title: "Seopjikoji coast walk + lunch", emoji: "🌊" },
       { dayId: "d28", time: "15:30", title: "Manjanggul lava tube", emoji: "🕳️" },
-      { dayId: "d28", time: "19:30", title: "Jeju seafood / BBQ dinner", emoji: "🦞", kind: "dinner" },
+      { dayId: "d28", time: "19:30", title: "Jeju seafood feast (galchi + mulhoe)", emoji: "🦞", kind: "dinner" },
       { dayId: "d29", time: "08:00", title: "Hallasan hike (Yeongsil or Eorimok trail)", emoji: "⛰️" },
       { dayId: "d29", time: "14:00", title: "Jusangjeolli columnar-basalt cliffs", emoji: "🪨" },
       { dayId: "d29", time: "15:30", title: "Cheonjiyeon Waterfall", emoji: "💦" },
-      { dayId: "d29", time: "19:30", title: "Jeju black-pork dinner", emoji: "🐷", kind: "dinner" },
+      { dayId: "d29", time: "19:30", title: "Jeju black-pork BBQ (heukdwaeji)", emoji: "🐷", kind: "dinner" },
       { dayId: "d30", time: "10:30", title: "West coast — Hallim Park / Hyeopjae beach", emoji: "🏖️" },
       { dayId: "d30", time: "13:00", title: "O'sulloc tea fields + museum", emoji: "🍵" },
       { dayId: "d30", time: "17:30", title: "Sunset at the Aewol coast cafés", emoji: "🌅" },
@@ -1513,6 +1513,25 @@
         consolidate("d2", ["Collect bags + airport reset", "Central Shanghai → PVG Terminal 2", "Fly PVG → HEL · Finnair AY88"], { time: "15:30", title: "Collect bags → PVG T2 → fly Finnair AY88 (21:00)", emoji: "✈️", kind: "flight", note: "Leave central Shanghai by 16:30 and target Terminal 2 by 18:00." });
         consolidate("d3", ["Land Helsinki · 2h35 connection", "Fly HEL → LHR · Finnair AY1331", "Land London Heathrow Terminal 3"], { time: "05:15", title: "Helsinki connection → London · AY1331 (lands 09:10)", emoji: "🇬🇧", kind: "flight", note: "Arrive HEL 05:15, connect airside for the 07:50 departure to Heathrow T3." });
         p.koreaItineraryConsolidationV7 = true;
+      }
+      // Food-variety pass: the group flagged too many BBQ nights. Keep the two
+      // that earn it (a KBBQ + drinks night, and Jeju black pork) and swap the
+      // rest for Korea's other great food. Matches by day + dinner kind so any
+      // group-added dinner is left alone; idempotent behind the flag.
+      if (!p.koreaFoodVarietyV8) {
+        const retitleDinner = (dayId, re, title, emoji) => {
+          const it = p.items.find(x => x.dayId === dayId && x.kind === "dinner" && re.test((x.title || "")));
+          if (it) { it.title = title; if (emoji) it.emoji = emoji; }
+        };
+        retitleDinner("d25", /korean bbq dinner|fried chicken|chimaek/i, "Korean fried chicken + beer (chimaek)", "🍗");
+        retitleDinner("d26", /dinner and drinks in hongdae|hongdae night out|kbbq \+ drinks/i, "KBBQ + drinks in Hongdae", "🍖");
+        retitleDinner("d28", /seafood \/ bbq|seafood feast|galchi|mulhoe/i, "Jeju seafood feast (galchi + mulhoe)", "🦞");
+        retitleDinner("d29", /black.?pork|black.?pig|heukdwaeji/i, "Jeju black-pork BBQ (heukdwaeji)", "🐷");
+        p.koreaFoodVarietyV8 = true;
+      }
+      if (!p.koreaBoysOnlyPhotoCleanupV9) {
+        p.items = p.items.filter(it => (it.title || "").trim() !== "🍻 9.9");
+        p.koreaBoysOnlyPhotoCleanupV9 = true;
       }
       return p;
     }
@@ -3027,7 +3046,7 @@
 
     // ---- Visual itinerary: illustrated poster carousel (overview + per-day slides) ----
     const DAY_ACCENT = { d24: "#e07a3f", d25: "#d64545", d26: "#f4b942", d27: "#e07a3f", d28: "#6aa392", d29: "#4a9d8f", d30: "#5a8fc2", d31: "#c0392b", d1: "#d4a12a", d2: "#236b8e", d3: "#44546a" };
-    const DAY_SCENE = { d24: "scene-namsan.jpg", d25: "scene-gyeongbok.jpg", d26: "scene-myeongdong.jpg", d27: "scene-changdeok.jpg", d28: "scene-seopjikoji.jpg", d29: "scene-hallasan.jpg", d30: "scene-aewol.jpg", d31: "scene-shanghai-arrival.png", d1: "scene-shanghai-concession.png", d2: "scene-shanghai-pudong.png", d3: "scene-flight.jpg" };
+    const DAY_SCENE = { d24: "scene-namsan.jpg", d25: "scene-gyeongbok.jpg", d26: "scene-myeongdong.png", d27: "scene-changdeok.jpg", d28: "scene-seopjikoji.jpg", d29: "scene-hallasan.jpg", d30: "scene-aewol.jpg", d31: "scene-shanghai-arrival.png", d1: "scene-shanghai-concession.png", d2: "scene-shanghai-pudong.png", d3: "scene-helsinki-transfer.png" };
     const DAY_DETAILS = {
       d24: { sleep: "Seoul hotel or apartment", move: "ICN to Seoul by AREX, airport bus or taxi", prep: "eSIM, T-money card, passport and arrival QR saved" },
       d25: { sleep: "Seoul", move: "Subway + walking: Gyeongbokgung → Insadong → Namsan", prep: "Comfy shoes, visibility check and sunset target" },
@@ -3111,29 +3130,29 @@
     // artwork and guarantees every itinerary card has a deliberate image.
     const EXACT_SCENE = {
       "land in seoul — check in, drop bags": "scene-flight.jpg",
-      "easy first night — hongdae or myeongdong street food": "scene-myeongdong.jpg",
+      "easy first night — hongdae or myeongdong street food": "scene-arrival-streetfood.png",
       "gyeongbokgung palace + changing-of-the-guard": "scene-gyeongbok.jpg",
       "insadong tea + ssamziegil": "scene-insadong.jpg",
       "n seoul tower at sunset (namsan)": "scene-namsan.jpg",
-      "korean bbq dinner": "scene-bbq.jpg",
+      "korean fried chicken + beer (chimaek)": "scene-arrival-streetfood.png",
       "gwangjang market street-food brunch": "scene-gwangjang.jpg",
-      "ddp dongdaemun + cheonggyecheon walk": "scene-ddp.jpg",
-      "myeongdong shopping + k-beauty": "scene-myeongdong.jpg",
-      "dinner and drinks in hongdae": "scene-hongdae.jpg",
+      "ddp dongdaemun + cheonggyecheon walk": "scene-ddp.png",
+      "myeongdong shopping + k-beauty": "scene-myeongdong.png",
+      "kbbq + drinks in hongdae": "scene-bbq.jpg",
       "changdeokgung + secret garden": "scene-changdeok.jpg",
       "bukchon hanok village walk": "scene-bukchon.jpg",
       "last seoul lunch + pack up": "scene-seoul-last-lunch.png",
-      "head to gimpo airport (gmp)": "scene-gimpo.jpg",
+      "head to gimpo airport (gmp)": "scene-gimpo.png",
       "fly gmp → cju · asiana oz8997 (lands 22:15)": "scene-flight.jpg",
       "pick up hire cars": "scene-drive.jpg",
       "seongsan ilchulbong (sunrise peak)": "scene-seongsan.jpg",
       "seopjikoji coast walk + lunch": "scene-seopjikoji.jpg",
       "manjanggul lava tube": "scene-manjanggul.jpg",
-      "jeju seafood / bbq dinner": "scene-jeju-seafood.png",
+      "jeju seafood feast (galchi + mulhoe)": "scene-jeju-seafood.png",
       "hallasan hike (yeongsil or eorimok trail)": "scene-hallasan.jpg",
       "jusangjeolli columnar-basalt cliffs": "scene-jusangjeolli.jpg",
       "cheonjiyeon waterfall": "scene-jeju-waterfall.jpg",
-      "jeju black-pork dinner": "scene-bbq.jpg",
+      "jeju black-pork bbq (heukdwaeji)": "scene-bbq.jpg",
       "west coast — hallim park / hyeopjae beach": "scene-hyeopjae.jpg",
       "o'sulloc tea fields + museum": "scene-osulloc.jpg",
       "sunset at the aewol coast cafés": "scene-aewol.jpg",
@@ -3160,11 +3179,10 @@
       "land helsinki · 2h35 connection": "scene-flight.jpg",
       "fly hel → lhr · finnair ay1331": "scene-flight.jpg",
       "land london heathrow terminal 3": "scene-flight.jpg",
-      "🍻 9.9": "scene-hongdae.jpg",
-      "transfer to gmp + fly to jeju · oz8997 (lands 22:15)": "scene-gimpo.jpg",
+      "transfer to gmp + fly to jeju · oz8997 (lands 22:15)": "scene-gimpo.png",
       "pick up hire cars → seongsan ilchulbong": "scene-seongsan.jpg",
       "return cars + fly cju → pvg · 9c8570 (11:10–11:50)": "scene-shanghai-arrival.png",
-      "nanjing east road → bund blue hour + first-night dinner": "scene-shanghai-bund.png",
+      "nanjing east road → bund blue hour + first-night dinner": "scene-shanghai-dinner.png",
       "wukang + anfu roads → xintiandi lunch": "scene-shanghai-concession.png",
       "yu garden + old city lanes": "scene-shanghai-yuyuan.png",
       "bund sunset → huangpu ferry → lujiazui lights": "scene-shanghai-bund.png",
@@ -3182,13 +3200,13 @@
       if (/(osulloc|o'sulloc|o’sulloc|tea field)/.test(t)) return "scene-osulloc.jpg";
       if (/(bukchon|hanok|\btea\b)/.test(t)) return "scene-bukchon.jpg";
       if (/(namsan|n seoul tower|n tower)/.test(t)) return "scene-namsan.jpg";
-      if (/(myeongdong|shopping|k-beauty|beauty)/.test(t)) return "scene-myeongdong.jpg";
-      if (/(skin analysis|skin clinic|skincare consultation)/.test(t)) return "scene-skin-analysis.jpg";
+      if (/(myeongdong|shopping|k-beauty|beauty)/.test(t)) return "scene-myeongdong.png";
+      if (/(skin analysis|skin clinic|skincare consultation)/.test(t)) return "scene-skin-analysis.png";
       if (/(jjimjilbang|bathhouse|sauna|korean spa)/.test(t)) return "scene-jjimjilbang.jpg";
       if (/(dinner and drinks|friday dinner|group dinner|korean bbq|black-pork|black pork|seafood|soju)/.test(t)) return "scene-bbq.jpg";
-      if (/(hongdae|night out|club\b|first night)/.test(t)) return "scene-hongdae.jpg";
+      if (/(hongdae|night out|club\b)/.test(t)) return "scene-hongdae.png";
       if (/(gwangjang|market|street food|brunch)/.test(t)) return "scene-gwangjang.jpg";
-      if (/(ddp|dongdaemun|cheonggyecheon)/.test(t)) return "scene-ddp.jpg";
+      if (/(ddp|dongdaemun|cheonggyecheon)/.test(t)) return "scene-ddp.png";
       if (/(han river|hangang|picnic|bike|cycl)/.test(t)) return "scene-hanriver.jpg";
       if (/(seongsan|sunrise peak|ilchulbong)/.test(t)) return "scene-seongsan.jpg";
       if (/(seopjikoji)/.test(t)) return "scene-seopjikoji.jpg";
@@ -3203,7 +3221,7 @@
       if (/(lujiazui|shanghai tower|pudong lunch)/.test(t)) return "scene-shanghai-pudong.png";
       if (/(shanghai|pvg|maglev|9c8570)/.test(t)) return "scene-shanghai-arrival.png";
       if (/(dinner|lunch|breakfast|bbq|pork|seafood|soju|\bfood\b|eat\b|restaurant|meal)/.test(t)) return "scene-bbq.jpg";
-      if (/(head to gimpo|gimpo airport|airport transfer)/.test(t)) return "scene-gimpo.jpg";
+      if (/(head to gimpo|gimpo airport|airport transfer)/.test(t)) return "scene-gimpo.png";
       if (/(flight|\bfly\b|airport|gmp|cju|gimpo|oz8997|\bland\b)/.test(t)) return "scene-flight.jpg";
       if (/(drive|\bcar\b|hire|taxi|transfer|return car|pick up|head to)/.test(t)) return "scene-drive.jpg";
       if (/(check.?in|check.?out|hotel|villa|\bstay\b|drop bags|souvenir)/.test(t)) return "scene-stay.jpg";
