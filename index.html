@@ -530,7 +530,7 @@
     .opt-meta .pill { padding:5px 9px; font-size:11px; }
     .opt-rich { margin-top:11px; padding-top:11px; border-top:1px solid rgba(255,255,255,0.1); display:grid; gap:10px; }
     .opt-gallery { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); grid-auto-rows:72px; gap:6px; }
-    .opt-gallery a { display:block; overflow:hidden; border-radius:11px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.05); }
+    .opt-gallery a { display:block; overflow:hidden; border-radius:11px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.05); cursor:zoom-in; }
     .opt-gallery a:first-child { grid-column:span 2; grid-row:span 2; }
     .opt-gallery img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .2s ease, filter .2s ease; }
     .opt-gallery a:hover img { transform:scale(1.035); filter:brightness(1.06); }
@@ -545,6 +545,22 @@
       .opt-gallery { grid-template-columns:repeat(3,minmax(0,1fr)); grid-auto-rows:66px; }
       .opt-facts { grid-template-columns:repeat(2,minmax(0,1fr)); }
     }
+    /* Photo lightbox — pops a photo out over the board (no new tab) */
+    .lightbox { position:fixed; inset:0; z-index:140; display:none; align-items:center; justify-content:center; padding:24px; background:rgba(3,7,15,0.92); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
+    .lightbox.active { display:flex; animation:lbFade .18s ease; }
+    @keyframes lbFade { from { opacity:0; } to { opacity:1; } }
+    .lb-fig { margin:0; max-width:min(1120px,95vw); max-height:90vh; display:flex; flex-direction:column; gap:12px; align-items:center; }
+    .lb-fig img { max-width:100%; max-height:80vh; width:auto; height:auto; object-fit:contain; border-radius:16px; border:1px solid rgba(255,255,255,0.16); box-shadow:0 30px 90px rgba(0,0,0,0.65); background:#0b1017; }
+    .lb-cap { display:flex; gap:12px; align-items:center; justify-content:center; flex-wrap:wrap; color:#e6ecf8; font-size:13px; font-weight:700; text-align:center; }
+    .lb-count { color:rgba(255,255,255,0.6); font-weight:900; font-variant-numeric:tabular-nums; }
+    .lb-btn { position:absolute; border:1px solid rgba(255,255,255,0.22); background:rgba(18,24,36,0.82); color:#fff; cursor:pointer; display:grid; place-items:center; transition:background .15s ease, transform .15s ease; }
+    .lb-btn:hover { background:rgba(44,56,80,0.95); }
+    .lb-btn:active { transform:scale(0.94); }
+    .lb-close { top:16px; right:18px; width:46px; height:46px; border-radius:50%; font-size:20px; }
+    .lb-nav { top:50%; transform:translateY(-50%); width:54px; height:54px; border-radius:50%; font-size:30px; line-height:1; padding-bottom:4px; }
+    .lb-nav:active { transform:translateY(-50%) scale(0.94); }
+    .lb-prev { left:18px; } .lb-next { right:18px; }
+    @media (max-width:560px) { .lb-nav { width:44px; height:44px; font-size:24px; } .lb-prev { left:8px; } .lb-next { right:8px; } .lightbox { padding:12px; } }
     .opt-actions { display:grid; gap:6px; justify-items:end; align-content:start; }
     .vote-up { border:1px solid rgba(255,255,255,0.14); border-radius:12px; background:rgba(0,0,0,0.22); color:var(--muted); padding:8px 12px; font-weight:950; font-size:13px; white-space:nowrap; transition:transform .15s ease, background .15s ease, border-color .15s ease; }
     .vote-up:hover { transform:translateY(-1px); border-color:rgba(255,255,255,0.26); }
@@ -1097,7 +1113,7 @@
           </div>
 
           <div class="grid-3">
-            <div class="info-card"><div class="emoji">💸</div><h3>Money</h3><p>Currency is the Korean won (₩). Rough math: ₩1,000 ≈ £0.55, so ₩10,000 ≈ £5–6.</p><ul><li>Card works almost everywhere; carry some cash for markets, taxis and older spots.</li><li>Grab a <strong>T-money</strong> card at any convenience store — taps subway, bus and a lot of shops.</li><li>Use ATMs marked <strong>"Global"</strong> (airport, 7-Eleven, GS25) for foreign cards.</li></ul><a class="btn small" href="https://tricount.com/tOqnfHyhVAbKRuJQUk" target="_blank" rel="noopener" style="display:inline-flex; margin-top:12px">💸 Split expenses on Tricount ↗</a></div>
+            <div class="info-card"><div class="emoji">💸</div><h3>Money</h3><p>Currency is the Korean won (₩). Rough math: ₩1,000 ≈ A$0.95, so ₩10,000 ≈ A$9–10.</p><ul><li>Card works almost everywhere; carry some cash for markets, taxis and older spots.</li><li>Grab a <strong>T-money</strong> card at any convenience store — taps subway, bus and a lot of shops.</li><li>Use ATMs marked <strong>"Global"</strong> (airport, 7-Eleven, GS25) for foreign cards.</li></ul><a class="btn small" href="https://tricount.com/tOqnfHyhVAbKRuJQUk" target="_blank" rel="noopener" style="display:inline-flex; margin-top:12px">💸 Split expenses on Tricount ↗</a></div>
             <div class="info-card"><div class="emoji">📱</div><h3>Data &amp; apps</h3><p>Grab an <strong>eSIM/SIM</strong> at the airport or pre-order — cheap unlimited data.</p><ul><li>⚠️ Google Maps barely does directions in Korea — use <strong>Naver Map</strong> or <strong>KakaoMap</strong>.</li><li><strong>Papago</strong> for translation, <strong>KakaoTalk</strong> to message, <strong>Kakao&nbsp;T</strong> for taxis.</li></ul></div>
             <div class="info-card"><div class="emoji">🚇</div><h3>Getting around</h3><p>Seoul's subway is fast, cheap and English-signed — tap in/out with T-money.</p><ul><li>Taxis are cheap — hail one or use <strong>Kakao&nbsp;T</strong>; pay by card or T-money.</li><li>Jeju has barely any public transport — that's why we're hiring cars (Zhao's on it).</li></ul></div>
           </div>
@@ -1190,6 +1206,16 @@
 
   <div class="toast" id="toast"></div>
 
+  <div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Photo viewer">
+    <button type="button" id="lbClose" class="lb-btn lb-close" aria-label="Close photo">✕</button>
+    <button type="button" id="lbPrev" class="lb-btn lb-nav lb-prev" aria-label="Previous photo">‹</button>
+    <figure class="lb-fig">
+      <img id="lbImg" alt="" />
+      <figcaption class="lb-cap"><span id="lbCap"></span><span id="lbCount" class="lb-count"></span></figcaption>
+    </figure>
+    <button type="button" id="lbNext" class="lb-btn lb-nav lb-next" aria-label="Next photo">›</button>
+  </div>
+
   <script>
     const STORE_KEY = "koreaBoysTripQuestBoardV1";
     // Paste your Google Apps Script Web App URL here after deployment.
@@ -1263,19 +1289,20 @@
     // Crew Desk — own a job, share options, group votes, owner locks the pick.
     const defaultDesk = {
       rooms: [
-        { id: "stay_seoul", emoji: "🏨", kind: "accom", title: "Seoul stay", desc: "Daniel's shortlist for 24–27 Oct — four bases for eight people across Hongdae and Bukchon.", owners: [], options: [
-          { id: "stay_seoul_seogyo_huestay", by: null, researcher: "Daniel", title: "Seogyo Huestay", link: "https://www.booking.com/hotel/kr/seogyohuestay.html?checkin=2026-10-24&checkout=2026-10-27&group_adults=8&group_children=0&no_rooms=2", price: "£46 pp · £371 total", availability: "Live quote · inquiry only", availabilityTone: "warn", notes: "Hongdae / Seogyo · 24–27 Oct · compact single-room setup for all eight", facts: [{ label: "Sleeps", value: "8 guests" }, { label: "Layout", value: "1 family room" }, { label: "Beds", value: "4 full beds" }, { label: "Bathrooms", value: "1 private" }, { label: "Station", value: "Hongik Univ · 450 yd" }, { label: "Rating", value: "9.3 / 10" }], photos: ["images/crew-options/seogyo-1.jpg","images/crew-options/seogyo-2.jpg","images/crew-options/seogyo-3.jpg","images/crew-options/seogyo-4.jpg","images/crew-options/seogyo-5.jpg","images/crew-options/seogyo-6.jpg"], warning: "One shared sleeping room and one bathroom is the key trade-off. Booking.com currently requires an inquiry rather than instant confirmation.", source: "Booking.com listing and photos · live quote checked 18 Jul 2026 · rates can change", votes: {} },
-          { id: "stay_seoul_hongdae_t_house", by: null, researcher: "Daniel", title: "HONGDAE t HOUSE", link: "https://www.booking.com/hotel/kr/hongdae-t-house.html?checkin=2026-10-24&checkout=2026-10-27&group_adults=8&group_children=0&no_rooms=2", price: "£80 pp · £643 total", availability: "Available · whole villa", availabilityTone: "done", notes: "Hongdae · 24–27 Oct · strongest central whole-group layout", facts: [{ label: "Sleeps", value: "8 guests" }, { label: "Bedrooms", value: "3" }, { label: "Beds", value: "King + twin + 2 doubles + sofa" }, { label: "Bathrooms", value: "1 private" }, { label: "Cancellation", value: "Free to 10 Oct" }, { label: "Station", value: "Hongik Univ · <1 km" }], photos: ["images/crew-options/hongdae-1.jpg","images/crew-options/hongdae-2.jpg","images/crew-options/hongdae-3.jpg","images/crew-options/hongdae-4.jpg","images/crew-options/hongdae-5.jpg","images/crew-options/hongdae-6.jpg"], warning: "Only one bathroom for eight people. The displayed total includes Booking.com's current online-payment contribution.", source: "Booking.com listing and photos · £642.89 total checked 18 Jul 2026 · rates can change", votes: {} },
-          { id: "stay_seoul_airbnb_1110018768120035288", by: null, researcher: "Daniel", title: "Daniel's Seoul Airbnb option", link: "https://www.airbnb.com.au/rooms/1110018768120035288?adults=8&check_in=2026-10-24&check_out=2026-10-27", price: "Price unavailable", availability: "Listing link not loading", availabilityTone: "hot", notes: "Airbnb link currently redirects to the generic homepage", facts: [{ label: "Sleeps", value: "Unverified" }, { label: "Bedrooms", value: "Unverified" }, { label: "Bathrooms", value: "Unverified" }, { label: "Dates", value: "24–27 Oct" }], photos: [], photoNote: "No reliable property photos are shown because the supplied Airbnb listing no longer resolves. Daniel should re-share the active listing before this option is compared or booked.", warning: "Do not vote on price or layout yet—the current link provides no verifiable property details.", source: "Airbnb link rechecked 18 Jul 2026", votes: {} },
-          { id: "stay_seoul_bukchon_hanok", by: null, researcher: "Daniel", title: "Seoul Bukchon Homi Hanok", link: "https://www.booking.com/hotel/kr/seoul-bukchon-hanok.html?checkin=2026-10-24&checkout=2026-10-27&group_adults=8&group_children=0&no_rooms=2", price: "No availability", availability: "Unavailable for trip dates", availabilityTone: "hot", notes: "Bukchon · heritage whole-apartment experience · 24–27 Oct", facts: [{ label: "Sleeps", value: "Up to 10" }, { label: "Bedrooms", value: "4" }, { label: "Beds", value: "5 full beds" }, { label: "Bathrooms", value: "3" }, { label: "Size", value: "1,076 ft²" }, { label: "Palace", value: "Changdeokgung · 7 min" }], photos: ["images/crew-options/bukchon-1.jpg","images/crew-options/bukchon-2.jpg","images/crew-options/bukchon-3.jpg","images/crew-options/bukchon-4.jpg","images/crew-options/bukchon-5.jpg","images/crew-options/bukchon-6.jpg"], warning: "Booking.com currently shows no availability for 24–27 October 2026. Keep as a benchmark unless Daniel has a separate direct-booking route.", source: "Booking.com listing and photos · availability checked 18 Jul 2026", votes: {} }
+        { id: "stay_seoul", emoji: "🏨", kind: "accom", title: "Seoul stay", desc: "Daniel's shortlist for 24–27 Oct, prices refreshed to live AUD on 18 Jul — whole-group bases across Hongdae and Bukchon.", owners: [], options: [
+          { id: "stay_seoul_seogyo_huestay", by: null, researcher: "Live search", title: "Cozy Home Hapjeong · Hongdae", link: "https://www.booking.com/hotel/kr/habjeong-hongdae-ddaddeushan-jib.html?checkin=2026-10-24&checkout=2026-10-27&group_adults=8&no_rooms=1&selected_currency=AUD", price: "A$113 pp · A$903 total", availability: "Cheapest whole home · books instantly", availabilityTone: "done", notes: "Hapjeong / Hongdae · 24–27 Oct · 4-bedroom apartment, best-value whole-group base with two bathrooms", facts: [{ label: "Sleeps", value: "Up to 10" }, { label: "Bedrooms", value: "4" }, { label: "Beds", value: "6 (doubles + sofa)" }, { label: "Bathrooms", value: "2 private" }, { label: "Station", value: "Mangwon / Hapjeong · 550 m" }, { label: "Rating", value: "9.1 / 10" }], photos: [], photoNote: "Live Booking.com listing — tap the title above for current photos, guest reviews and to book. A$902.51 total for 8 verified 18 Jul 2026.", warning: "Hapjeong sits one stop west of Hongdae's main strip — still a 10–12 min walk to the nightlife. Two bathrooms for eight is the best ratio on this list.", source: "Booking.com live search · A$902.51 total for 8 · checked 18 Jul 2026 · rates can change", votes: {} },
+          { id: "stay_seoul_hongdae_t_house", by: null, researcher: "Daniel", title: "HONGDAE t HOUSE", link: "https://www.booking.com/hotel/kr/hongdae-t-house.html?checkin=2026-10-24&checkout=2026-10-27&group_adults=8&no_rooms=1&selected_currency=AUD", price: "A$152 pp · A$1,219 total", availability: "Available · whole villa", availabilityTone: "done", notes: "Hongdae · 24–27 Oct · strongest central whole-group layout", facts: [{ label: "Sleeps", value: "8 guests" }, { label: "Bedrooms", value: "3" }, { label: "Beds", value: "King + twin + 2 doubles + sofa" }, { label: "Bathrooms", value: "1 private" }, { label: "Cancellation", value: "Free to 10 Oct" }, { label: "Station", value: "Hongik Univ · <1 km" }], photos: ["images/crew-options/hongdae-1.jpg","images/crew-options/hongdae-2.jpg","images/crew-options/hongdae-3.jpg","images/crew-options/hongdae-4.jpg","images/crew-options/hongdae-5.jpg","images/crew-options/hongdae-6.jpg"], warning: "Only one bathroom for eight people, but the most central whole-group layout on the list.", source: "Booking.com listing and photos · A$1,219 total for 8 checked 18 Jul 2026 · rates can change", votes: {} },
+          { id: "stay_seoul_airbnb_1110018768120035288", by: null, researcher: "Live search", title: "Near Hongik Univ Station Suite", link: "https://www.booking.com/hotel/kr/5seonggeub-seuwiteurum-hongdaeibguyeog-30co-cimdae4gae-gonghangceoldo-1bun-seoul.html?checkin=2026-10-24&checkout=2026-10-27&group_adults=8&no_rooms=1&selected_currency=AUD", price: "A$167 pp · A$1,335 total", availability: "Top rated 9.9 · books instantly", availabilityTone: "done", notes: "Hongik Univ · 24–27 Oct · highest-rated whole-group suite, one ride from the AREX airport line", facts: [{ label: "Sleeps", value: "8 guests" }, { label: "Rating", value: "9.9 / 10" }, { label: "Reviews", value: "23" }, { label: "Extras", value: "Luggage storage" }, { label: "Station", value: "Hongik Univ · walk" }, { label: "Airport", value: "AREX one ride" }], photos: [], photoNote: "Live Booking.com listing — tap the title above for current photos, guest reviews and to book. A$1,335.33 total for 8 verified 18 Jul 2026.", warning: "Small review count (23) but a near-perfect score. Confirm the exact bed split for eight before locking.", source: "Booking.com live search · A$1,335.33 total for 8 · checked 18 Jul 2026 · rates can change", votes: {} },
+          { id: "stay_seoul_bukchon_hanok", by: null, researcher: "Daniel", title: "Seoul Bukchon Homi Hanok", link: "https://www.booking.com/hotel/kr/seoul-bukchon-hanok.html?checkin=2026-10-24&checkout=2026-10-27&group_adults=8&no_rooms=1&selected_currency=AUD", price: "Sold out for our dates", availability: "Booked out · heritage benchmark", availabilityTone: "hot", notes: "Bukchon · heritage hanok · sold out for 24–27 Oct, kept as a style and price benchmark", facts: [{ label: "Sleeps", value: "Up to 10" }, { label: "Bedrooms", value: "4" }, { label: "Beds", value: "5 full beds" }, { label: "Bathrooms", value: "3" }, { label: "Size", value: "100 m²" }, { label: "Palace", value: "Changdeokgung · 7 min" }], photos: ["images/crew-options/bukchon-1.jpg","images/crew-options/bukchon-2.jpg","images/crew-options/bukchon-3.jpg","images/crew-options/bukchon-4.jpg","images/crew-options/bukchon-5.jpg","images/crew-options/bukchon-6.jpg"], warning: "Booking.com shows no availability for 24–27 October 2026. Search a similar Bukchon hanok direct if the group wants this heritage vibe.", source: "Booking.com listing and photos · availability re-checked 18 Jul 2026", votes: {} }
         ], status: "open", chosen: null },
-        { id: "stay_jeju", emoji: "🏝️", kind: "accom", title: "Jeju villa / stay", desc: "Daniel's Jeju shortlist for 27–31 Oct — compare a resort stay against villa options.", owners: [], options: [
-          { id: "stay_jeju_goldone_suites", by: null, researcher: "Daniel", title: "GoldOne Hotel & Suites", link: "https://www.booking.com/hotel/kr/gold-one-amp-suites.en-gb.html?checkin=2026-10-27&checkout=2026-10-31&group_adults=8&group_children=0&no_rooms=2", price: "£174 pp · £1,394 total", availability: "Available · 2 suites", availabilityTone: "done", notes: "Seogwipo ocean-view hotel · 27–31 Oct · priced as two Ocean View Suites", facts: [{ label: "Sleeps", value: "10 across 2 suites" }, { label: "Bedrooms", value: "4 total" }, { label: "Beds", value: "4 doubles + 2 sofa beds" }, { label: "Bathrooms", value: "2 ensuite + 2 additional" }, { label: "Stay", value: "4 nights" }, { label: "Facilities", value: "Heated pool + spa baths" }], photos: ["images/crew-options/goldone-1.jpg","images/crew-options/goldone-2.jpg","images/crew-options/goldone-3.jpg","images/crew-options/goldone-4.jpg","images/crew-options/goldone-5.jpg","images/crew-options/goldone-6.jpg"], warning: "Price assumes two Ocean View Suites at the lowest visible rate. Confirm the exact two-room combination and cancellation terms before booking.", source: "Booking.com listing and photos · £1,394 for 2 suites checked 18 Jul 2026 · rates can change", votes: {} }
+        { id: "stay_jeju", emoji: "🏝️", kind: "accom", title: "Jeju villa / stay", desc: "Daniel's Jeju shortlist for 27–31 Oct, prices refreshed to live AUD on 18 Jul — a value beachfront pension against the resort suites.", owners: [], options: [
+          { id: "stay_jeju_gillime", by: null, researcher: "Live search", title: "Jeju Gillime Pension", link: "https://www.booking.com/hotel/kr/jeju-gillime-pension.html?checkin=2026-10-27&checkout=2026-10-31&group_adults=8&no_rooms=1&selected_currency=AUD", price: "A$111 pp · A$887 total", availability: "Cheapest · beachfront pension", availabilityTone: "done", notes: "Jeju City · 27–31 Oct · beachfront pension with three bathrooms, minutes from the airport", facts: [{ label: "Sleeps", value: "Up to 14" }, { label: "Bedrooms", value: "3" }, { label: "Beds", value: "10 beds" }, { label: "Bathrooms", value: "3" }, { label: "Airport", value: "700 m" }, { label: "Rating", value: "8.8 / 10" }], photos: [], photoNote: "Live Booking.com listing — tap the title above for current photos, guest reviews and to book. A$886.54 total for 8 verified 18 Jul 2026.", warning: "Jeju City base on the north side — favours the arrival night, airport and east-coast days over the Seogwipo south coast. Sauna, BBQ and beachfront on site.", source: "Booking.com live search · A$886.54 total for 8 · checked 18 Jul 2026 · rates can change", votes: {} },
+          { id: "stay_jeju_goldone_suites", by: null, researcher: "Daniel", title: "GoldOne Hotel & Suites", link: "https://www.booking.com/hotel/kr/gold-one-amp-suites.html?checkin=2026-10-27&checkout=2026-10-31&group_adults=8&no_rooms=2&selected_currency=AUD", price: "A$275 pp · A$2,198 total", availability: "Available · 2 suites", availabilityTone: "done", notes: "Seogwipo ocean-view resort · 27–31 Oct · priced as two Ocean View Suites", facts: [{ label: "Sleeps", value: "10 across 2 suites" }, { label: "Bedrooms", value: "4 total" }, { label: "Beds", value: "4 doubles + 2 sofa beds" }, { label: "Bathrooms", value: "2 ensuite + 2 more" }, { label: "Rating", value: "8.8 / 10 · 495 rev" }, { label: "Facilities", value: "Infinity pool + spa" }], photos: ["images/crew-options/goldone-1.jpg","images/crew-options/goldone-2.jpg","images/crew-options/goldone-3.jpg","images/crew-options/goldone-4.jpg","images/crew-options/goldone-5.jpg","images/crew-options/goldone-6.jpg"], warning: "Price assumes two Ocean View Suites at the lowest visible rate. Confirm the exact two-room combination and cancellation terms before booking.", source: "Booking.com listing and photos · A$2,198 for 2 suites checked 18 Jul 2026 · rates can change", votes: {} }
         ], status: "open", chosen: null },
         { id: "room_bathhouse", taskId: "activityShortlist", emoji: "♨️", kind: "custom", title: "Korean bathhouse / jjimjilbang", desc: "Stanley's three-option shortlist — compare location, atmosphere, facilities and group comfort.", owners: [], options: [
           { id: "bathhouse_aquafield_goyang", by: null, researcher: "Stanley", title: "AQUAFIELD Goyang", link: "https://en.aquafield.co.kr/branch.html#goyang", price: "₩26,000 pp", availability: "Current official adult rate", availabilityTone: "done", notes: "Premium destination spa in Goyang · best facilities, longest journey", facts: [{ label: "Hours", value: "10:00–22:00" }, { label: "Time limit", value: "Up to 6 hours" }, { label: "Zones", value: "Sauna + themed jjimjil rooms" }, { label: "Best for", value: "Half-day destination" }, { label: "Pool add-on", value: "Multi Pass ₩58,000" }, { label: "Location", value: "Starfield Goyang" }], photos: ["images/crew-options/aquafield-1.webp","images/crew-options/aquafield-2.webp","images/crew-options/aquafield-3.webp","images/crew-options/aquafield-4.webp","images/crew-options/aquafield-5.webp","images/crew-options/aquafield-6.webp"], warning: "This is the most polished option but requires a dedicated trip outside central Seoul. Reconfirm October operating hours before travel.", source: "Official AQUAFIELD rates, facility details and photos · checked 18 Jul 2026", votes: {} },
           { id: "bathhouse_sparex_dongdaemun", by: null, researcher: "Stanley", title: "GoodMorning City SPAREX", link: "https://www.klook.com/en-AU/activity/133675-seoul-dongdaemun-sparex-jjimjilbang-sauna-admission-ticket/", price: "AUD 13.15 pp", availability: "Bookable on Klook", availabilityTone: "done", notes: "Full-scale central jjimjilbang opposite DDP · easiest itinerary fit", facts: [{ label: "Hours", value: "24 hours" }, { label: "Day entry", value: "05:00–20:00" }, { label: "Night entry", value: "20:00–05:00" }, { label: "Facilities", value: "Baths + hot/cold rooms + rest areas" }, { label: "Extras", value: "Scrub + luggage storage" }, { label: "Location", value: "Good Morning City B3/B4" }], photos: ["images/crew-options/sparex-1.webp","images/crew-options/sparex-2.webp","images/crew-options/sparex-3.webp","images/crew-options/sparex-4.webp","images/crew-options/sparex-5.webp","images/crew-options/sparex-6.webp"], warning: "Bring toiletries or buy them onsite. Re-entry is generally not allowed; bathhouse cleaning windows affect some facilities overnight.", source: "Klook listing details, price and photos · checked 18 Jul 2026 · price can change", votes: {} },
-          { id: "bathhouse_insadong_spa", by: null, researcher: "Stanley", title: "Insadong Spa & Sauna", link: "https://www.tripadvisor.co.uk/Attraction_Review-g294197-d7061496-Reviews-Insadong_Spa_Sauna-Seoul.html", price: "~₩10,000 entry pp", availability: "Estimate · verify onsite", availabilityTone: "warn", notes: "Compact traditional bathhouse near Anguk · easiest add-on to the palace / Insadong day", facts: [{ label: "Hours", value: "09:00–21:00" }, { label: "Typical visit", value: "2–3 hours" }, { label: "Facilities", value: "Hot baths + saunas" }, { label: "Treatments", value: "Scrub + massage" }, { label: "Packages", value: "Recent report ~US$90" }, { label: "Location", value: "~5 min from Anguk" }], photos: ["images/crew-options/insadong-1.jpg","images/crew-options/insadong-2.jpg","images/crew-options/insadong-3.jpg","images/crew-options/insadong-4.jpg","images/crew-options/insadong-5.jpg","images/crew-options/insadong-6.jpg"], warning: "Basic entry pricing is not published on an official site; ₩10,000 is a traveller-reported estimate. Treatment packages are much more expensive and cash may be preferred.", source: "Tripadvisor listing, hours and visitor photos · price estimate from traveller reports · checked 18 Jul 2026", votes: {} }
+          { id: "bathhouse_insadong_spa", by: null, researcher: "Stanley", title: "Insadong Spa & Sauna", link: "https://www.tripadvisor.com.au/Attraction_Review-g294197-d7061496-Reviews-Insadong_Spa_Sauna-Seoul.html", price: "~₩10,000 entry pp", availability: "Estimate · verify onsite", availabilityTone: "warn", notes: "Compact traditional bathhouse near Anguk · easiest add-on to the palace / Insadong day", facts: [{ label: "Hours", value: "09:00–21:00" }, { label: "Typical visit", value: "2–3 hours" }, { label: "Facilities", value: "Hot baths + saunas" }, { label: "Treatments", value: "Scrub + massage" }, { label: "Packages", value: "Report ~A$135" }, { label: "Location", value: "~5 min from Anguk" }], photos: ["images/crew-options/insadong-1.jpg","images/crew-options/insadong-2.jpg","images/crew-options/insadong-3.jpg","images/crew-options/insadong-4.jpg","images/crew-options/insadong-5.jpg","images/crew-options/insadong-6.jpg"], warning: "Basic entry pricing is not published on an official site; ₩10,000 is a traveller-reported estimate. Treatment packages are much more expensive and cash may be preferred.", source: "Tripadvisor listing, hours and visitor photos · price estimate from traveller reports · checked 18 Jul 2026", votes: {} }
         ], status: "open", chosen: null },
         { id: "car_jeju", emoji: "🚘", kind: "car", title: "Jeju car hire", desc: "Rental cars for the island. Who's driving and who's researching?", owners: [], drivers: [], options: [], status: "open", chosen: null },
         { id: "dinner_seoul", emoji: "🍖", kind: "dinner", title: "Seoul group dinner", desc: "One big group dinner in Seoul — KBBQ, fried chicken, whatever wins.", owners: [], options: [], status: "open", chosen: null },
@@ -2069,7 +2096,7 @@
       const pill = document.getElementById("seoulNowPill");
       if (pill) {
         try {
-          const hm = new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Seoul", hour: "2-digit", minute: "2-digit", hour12: false }).format(now);
+          const hm = new Intl.DateTimeFormat("en-AU", { timeZone: "Asia/Seoul", hour: "2-digit", minute: "2-digit", hour12: false }).format(now);
           const hr = Number(hm.split(":")[0]);
           const ico = hr >= 6 && hr < 17 ? "☀️" : hr < 21 ? "🌆" : "🌙";
           pill.textContent = `${ico} ${hm} in Seoul`;
@@ -2599,7 +2626,7 @@
           if (chosen) meta.push(`<span class="pill done">✅ Chosen</span>`);
           const photos = Array.isArray(o.photos) ? o.photos : [];
           const gallery = photos.length
-            ? `<div class="opt-gallery">${photos.slice(0, 6).map((src, i) => `<a href="${escapeAttr(src)}" target="_blank" rel="noopener" aria-label="Open ${escapeAttr(o.title)} photo ${i + 1}"><img src="${escapeAttr(src)}" alt="${escapeAttr(o.title)} · photo ${i + 1}" loading="lazy"></a>`).join("")}</div>`
+            ? `<div class="opt-gallery" data-gallery="${escapeAttr(o.id)}">${photos.slice(0, 6).map((src, i) => `<a class="opt-shot" href="${escapeAttr(src)}" data-idx="${i}" aria-label="Open ${escapeAttr(o.title)} photo ${i + 1}"><img src="${escapeAttr(src)}" alt="${escapeAttr(o.title)} · photo ${i + 1}" loading="lazy"></a>`).join("")}</div>`
             : (o.photoNote ? `<div class="opt-photo-empty">📷 ${escapeHtml(o.photoNote)}</div>` : "");
           const facts = Array.isArray(o.facts) && o.facts.length
             ? `<div class="opt-facts">${o.facts.map(f => `<div class="opt-fact"><span>${escapeHtml(f.label || "Detail")}</span><strong>${escapeHtml(f.value || "—")}</strong></div>`).join("")}</div>`
@@ -2871,7 +2898,7 @@
       if (!iso) return "";
       const d = tripDayByIso(iso); if (d) return d.date;
       const dt = new Date(iso + "T00:00:00");
-      return isNaN(dt) ? iso : dt.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
+      return isNaN(dt) ? iso : dt.toLocaleDateString("en-AU", { weekday: "short", day: "numeric", month: "short" });
     }
     function arrivalWhen(a) {
       if (!a || !a.date) return "";
@@ -3314,6 +3341,66 @@
         document.querySelector(`.nav button[data-tab='${target}']`).click();
         document.getElementById(target).scrollIntoView({ behavior: "smooth", block: "start" });
       });
+    });
+
+    // Photo lightbox — click any option photo to pop it out over the board (instead of a new tab).
+    const lb = { items: [], idx: 0 };
+    const lbEl = document.getElementById("lightbox");
+    const lbImg = document.getElementById("lbImg");
+    const lbCap = document.getElementById("lbCap");
+    const lbCount = document.getElementById("lbCount");
+    const lbPrev = document.getElementById("lbPrev");
+    const lbNext = document.getElementById("lbNext");
+    function lbRender() {
+      const it = lb.items[lb.idx];
+      if (!it) return;
+      lbImg.src = it.src;
+      lbImg.alt = it.caption || "";
+      lbCap.textContent = it.caption || "";
+      const multi = lb.items.length > 1;
+      lbCount.textContent = multi ? `${lb.idx + 1} / ${lb.items.length}` : "";
+      lbPrev.style.display = multi ? "" : "none";
+      lbNext.style.display = multi ? "" : "none";
+    }
+    function lbOpen(items, idx) {
+      if (!items || !items.length) return;
+      lb.items = items;
+      lb.idx = Math.max(0, Math.min(idx || 0, items.length - 1));
+      lbRender();
+      lbEl.classList.add("active");
+      lbEl.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+    function lbClose() {
+      lbEl.classList.remove("active");
+      lbEl.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      lbImg.src = "";
+    }
+    function lbStep(d) {
+      if (lb.items.length < 2) return;
+      lb.idx = (lb.idx + d + lb.items.length) % lb.items.length;
+      lbRender();
+    }
+    // Delegated: works for dynamically re-rendered galleries and synced state.
+    document.addEventListener("click", (e) => {
+      const shot = e.target.closest(".opt-shot");
+      if (!shot) return;
+      e.preventDefault();
+      const gallery = shot.closest(".opt-gallery");
+      const shots = gallery ? Array.from(gallery.querySelectorAll(".opt-shot")) : [shot];
+      const items = shots.map(a => ({ src: a.getAttribute("href"), caption: (a.querySelector("img") || {}).alt || "" }));
+      lbOpen(items, shots.indexOf(shot));
+    });
+    lbPrev.addEventListener("click", () => lbStep(-1));
+    lbNext.addEventListener("click", () => lbStep(1));
+    document.getElementById("lbClose").addEventListener("click", lbClose);
+    lbEl.addEventListener("click", (e) => { if (e.target === lbEl) lbClose(); });
+    document.addEventListener("keydown", (e) => {
+      if (!lbEl.classList.contains("active")) return;
+      if (e.key === "Escape") lbClose();
+      else if (e.key === "ArrowLeft") lbStep(-1);
+      else if (e.key === "ArrowRight") lbStep(1);
     });
 
     document.getElementById("playerSelect")?.addEventListener("change", e => { state.selectedPlayer = Number(e.target.value); saveState(); renderAll(); });
