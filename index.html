@@ -281,6 +281,14 @@
     .vote-btn.active.maybe { background: rgba(255,209,92,0.18); color: #ffe7ae; border-color: rgba(255,209,92,0.38); }
     .vote-btn.active.no { background: rgba(255,100,100,0.18); color: #ffdada; border-color: rgba(255,100,100,0.38); }
     .vote-meter { display: grid; gap: 8px; position: relative; }
+    /* Who voted — name chips per vote group */
+    .vote-who { display: grid; gap: 7px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,0.12); }
+    .vote-who.empty { color: var(--subtle); font-size: 11.5px; border-top: 0; padding-top: 0; margin-top: 8px; }
+    .vw-line { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+    .vw-tag { font-size: 11px; font-weight: 900; padding: 2px 4px; }
+    .vw-names { display: flex; flex-wrap: wrap; gap: 6px; }
+    .vw-chip { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700; padding: 3px 9px 3px 7px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); }
+    .vw-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
     .meter-track { height: 11px; display: flex; overflow: hidden; border-radius: 999px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.08); }
     .meter-keen { background: rgba(119,240,168,0.85); }
     .meter-maybe { background: rgba(255,209,92,0.85); }
@@ -505,6 +513,21 @@
     @media (max-width:620px){ .task-expand { margin-left:0; } .task-rooms { margin-left:0; padding-left:10px; } }
     .desk-room { position:relative; overflow:hidden; border:1px solid rgba(255,255,255,0.14); border-radius:24px; background:linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.045)); padding:16px; display:grid; gap:13px; box-shadow:0 14px 34px rgba(24,7,49,0.12); }
     .desk-room.is-decided { border-color:rgba(139,232,212,0.32); background:linear-gradient(180deg, rgba(139,232,212,0.10), rgba(255,255,255,0.03)); }
+    /* Open Decisions log + booked card */
+    .decision-log { border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:10px 12px; margin:2px 0 12px; background:rgba(0,0,0,0.14); display:grid; gap:9px; }
+    .decision-log.dl-booked { border-color:rgba(139,232,212,0.4); background:rgba(139,232,212,0.08); }
+    .dl-row { display:flex; flex-wrap:wrap; gap:7px; align-items:center; }
+    .dl-chip { border:1px solid rgba(255,255,255,0.16); background:rgba(255,255,255,0.05); color:var(--ink); border-radius:999px; padding:5px 11px; font-size:12px; font-weight:800; cursor:pointer; font-family:inherit; }
+    .dl-chip.on { border-color:rgba(114,244,255,0.5); background:rgba(114,244,255,0.14); }
+    .dl-chip.done.on { border-color:rgba(139,232,212,0.6); background:rgba(139,232,212,0.16); }
+    .dl-outcome { font-size:13px; color:var(--ink); background:rgba(255,255,255,0.05); border-radius:10px; padding:8px 10px; line-height:1.42; }
+    .dl-edit { display:grid; grid-template-columns:1fr auto; gap:8px; }
+    .dl-input { padding:8px 10px; font-size:12.5px; border-radius:10px; background:rgba(0,0,0,0.16); border:1px solid rgba(255,255,255,0.14); color:var(--ink); font-family:inherit; }
+    .booked-card { border:1px solid rgba(139,232,212,0.28); border-radius:14px; background:rgba(139,232,212,0.08); padding:11px 13px; margin-bottom:10px; }
+    .booked-head { display:flex; align-items:center; gap:8px; font-size:14px; }
+    .booked-emoji { font-size:17px; }
+    .booked-out { margin:7px 0 9px; font-size:12.5px; color:var(--muted); line-height:1.4; overflow-wrap:anywhere; }
+    .booked-reopen { border:0; background:none; color:var(--subtle); font-size:11px; font-weight:800; cursor:pointer; padding:0; font-family:inherit; }
     .desk-head { display:grid; grid-template-columns:auto 1fr auto; gap:12px; align-items:start; }
     .desk-emoji { width:46px; height:46px; border-radius:16px; display:grid; place-items:center; font-size:24px; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.12); }
     .desk-title { font-weight:1000; letter-spacing:-0.03em; font-size:17px; }
@@ -2043,6 +2066,11 @@
         const status = longShot ? { label: "Long shot", cls: "" } : ideaStatus(tally);
         const selectedVote = state.ideaVotes?.[idea.id]?.[state.selectedPlayer] || "";
         const denom = Math.max(tally.total, 1);
+        const idVoters = state.ideaVotes?.[idea.id] || {};
+        const vGroups = { keen: [], maybe: [], no: [] };
+        Object.keys(idVoters).forEach(pi => { const vv = idVoters[pi]; if (vGroups[vv]) vGroups[vv].push(Number(pi)); });
+        const whoLine = (lab, cls, arr) => arr.length ? `<div class="vw-line"><span class="vw-tag vw-${cls}">${lab}</span><span class="vw-names">${arr.map(pi => { const p = state.players[pi]; return p ? `<span class="vw-chip"><span class="vw-dot" style="background:${p.colour || "#72f4ff"}"></span>${escapeHtml(p.name)}</span>` : ""; }).join("")}</span></div>` : "";
+        const whoHtml = Object.keys(idVoters).length ? `<div class="vote-who">${whoLine("✅ Keen", "keen", vGroups.keen)}${whoLine("🤷 Maybe", "maybe", vGroups.maybe)}${whoLine("❌ No", "no", vGroups.no)}</div>` : `<div class="vote-who empty">No votes yet — pick yourself in the crew panel, then vote.</div>`;
         const imgSrc = ideaImageFor(idea);
         const photo = imgSrc
           ? `<img class="idea-photo" src="images/${escapeAttr(imgSrc)}" alt="${escapeAttr(idea.title)}" loading="lazy" onerror="this.outerHTML='<div class=\\'idea-photo-fallback\\'>${idea.emoji || "💡"}</div>'">`
@@ -2066,6 +2094,7 @@
             <div class="meter-track"><div class="meter-keen" style="width:${tally.keen / denom * 100}%"></div><div class="meter-maybe" style="width:${tally.maybe / denom * 100}%"></div><div class="meter-no" style="width:${tally.no / denom * 100}%"></div></div>
             <div class="vote-counts"><span>✅ ${tally.keen} keen</span><span>🤷 ${tally.maybe} maybe</span><span>❌ ${tally.no} no</span></div>
           </div>
+          ${whoHtml}
           <button class="ls-toggle ${longShot ? "on" : ""}" data-ls="${idea.id}" title="${longShot ? "Put this back in the running" : "Grey this out as a probably-not"}">${longShot ? "💤 Long shot — tap to revive" : "🎯 In the running"}</button>
           </div>
         </article>`;
@@ -2579,6 +2608,36 @@
       logEvent("🙋", `${p ? p.name : "Someone"} stepped off “${r.title}”`);
       saveState(); renderAll();
     }
+    function setLogStatus(id, val) {
+      const r = deskRoom(id); if (!r) return;
+      if (!r.log || typeof r.log !== "object") r.log = { status: "open", text: "" };
+      if (val === "booked") { r.log.status = "booked"; logEvent("✅", `“${r.title}” marked booked`); }
+      else { r.log.status = "open"; if (r.status === "decided") { r.status = "open"; r.chosen = null; } }
+      saveState(); renderAll();
+    }
+    function saveLog(id, container) {
+      const r = deskRoom(id); if (!r) return;
+      if (!r.log || typeof r.log !== "object") r.log = { status: "open", text: "" };
+      const el = (container || document).querySelector(`input[data-room="${id}"][data-f="logtext"]`);
+      r.log.text = el ? el.value.trim() : (r.log.text || "");
+      saveState(); renderAll(); toast("Decision saved");
+    }
+    function unbookRoom(id) {
+      const r = deskRoom(id); if (!r) return;
+      if (r.log && typeof r.log === "object") r.log.status = "open";
+      if (r.status === "decided") { r.status = "open"; r.chosen = null; }
+      logEvent("↩", `“${r.title}” moved back to open`);
+      saveState(); renderAll();
+    }
+    function deskBookedCard(r) {
+      const o = (r.options || []).find(x => x.id === r.chosen);
+      const info = (r.log && r.log.text) || (o ? (o.title + (o.price ? " · " + o.price : "")) : "") || "Booked — tap reopen to add the details.";
+      return `<div class="booked-card">
+        <div class="booked-head"><span class="booked-emoji">${r.emoji || "✅"}</span><strong>${escapeHtml(r.title)}</strong></div>
+        <p class="booked-out">${escapeHtml(info)}</p>
+        <button class="booked-reopen" data-desk="unbook" data-room="${r.id}">↩ Move back to open</button>
+      </div>`;
+    }
     function optVotes(o) { return Object.keys(o.votes || {}).length; }
 
     function toggleOwner(id) {
@@ -2741,6 +2800,15 @@
         <input type="text" class="opt-notes-in" data-room="${r.id}" data-f="notes" placeholder="One-line note (optional)" />` : "";
 
         const removable = !DEFAULT_ROOM_IDS.includes(r.id);
+        const logText = (r.log && r.log.text) || "";
+        const decisionLog = `<div class="decision-log dl-open">
+          <div class="dl-row"><span class="crew-label">Decision</span>
+            <button class="dl-chip on" data-desk="logstatus" data-room="${r.id}" data-val="open">Open</button>
+            <button class="dl-chip done" data-desk="logstatus" data-room="${r.id}" data-val="booked">✅ Mark booked</button>
+          </div>
+          ${logText ? `<div class="dl-outcome">📝 ${escapeHtml(logText)}</div>` : ""}
+          <div class="dl-edit"><input type="text" class="dl-input" data-room="${r.id}" data-f="logtext" placeholder="What did we book? (e.g. HONGDAE t HOUSE · 24–27 Oct · link)" value="${escapeAttr(logText)}" /><button class="btn small secondary" data-desk="savelog" data-room="${r.id}">Save</button></div>
+        </div>`;
         const footer = (decided || removable) ? `<div class="bet-foot">
           ${decided ? `<button class="btn small ghost" data-desk="reopen" data-room="${r.id}">Reopen</button>` : ""}
           ${removable ? `<button class="btn small danger" data-desk="delroom" data-room="${r.id}">🗑️ Remove room</button>` : ""}
@@ -2752,6 +2820,7 @@
             <div><div class="desk-title">${escapeHtml(r.title)}</div><div class="desk-desc">${escapeHtml(r.desc || "")}</div></div>
             <span class="idea-status ${decided ? "hot" : ""}">${decided ? "Decided" : "Open"}</span>
           </div>
+          ${decisionLog}
           <div class="crew-row"><span class="crew-label">On it</span>${ownerChips}<button class="hand-btn ${meOwner ? "on" : ""}" data-desk="hand" data-room="${r.id}">${meOwner ? "✋ You're on it" : "🙋 I'll look into this"}</button></div>
           ${driveRow}
           <div class="opt-list">${optHtml}</div>
@@ -2766,6 +2835,9 @@
           const act = btn.dataset.desk, room = btn.dataset.room, opt = btn.dataset.opt;
           if (act === "hand") toggleOwner(room);
           else if (act === "unown") unassignOwner(room, Number(btn.dataset.player));
+          else if (act === "logstatus") setLogStatus(room, btn.dataset.val);
+          else if (act === "savelog") saveLog(room, container);
+          else if (act === "unbook") unbookRoom(room);
           else if (act === "drive") toggleDriver(room);
           else if (act === "vote") toggleOptionVote(room, opt);
           else if (act === "pick") { if (confirm("Lock this as the group's pick?")) decideRoom(room, opt); }
@@ -2785,20 +2857,17 @@
       const holder = document.getElementById("deskList");
       if (!holder) return;
       const rooms = state.desk.rooms;
-      const open = rooms.filter(r => r.status !== "decided");
-      const booked = rooms.filter(r => r.status === "decided");
-      // Open jobs on the left; booked decisions summarised in the side column.
+      const isBooked = r => r.status === "decided" || (r.log && r.log.status === "booked");
+      const open = rooms.filter(r => !isBooked(r));
+      const booked = rooms.filter(isBooked);
+      // Open jobs on the left; booked decisions as booked-cards in the side column.
       holder.innerHTML = open.length ? open.map(deskRoomCard).join("") : `<p class="panel-sub" style="padding:8px 2px">No open jobs — it's all booked 🎉</p>`;
       bindDeskActions(holder);
 
       const bookedHolder = document.getElementById("deskBooked");
       if (bookedHolder) {
-        bookedHolder.innerHTML = booked.length ? booked.map(r => {
-          const o = (r.options || []).find(x => x.id === r.chosen);
-          const meta = escapeHtml(r.title) + (o && o.price ? " · " + escapeHtml(o.price) : "");
-          const link = o && o.url ? ` <a href="${escapeAttr(o.url)}" target="_blank" rel="noopener" class="pi-sub">↗</a>` : "";
-          return `<div class="mini-idea-row"><span>${r.emoji || "✅"}</span><div><div class="mini-idea-name">${escapeHtml(o ? o.title : r.title)}${link}</div><div class="mini-idea-meta">${meta}</div></div><span class="idea-status hot">Booked</span></div>`;
-        }).join("") : `<div class="micro">Nothing booked yet.</div>`;
+        bookedHolder.innerHTML = booked.length ? booked.map(deskBookedCard).join("") : `<div class="micro">Nothing booked yet.</div>`;
+        bindDeskActions(bookedHolder);
       }
 
       const decidedCount = booked.length;
