@@ -514,6 +514,10 @@
     .owner-chip { display:inline-flex; align-items:center; gap:6px; border:1px solid rgba(255,255,255,0.14); background:rgba(0,0,0,0.2); color:var(--ink); border-radius:999px; padding:5px 11px 5px 5px; font-size:12px; font-weight:800; }
     .owner-chip .avatar-dot { width:20px; height:20px; border-radius:7px; font-size:10px; }
     .owner-chip.empty { color:var(--subtle); font-weight:700; border-style:dashed; padding:6px 11px; }
+    .owner-chip.removable { cursor:pointer; font-family:inherit; }
+    .owner-chip.removable:hover { border-color:rgba(255,120,120,0.5); }
+    .owner-chip .oc-x { opacity:0.5; font-size:10px; }
+    .owner-chip.removable:hover .oc-x { opacity:1; color:#ff9c9c; }
     .hand-btn { border:1px solid rgba(255,255,255,0.16); border-radius:999px; background:rgba(0,0,0,0.2); color:var(--muted); padding:7px 12px; font-weight:850; font-size:12px; transition:transform .15s ease, background .15s ease, border-color .15s ease; }
     .hand-btn:hover { transform:translateY(-1px); border-color:rgba(255,255,255,0.28); }
     .hand-btn.on { background:rgba(114,244,255,0.16); border-color:rgba(114,244,255,0.4); color:#d4f9ff; }
@@ -2568,6 +2572,13 @@
       });
     }
     function deskRoom(id) { ensureDesk(); return state.desk.rooms.find(r => r.id === id); }
+    function unassignOwner(id, playerIdx) {
+      const r = deskRoom(id); if (!r || !(r.owners || []).includes(playerIdx)) return;
+      r.owners = r.owners.filter(x => x !== playerIdx);
+      const p = state.players[playerIdx];
+      logEvent("🙋", `${p ? p.name : "Someone"} stepped off “${r.title}”`);
+      saveState(); renderAll();
+    }
     function optVotes(o) { return Object.keys(o.votes || {}).length; }
 
     function toggleOwner(id) {
@@ -2658,7 +2669,7 @@
         const opts = (r.options || []).slice().sort((a, b) => optVotes(b) - optVotes(a));
         const topVotes = opts.length ? optVotes(opts[0]) : 0;
         const ownerChips = r.owners.length
-          ? r.owners.map(i => `<span class="owner-chip">${avatar(i)}${nameOf(i)}</span>`).join("")
+          ? r.owners.map(i => `<button class="owner-chip removable" data-desk="unown" data-room="${r.id}" data-player="${i}" title="Take ${escapeAttr(nameOf(i))} off this job">${avatar(i)}${nameOf(i)} <span class="oc-x">✕</span></button>`).join("")
           : `<span class="owner-chip empty">No one yet</span>`;
         const meOwner = r.owners.includes(idx);
 
@@ -2754,6 +2765,7 @@
         btn.addEventListener("click", () => {
           const act = btn.dataset.desk, room = btn.dataset.room, opt = btn.dataset.opt;
           if (act === "hand") toggleOwner(room);
+          else if (act === "unown") unassignOwner(room, Number(btn.dataset.player));
           else if (act === "drive") toggleDriver(room);
           else if (act === "vote") toggleOptionVote(room, opt);
           else if (act === "pick") { if (confirm("Lock this as the group's pick?")) decideRoom(room, opt); }
