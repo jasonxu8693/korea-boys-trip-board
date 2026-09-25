@@ -486,6 +486,7 @@
     .booked-warn { font-size:11.5px; line-height:1.45; color:var(--ink); background:rgba(255,196,120,0.12); border:1px solid rgba(255,196,120,0.28); border-radius:10px; padding:8px 10px; margin:0 0 9px; }
     .booked-link { display:inline-block; font-size:11.5px; font-weight:800; color:#8be8d4; text-decoration:none; margin:0 0 8px; }
     .booked-link:hover { text-decoration:underline; }
+    .opt-card .room-notes { margin-top:10px; padding-top:8px; }
     .room-notes { margin-top:12px; padding-top:10px; border-top:1px dashed rgba(255,255,255,0.14); }
     .rn-head { display:flex; align-items:center; gap:8px; font-size:12px; font-weight:800; letter-spacing:0.02em; margin-bottom:8px; }
     .rn-head span { font-weight:700; color:var(--subtle); font-size:11px; }
@@ -2295,44 +2296,57 @@
       logEvent("↩", `“${r.title}” moved back to open`);
       saveState(); renderAll();
     }
-    // Shared notes on accommodation rooms — anyone can add one, stamped with who and when.
-    // Stored on the room (r.notes) so they sync with the rest of the board.
-    function roomNotesHtml(r) {
-      if (r.kind !== "accom") return "";
-      const notes = Array.isArray(r.notes) ? r.notes : [];
+    // Shared notes threads. Accom options each get their own (o.comments); a booked card shows its
+    // chosen option's thread. Room-level r.notes is legacy and only renders if it has entries.
+    // Each note is stamped with who and when, and syncs with the rest of the board.
+    function notesThreadHtml(notes, roomId, optId) {
+      notes = Array.isArray(notes) ? notes : [];
       const me = state.selectedPlayer;
+      const key = optId ? `data-room="${roomId}" data-opt="${escapeAttr(optId)}"` : `data-room="${roomId}"`;
       const linkify = t => escapeHtml(t).replace(/https?:\/\/[^\s<]+/g, u => `<a href="${u}" target="_blank" rel="noopener">${u.length > 40 ? u.slice(0, 38) + "…" : u}</a>`);
       const list = notes.map(n => {
         const p = state.players[n.by];
         const who = p ? escapeHtml(p.name) : "Someone";
         const dot = p ? `<span class="avatar-dot" style="background:${p.colour}">${escapeHtml(p.initials)}</span>` : "";
         const when = n.at ? new Date(n.at).toLocaleDateString("en-AU", { day: "numeric", month: "short" }) : "";
-        const del = n.by === me ? `<button class="rn-del" data-desk="delnote" data-room="${r.id}" data-note="${escapeAttr(n.id)}" title="Delete your note">✕</button>` : "";
+        const del = n.by === me ? `<button class="rn-del" data-desk="delnote" ${key} data-note="${escapeAttr(n.id)}" title="Delete your note">✕</button>` : "";
         return `<li class="rn-item"><div class="rn-meta">${dot}<strong>${who}</strong><span>${when}</span>${del}</div><div class="rn-text">${linkify(n.text || "")}</div></li>`;
       }).join("");
       return `<div class="room-notes">
         <div class="rn-head">📝 Notes<span>${notes.length ? notes.length : "none yet"}</span></div>
         ${list ? `<ul class="rn-list">${list}</ul>` : ""}
-        <div class="rn-add"><input type="text" class="rn-input" maxlength="400" data-room="${r.id}" data-f="note" placeholder="Add a note for everyone (no door codes — the board is public)" /><button class="btn small" data-desk="addnote" data-room="${r.id}">Add</button></div>
+        <div class="rn-add"><input type="text" class="rn-input" maxlength="400" ${key} placeholder="Add a note for everyone (no door codes — the board is public)" /><button class="btn small" data-desk="addnote" ${key}>Add</button></div>
       </div>`;
     }
-    function addRoomNote(id, container) {
-      const r = deskRoom(id); if (!r) return;
-      const el = (container || document).querySelector(`.rn-input[data-room="${id}"]`);
+    function noteTarget(roomId, optId) {
+      const r = deskRoom(roomId); if (!r) return null;
+      if (!optId) return { r, holder: r, field: "notes", label: r.title };
+      const o = (r.options || []).find(x => x.id === optId); if (!o) return null;
+      return { r, holder: o, field: "comments", label: o.title };
+    }
+    function noteInput(container, roomId, optId) {
+      return [...(container || document).querySelectorAll(`.rn-input[data-room="${roomId}"]`)].find(el => (el.dataset.opt || "") === (optId || ""));
+    }
+    function addNote(roomId, optId, container) {
+      const t = noteTarget(roomId, optId); if (!t) return;
+      const el = noteInput(container, roomId, optId);
       const text = el ? el.value.trim() : "";
       if (!text) { toast("Type a note first"); return; }
-      if (!Array.isArray(r.notes)) r.notes = [];
-      r.notes.push({ id: `note_${Date.now()}_${Math.floor(Math.random() * 1000)}`, by: state.selectedPlayer, text: text.slice(0, 400), at: new Date().toISOString() });
+      if (!Array.isArray(t.holder[t.field])) t.holder[t.field] = [];
+      t.holder[t.field].push({ id: `note_${Date.now()}_${Math.floor(Math.random() * 1000)}`, by: state.selectedPlayer, text: text.slice(0, 400), at: new Date().toISOString() });
       if (el) el.value = "";
-      logEvent("📝", `${selectedPlayer().name} added a note to ${r.title}`);
+      logEvent("📝", `${selectedPlayer().name} added a note to ${t.label}`);
       saveState(); renderAll(); toast("Note added");
     }
-    function removeRoomNote(id, noteId) {
-      const r = deskRoom(id); if (!r || !Array.isArray(r.notes)) return;
-      const n = r.notes.find(x => x.id === noteId);
+    function removeNote(roomId, optId, noteId) {
+      const t = noteTarget(roomId, optId); if (!t || !Array.isArray(t.holder[t.field])) return;
+      const n = t.holder[t.field].find(x => x.id === noteId);
       if (!n || n.by !== state.selectedPlayer) return;
-      r.notes = r.notes.filter(x => x.id !== noteId);
+      t.holder[t.field] = t.holder[t.field].filter(x => x.id !== noteId);
       saveState(); renderAll(); toast("Note deleted");
+    }
+    function legacyRoomNotesHtml(r) {
+      return (r.kind === "accom" && Array.isArray(r.notes) && r.notes.length) ? notesThreadHtml(r.notes, r.id, null) : "";
     }
     function deskBookedCard(r) {
       const o = (r.options || []).find(x => x.id === r.chosen);
@@ -2351,7 +2365,7 @@
         <div class="booked-head"><span class="booked-emoji">${r.emoji || "✅"}</span><strong>${escapeHtml(r.title)}</strong></div>
         <p class="booked-out">${escapeHtml(info)}</p>
         ${facts}${warn}${link}
-        ${roomNotesHtml(r)}
+        ${legacyRoomNotesHtml(r)}${(r.kind === "accom" && o) ? notesThreadHtml(o.comments, r.id, o.id) : ""}
         ${reopen}
       </div>`;
     }
@@ -2505,6 +2519,7 @@
               </div>
             </div>
             ${rich}
+            ${r.kind === "accom" ? notesThreadHtml(o.comments, r.id, o.id) : ""}
           </div>`;
         }).join("") : `<div class="plan-empty-day">No options shared yet. Add the first one below.</div>`;
 
@@ -2542,14 +2557,14 @@
           ${driveRow}
           <div class="opt-list">${optHtml}</div>
           ${addForm}
-          ${roomNotesHtml(r)}
+          ${legacyRoomNotesHtml(r)}
           ${footer}
         </article>`;
     }
 
     function bindDeskActions(container) {
       container.querySelectorAll(".rn-input").forEach(inp => inp.addEventListener("keydown", e => {
-        if (e.key === "Enter") { e.preventDefault(); addRoomNote(inp.dataset.room, container); }
+        if (e.key === "Enter") { e.preventDefault(); addNote(inp.dataset.room, inp.dataset.opt, container); }
       }));
       container.querySelectorAll("[data-desk]").forEach(btn => {
         btn.addEventListener("click", () => {
@@ -2559,8 +2574,8 @@
           else if (act === "logstatus") setLogStatus(room, btn.dataset.val);
           else if (act === "savelog") saveLog(room, container);
           else if (act === "unbook") unbookRoom(room);
-          else if (act === "addnote") addRoomNote(room, container);
-          else if (act === "delnote") { if (confirm("Delete your note?")) removeRoomNote(room, btn.dataset.note); }
+          else if (act === "addnote") addNote(room, opt, container);
+          else if (act === "delnote") { if (confirm("Delete your note?")) removeNote(room, opt, btn.dataset.note); }
           else if (act === "drive") toggleDriver(room);
           else if (act === "vote") toggleOptionVote(room, opt);
           else if (act === "pick") { if (confirm("Lock this as the group's pick?")) decideRoom(room, opt); }
@@ -2582,8 +2597,9 @@
       const rooms = state.desk.rooms;
       const drafts = {}; let focusRoom = null;
       document.querySelectorAll(".rn-input").forEach(el => {
-        if (el.value) drafts[el.dataset.room] = el.value;
-        if (el === document.activeElement) focusRoom = el.dataset.room;
+        const k = el.dataset.room + "|" + (el.dataset.opt || "");
+        if (el.value) drafts[k] = el.value;
+        if (el === document.activeElement) focusRoom = k;
       });
       const isBooked = r => r.status === "decided" || (r.log && r.log.status === "booked");
       const open = rooms.filter(r => !isBooked(r));
@@ -2598,8 +2614,9 @@
         bindDeskActions(bookedHolder);
       }
 
-      Object.keys(drafts).forEach(id => { const el = document.querySelector(`.rn-input[data-room="${id}"]`); if (el) el.value = drafts[id]; });
-      if (focusRoom) { const el = document.querySelector(`.rn-input[data-room="${focusRoom}"]`); if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); } }
+      const inputFor = k => { const [rid, oid] = k.split("|"); return noteInput(document, rid, oid); };
+      Object.keys(drafts).forEach(k => { const el = inputFor(k); if (el) el.value = drafts[k]; });
+      if (focusRoom) { const el = inputFor(focusRoom); if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); } }
 
       const decidedCount = booked.length;
       const openCount = open.length;
