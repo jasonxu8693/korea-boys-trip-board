@@ -1659,6 +1659,7 @@
       if (!opts.poll) setSyncChip("syncing");
       const callbackName = `koreaBoardSync_${Date.now()}_${Math.floor(Math.random() * 100000)}`;
       const script = document.createElement("script");
+      const startedAt = Date.now();
       let done = false;
       const cleanup = () => {
         if (done) return;
@@ -1672,7 +1673,10 @@
           const changed = remoteStamp && remoteStamp !== lastSeenUpdatedAt;
           // Don't overwrite local edits that haven't finished saving yet.
           const safe = !pendingSave && (Date.now() - lastLocalSaveAt > 4000);
-          const allowMerge = opts.manual || opts.initial || (changed && safe);
+          // The first load always applies, unless this device saved something while it was
+          // still waiting (a cold Apps Script can take 30s+). Then only a safe merge applies.
+          const initialOk = opts.initial && lastLocalSaveAt < startedAt;
+          const allowMerge = opts.manual || initialOk || (changed && safe);
           if (response.state && allowMerge) {
             mergeRemoteState(response.state);
             renderAll();
@@ -1696,7 +1700,10 @@
       };
       script.src = `${REMOTE_API_URL}?callback=${encodeURIComponent(callbackName)}&t=${Date.now()}`;
       document.body.appendChild(script);
-      setTimeout(() => { if (!done) { setSyncChip(lastSyncedAt ? "live" : "offline"); cleanup(); } }, 10000);
+      // Apps Script cold-starts can take 30s+. Flag slowness at 10s but keep the callback alive,
+      // so a late answer still lands; only give up for good at 60s.
+      setTimeout(() => { if (!done) setSyncChip(lastSyncedAt ? "live" : "offline"); }, 10000);
+      setTimeout(() => { if (!done) cleanup(); }, 60000);
     }
 
     function startSyncLoops() {
