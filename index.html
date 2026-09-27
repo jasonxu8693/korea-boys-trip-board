@@ -366,6 +366,11 @@
 
     .modal { position: fixed; inset: 0; display: none; place-items: center; padding: 18px; background: rgba(2, 8, 18, 0.76); backdrop-filter: blur(14px); z-index: 80; }
     .modal.active { display: grid; }
+    .who-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px; margin-top:18px; }
+    .who-btn { display:flex; align-items:center; gap:10px; padding:12px 14px; border:1px solid rgba(255,255,255,0.16); border-radius:16px; background:rgba(255,255,255,0.05); color:var(--ink); font:inherit; font-weight:800; cursor:pointer; }
+    .who-btn:hover { background:rgba(255,255,255,0.12); border-color:rgba(255,255,255,0.4); }
+    .who-btn.me { border-color:rgba(139,232,212,0.55); background:rgba(139,232,212,0.12); }
+    .who-dot { width:14px; height:14px; border-radius:999px; flex:none; }
     .modal-card { width: min(780px, 100%); border: 1px solid rgba(255,255,255,0.18); border-radius: 34px; background: linear-gradient(180deg, rgba(24, 30, 44, 0.98), rgba(12, 17, 27, 0.98)); box-shadow: var(--shadow); padding: 24px; }
     .modal-card h2 { margin: 0 0 8px; font-size: clamp(28px, 6vw, 50px); letter-spacing: -0.06em; }
     .modal-card p { color: var(--muted); line-height: 1.55; }
@@ -1245,6 +1250,14 @@
     <button data-tab="intel"><span class="d-ico">🧭</span>Pack</button>
   </nav>
 
+  <div class="modal" id="whoModal" role="dialog" aria-modal="true" aria-label="Who are you?">
+    <div class="modal-card">
+      <h2>Who are you?</h2>
+      <p>Tap your name so your votes, notes and jobs are signed as you and not as someone else. It's saved on this device, so you're only asked once.</p>
+      <div class="who-grid" id="whoGrid"></div>
+      <p class="panel-sub" style="margin-top:16px">Picked the wrong one? Use “Not you? Pick yourself” in the Activity Market any time.</p>
+    </div>
+  </div>
   <div class="toast" id="toast"></div>
 
   <div id="detailModal" class="dmodal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Details"><div class="dm-card" id="dmCard"></div></div>
@@ -3445,6 +3458,30 @@
       go(Math.min(vitinIdx, total - 1));
     }
 
+    // First-load identity gate (ported from Slovenia). Stored per device, never synced.
+    const WHOAMI_KEY = "koreaCrewWhoami";
+    let whoPrompted = false;
+    function whoamiSaved() { try { const v = localStorage.getItem(WHOAMI_KEY); return v == null ? null : Number(v); } catch (e) { return null; } }
+    function setWhoami(idx) { try { localStorage.setItem(WHOAMI_KEY, String(idx)); } catch (e) {} }
+    function openWhoModal() {
+      const grid = document.getElementById("whoGrid"), modal = document.getElementById("whoModal");
+      if (!grid || !modal) return;
+      grid.innerHTML = state.players.map((p, idx) => `<button type="button" class="who-btn ${idx === state.selectedPlayer ? "me" : ""}" data-who="${idx}"><span class="who-dot" style="background:${p.colour || "#8fb6ff"}"></span>${escapeHtml(p.name)}</button>`).join("");
+      grid.querySelectorAll("[data-who]").forEach(b => b.addEventListener("click", () => {
+        const idx = Number(b.dataset.who);
+        state.selectedPlayer = idx; setWhoami(idx);
+        modal.classList.remove("active");
+        saveState(); renderAll(); toast(`You're set as ${state.players[idx].name}`);
+      }));
+      modal.classList.add("active");
+    }
+    // Called once after the first remote pull (or its failure), so the names are the group's real ones.
+    function maybePromptWho() {
+      if (whoPrompted) return; whoPrompted = true;
+      const saved = whoamiSaved();
+      if (saved != null && state.players[saved]) { if (state.selectedPlayer !== saved) { state.selectedPlayer = saved; renderAll(); } return; }
+      openWhoModal();
+    }
     function renderAll() {
       ensureDesk(); ensurePlan();
       renderWho(); renderPlayerSelect(); renderTravellerGrid(); renderIdeas(); renderBadges(); renderRosterEditor(); renderHero(); renderDesk(); renderPlan(); renderVisualItinerary(); renderArrivals(); renderExtras();
@@ -3561,11 +3598,8 @@
       else if (e.key === "ArrowRight") lbStep(1);
     });
 
-    document.getElementById("playerSelect")?.addEventListener("change", e => { state.selectedPlayer = Number(e.target.value); saveState(); renderAll(); });
-    document.getElementById("changeWhoBtn")?.addEventListener("click", () => {
-      const sel = document.getElementById("playerSelect");
-      if (sel) { sel.scrollIntoView({ behavior: "smooth", block: "center" }); sel.focus(); }
-    });
+    document.getElementById("playerSelect")?.addEventListener("change", e => { state.selectedPlayer = Number(e.target.value); setWhoami(state.selectedPlayer); saveState(); renderAll(); });
+    document.getElementById("changeWhoBtn")?.addEventListener("click", openWhoModal);
     document.querySelectorAll(".vitin-mode").forEach(b => b.addEventListener("click", () => {
       vitinPosterMode = b.dataset.vitin === "poster";
       applyVitinMode();
@@ -3712,7 +3746,7 @@
     renderAll();
     initPackingList();
     setSyncChip(hasRemoteSync() ? "syncing" : "disabled");
-    remotePull({ initial: true });
+    remotePull({ initial: true }).finally(maybePromptWho);
     startSyncLoops();
     setInterval(renderCountdown, 30000); // keep the countdown + Seoul clock ticking
   </script>
