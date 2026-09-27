@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta name="board-release" content="2026-09-28-review-v11">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Korea Boys Trip Board</title>
@@ -917,6 +918,41 @@
       .vpd-card.wide { grid-column: auto; }
     }
     @media (prefers-reduced-motion: reduce) { .vp-scene, .vp-spine, .vp-trav { animation: none !important; opacity: 1 !important; transform: none !important; } }
+      /* Review v11: compact overview, natural-height days, accessible controls. */
+    [hidden] { display:none !important; }
+    .vp-track { display:block; transform:none !important; }
+    .vp-slide { width:100%; min-width:0; }
+    .vp-jbtn,.vp-arrow { min-height:44px; min-width:44px; }
+    .vp-dots { flex-wrap:wrap; gap:0; }
+    .vp-dot { width:28px; height:44px; border:0; border-radius:0; background:transparent; position:relative; }
+    .vp-dot::after { content:''; position:absolute; left:10px; top:18px; width:8px; height:8px; border-radius:50%; background:#82909b; }
+    .vp-dot.on { background:transparent; box-shadow:none; }
+    .vp-dot.on::after { background:#f4b942; }
+    button:focus-visible,a:focus-visible,[tabindex]:focus-visible,summary:focus-visible { outline:3px solid #ffd15c; outline-offset:3px; }
+    .review-panel { margin:0 0 18px; border:1px solid rgba(245,197,111,.4); border-radius:18px; background:rgba(9,26,42,.94); color:#f4f6f8; padding:18px 20px; }
+    .review-panel h3 { margin:0 0 8px; font-size:20px; }
+    .review-panel p { color:#d7dfe5; font-size:14px; line-height:1.6; }
+    .review-panel summary { cursor:pointer; min-height:44px; display:flex; align-items:center; font-weight:800; gap:8px; }
+    .review-panel summary::before { content:'＋'; color:#ffd15c; }
+    .review-panel details[open]>summary::before { content:'−'; }
+    .nav { scrollbar-width:none; }
+    .nav::-webkit-scrollbar { display:none; }
+    .review-panel li { margin:10px 0; line-height:1.6; font-size:14px; }
+    .review-panel ul { padding-left:20px; }
+    .review-panel a { color:#afe4fa; text-underline-offset:3px; }
+    .review-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+    .review-actions button { min-height:44px; }
+    .review-map { width:100%; height:300px; border:0; border-radius:12px; background:#dae5ea; }
+    .review-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+    .review-grid > div { min-width:0; }
+    .sync-conflicts { position:fixed; inset:12% 5%; z-index:2000; background:#14263b; border:2px solid #ffd15c; border-radius:16px; padding:24px; color:white; overflow:auto; }
+    .sync-conflicts pre { white-space:pre-wrap; overflow-wrap:anywhere; }
+    .sync-conflicts button { padding:12px; margin:8px; }
+    .vpa-alternative { grid-column:1 / -1; border-top:1px solid #667; padding-top:14px; font-weight:800; }
+    .vpd-section > summary { cursor:pointer; min-height:44px; }
+    @media(max-width:800px){.review-grid{grid-template-columns:1fr}.hero-actions{display:none}.hero-content{gap:12px;padding-bottom:22px}.hero h1{font-size:clamp(32px,7vw,50px)}.stat-card{display:flex;gap:10px}.stat-card>.glass{flex:1;min-width:0}.vp-dots{display:none}.vp-nav{justify-content:space-between}.review-panel{padding:15px}.review-map{height:260px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
   </style>
 </head>
 <body>
@@ -1254,7 +1290,7 @@
     <div class="modal-card">
       <h2>Who are you?</h2>
       <p>Tap your name so your votes, notes and jobs are signed as you and not as someone else. It's saved on this device, so you're only asked once.</p>
-      <div class="who-grid" id="whoGrid"></div>
+      <div class="who-grid" id="whoGrid"></div><button type="button" id="browseBoard" class="btn">Browse without editing</button>
       <p class="panel-sub" style="margin-top:16px">Picked the wrong one? Use “Not you? Pick yourself” in the Activity Market any time.</p>
     </div>
   </div>
@@ -1272,6 +1308,7 @@
   </div>
 
   <script>
+    const storage = { failed:false, getItem(k){try{return localStorage.getItem(k)}catch(_){this.failed=true;return null}}, setItem(k,v){try{localStorage.setItem(k,v)}catch(_){this.failed=true}}, removeItem(k){try{localStorage.removeItem(k)}catch(_){this.failed=true}} };
     const STORE_KEY = "koreaBoysTripQuestBoardV1";
     // Group sync: Supabase PostgREST (plain fetch — no client library, file stays self-contained).
     // Shared "trip-boards" project, table board_state, one row per board. Migrated from the Google
@@ -1317,7 +1354,7 @@
     ];
     function vibeById(id) { return vibes.find(v => v.id === id) || null; }
 
-    const TRIP_START = new Date(2026, 9, 23); // 23 Oct 2026 (month is 0-indexed)
+    const TRIP_START = new Date("2026-10-24T00:00:00+09:00"); // Start of Seoul arrival day, Korea time
 
 
     const defaultIdeas = [
@@ -1370,7 +1407,7 @@
       { id: "d30", iso: "2026-10-30", date: "Fri 30 Oct", city: "Jeju west coast", note: "West-coast sweep: Hyeopjae / Hallim → O’Sulloc → Aewol sunset → booked Friday dinner." },
       { id: "d31", iso: "2026-10-31", date: "Sat 31 Oct", city: "Jeju → Shanghai · Jason + Zhao", logistics: true, note: "The Korea group splits. Jason and Zhao both fly 9C8570 to Shanghai — confirmed on the same ticket." },
       { id: "d1", iso: "2026-11-01", date: "Sun 1 Nov", city: "Shanghai · Jason + Zhao", note: "One directional city sweep: Wukang Road → Xintiandi → Old City → Bund and Pudong after dark." },
-      { id: "d2", iso: "2026-11-02", date: "Mon 2 Nov", city: "Shanghai → Helsinki · Jason + Zhao", logistics: true, note: "A compact Pudong morning, bags collected by 16:00 and a protected PVG buffer for Jason’s 21:00 Finnair departure." },
+      { id: "d2", iso: "2026-11-02", date: "Mon 2 Nov", city: "Shanghai departure · Helsinki for Jason", logistics: true, note: "A compact Pudong morning, bags collected by 16:00 and a protected PVG buffer for Jason’s 21:00 Finnair departure." },
       { id: "d3", iso: "2026-11-03", date: "Tue 3 Nov", city: "Helsinki → London · Jason", logistics: true, note: "Jason connects at Helsinki and lands at Heathrow Terminal 3 at 09:10. Zhao’s onward routing remains to be confirmed." }
     ];
 
@@ -1569,6 +1606,36 @@
         p.items = p.items.filter(it => (it.title || "").trim() !== "🍻 9.9");
         p.koreaBoysOnlyPhotoCleanupV9 = true;
       }
+      // v11: exact old title/time guards protect group-authored changes and deleted stops.
+      if (!p.koreaReviewV11) {
+        const edits = [
+          ['d24','Easy first night — Hongdae or Myeongdong street food','20:00','20:00','Easy first night — food near Hongdae','Stay near the accommodation tonight; save Myeongdong for the planned Monday visit. Eat whenever arrivals allow.'],
+          ['d25','Gyeongbokgung Palace + changing-of-the-guard','10:30','10:30','Gyeongbokgung Palace','Optional guard ceremony: arrive 09:45 for 10:00. Main palace visit 10:30, then lunch nearby around 13:00 before Insadong. There is no 10:30 ceremony.'],
+          ['d25','N Seoul Tower at sunset (Namsan)','17:30','17:30',null,'Be at the viewpoint by 17:30. Leave Insadong about 16:00; allow transit, uphill access and queues.'],
+          ['d28','Pick up hire cars → Seongsan Ilchulbong','09:30','13:00','Seongsan Ilchulbong · conditional east-coast day','Only after the car/driver plan is confirmed. If morning collection runs late, choose this OR Seopjikoji and drop the cave.'],
+          ['d28','Seopjikoji coast walk + lunch','13:30','11:00',null,'Conditional target from the south-coast villa, with cars already in hand. Coast walk then lunch; allow 60–75 minutes walking.'],
+          ['d28','Manjanggul lava tube','15:30','15:30',null,'Optional final stop, not a deadline to rush for. Reopened May 2026; last admission 17:00, target entry before 16:30.'],
+          ['d29','Hallasan hike (Yeongsil or Eorimok trail)','08:00','08:00',null,'Default: Yeongsil out-and-back to Witse-oreum, not the summit. If lower parking or Nambyeok extension, drop afternoon add-ons.'],
+          ['d29','Jusangjeolli columnar-basalt cliffs','14:00','15:30',null,'Optional after the mountain only if back at the car, fed and rested by about 14:30.'],
+          ['d29','Cheonjiyeon Waterfall','15:30','16:30',null,'Optional: first stop to drop after a slow hike.'],
+          ['d30','West coast — Hallim Park / Hyeopjae beach','10:30','13:00',null,'After O’sulloc: lunch, then choose beach OR park.'],
+          ['d30',"O'sulloc tea fields + museum",'13:00','10:30',null,'Start inland from the south-coast villa, then continue north to Hyeopjae and Aewol.'],
+          ['d30','Sunset at the Aewol coast cafés','17:30','16:45',null,'Park once, choose one café and walk. Leave around 18:00 for the villa; keep drivers sober.'],
+          ['d30','Friday dinner and drinks in Jeju','20:00','20:00','Friday dinner near Jungmun / Seogwipo','Return cars to the villa first, then taxi to dinner. Restaurant and capacity for eight still need booking.'],
+          ['d1','Yu Garden + Old City lanes','15:30','14:00',null,'Target the garden first, then Old City. Confirm the ticket’s entry window and current closing time.']
+        ];
+        for (const [day,title,oldTime,time,newTitle,note] of edits) {
+          const it=p.items.find(x=>x.dayId===day&&x.title===title&&(x.time||'')===oldTime);
+          if(it){it.time=time;if(newTitle)it.title=newTitle;it.note=[it.note,note].filter(Boolean).join(' · ');}
+        }
+        for(const it of p.items){
+          if(it.dayId==='d24'&&it.title==='Land in Seoul — check in, drop bags'&&!it.time){it.arrivalFirst=true;it.note=[it.note,'Arrival times vary by traveller; check Crew Flights. Check-in from 15:00; keep dinner flexible.'].filter(Boolean).join(' · ');}
+          if(it.dayId==='d26'&&['Skin analysis','Korean bathhouse / jjimjilbang'].includes(it.title)&&!it.time){it.optional=true;it.note=[it.note,'Alternative to DDP / shopping; not an extra stop after dinner. Choose one and confirm provider/time.'].filter(Boolean).join(' · ');}
+          if(it.dayId==='d26'&&it.title==='NANTA cooking-comedy show (Myeongdong)'){it.note=[it.note,'17:00 is a target, tickets unconfirmed. Arrive 16:30. “Ji” must be matched to the roster before buying four seats.'].filter(Boolean).join(' · ');}
+          if(it.dayId==='d27'&&it.title==='Spa / head-spa half-day (THE SEOL:HA, Hongdae)'){it.optional=true;it.note=[it.note,'Booking-dependent: confirm exact branch, treatment duration and simultaneous capacity. Finish by 17:00; skip if luggage or flight buffer slips.'].filter(Boolean).join(' · ');}
+        }
+        p.koreaReviewV11=true;
+      }
       return p;
     }
 
@@ -1647,7 +1714,7 @@
       };
       const merged = base.map(d => {
         const s = byId[d.id]; if (!s) return d;
-        const out = { ...d, owners: Array.isArray(s.owners) ? s.owners : [], options: mergeOptions(d.options, s.options), status: s.status || "open", chosen: s.chosen != null ? s.chosen : null, log: s.log || d.log || null, notes: Array.isArray(s.notes) ? s.notes : [] };
+        const out = { ...s, ...d, owners: Array.isArray(s.owners) ? s.owners : [], options: mergeOptions(d.options, s.options), status: s.status || "open", chosen: s.chosen != null ? s.chosen : null, log: s.log || d.log || null, notes: Array.isArray(s.notes) ? s.notes : [] };
         // Rooms flagged booked:true in the code defaults are settled in real life.
         // A stale synced state must never be able to reopen them.
         if (d.booked) { out.status = "decided"; out.chosen = d.chosen; out.log = d.log || out.log; }
@@ -1667,11 +1734,39 @@
       return out;
     }
 
+    // Evidence tier is explicit: guide selection != user rating != a confirmed reservation.
+    const FOOD_EVIDENCE = [
+      ['dinner_seoul','hwang','Hwangsaengga Kalguksu','Palace-area lunch: noodles and dumplings after Gyeongbokgung; not the Hongdae dinner anchor.','https://guide.michelin.com/en/seoul-capital-area/kr-seoul/restaurant/hwangsaengga-kalguksu','MICHELIN Guide selection','₩15,000–25,000 pp planning allowance','78 Bukchon-ro 5-gil, Seoul'],
+      ['dinner_seoul','cheong','Cheongdonok · Hongdae BBQ','Best geographic fit for Monday dinner near the base. Ask for eight seats together and last orders before committing.','https://english.visitseoul.net/area/Cheongdonok/ENPpr9v1k','Official Seoul tourism listing; independent score not verified','₩30,000–50,000 pp planning allowance','Cheongdonok Hongdae Seoul'],
+      ['dinner_seoul','goldpig','Geumdwaeji Sikdang · pork BBQ','Quality-led alternative in Yaksu, east of the base. A deliberate detour; only choose if the queue and eight-person seating work.','https://guide.michelin.com/en/seoul-capital-area/kr-seoul/restaurant/geumdwaeji-sikdang','MICHELIN Guide selection','₩35,000–60,000 pp planning allowance','149 Dasan-ro, Seoul'],
+      ['dinner_jeju','negeori','Negeori Restaurant · hairtail','Seogwipo seafood candidate for Wednesday. Confirm dinner opening, fish size, total price and seating for eight.','https://m.visitjeju.net/en/detail/view?contentsid=CNTS_000000000021760','Official Visit Jeju listing; independent score not verified','₩25,000–45,000 pp planning allowance','Negeori Restaurant Seogwipo'],
+      ['dinner_jeju','heukdon','Heukdonhyang · black pork','South-coast BBQ candidate for Thursday or Friday; check eight-person seating and transport back to the villa.','https://m.visitjeju.net/en/detail/view?contentsid=CNTS_000000000021471','Official Visit Jeju listing; independent score not verified','₩30,000–50,000 pp planning allowance','58 Taepyeong-ro Seogwipo'],
+      ['dinner_jeju','dolseom','Seongsan Dolseom · abalone','East-coast lunch alternative, not a dinner destination from the south-coast villa. Only use if the Wednesday route goes ahead.','https://www.visitjeju.net/kr/detail/view?contentsid=CNTS_000000000020035','Official Visit Jeju listing; independent score not verified','₩20,000–35,000 pp planning allowance','Seongsan Dolseom Jeju'],
+      ['dinner_shanghai','dahuchun','Da Hu Chun · Middle Sichuan Road','Pan-fried buns near the Bund for Jason + Zhao. Good casual breakfast/lunch or early dinner; allow a queue.','https://guide.michelin.com/en/shanghai-municipality/shanghai/restaurant/da-hu-chun-middle-sichuan-road','MICHELIN Guide selection','CNY 40–80 pp planning allowance','136 Middle Sichuan Road Shanghai'],
+      ['dinner_shanghai','lailai','Qiao Ai Lai Lai Xiao Long · Huangpu','Crab xiaolongbao for two near the central Shanghai route. Check current service hours; use as a lunch alternative.','https://guide.michelin.com/en/shanghai-municipality/shanghai/restaurant/qiao-ai-lai-lai-xiao-long-huangpu','MICHELIN Guide selection','CNY 60–120 pp planning allowance','Qiao Ai Lai Lai Xiao Long Huangpu Shanghai'],
+      ['dinner_shanghai','lubolang','Lu Bo Lang · Old City','Shanghainese meal by Yu Garden for two. Request a table and current menu; fits Sunday before returning to the Bund.','https://guide.michelin.com/en/shanghai-municipality/shanghai/restaurant/lu-bo-lang','MICHELIN Guide selection','CNY 150–250 pp planning allowance','115 Yuyuan Old Street Shanghai']
+    ];
+    for(const [room,id,title,verdict,source,evidence,price,where] of FOOD_EVIDENCE){
+      const r=defaultDesk.rooms.find(x=>x.id===room);if(!r)continue;
+      r.options.push({id:'review_food_'+id,title,verdict,price,by:null,researcher:'Research review',
+        link:source,source:'Checked 27 Sep 2026 · '+evidence,availability:'Shortlist only · no reservation or date-specific availability checked',availabilityTone:'warn',
+        notes:where,maps:'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(where),naver:room==='dinner_shanghai'?null:'https://map.naver.com/p/search/'+encodeURIComponent(where),warning:'Allowances are estimates, not menu quotes. Confirm hours, dietary needs, booking policy and party size directly.',
+        facts:[{label:'Evidence',value:evidence},{label:'Booking',value:'Unconfirmed'},{label:'Checked',value:'27 Sep 2026'},{label:'Party',value:room==='dinner_shanghai'?'Jason + Zhao · 2':'Korea crew · up to 8'}],votes:{}});
+    }
+    const revisedVilla=defaultDesk.rooms.find(r=>r.id==='stay_jeju')?.options.find(o=>o.id==='stay_jeju_hyeyum');
+    if(revisedVilla){
+      revisedVilla.warning='Confirm Monterrey cancellation outcome: its recorded free-cancellation deadline was 27 Sep 16:00 Korea time (08:00 UK), now past. Do not assume it was cancelled. Agree the eight-person bed/floor-mat allocation and confirm late keypad access privately.';
+      revisedVilla.verdict='Booked south-coast base. Six beds plus floor mattresses for eight: agree who sleeps where before travel. Current independent rating was not reverified in this review.';
+      revisedVilla.facts.find(f=>f.label==='Check-out').value='Sat 31 Oct · by 11:00; airport group leaves 06:45–07:00';
+    }
+    const carRoom=defaultDesk.rooms.find(r=>r.id==='car_jeju');
+    if(carRoom) carRoom.desc='Decision required: late handover with written confirmation, or a prebooked arrival transfer and a rested Wednesday collection. Two cars require two approved drivers; luggage capacity and insurance must be confirmed.';
+
     let state = loadState();
 
     function loadState() {
       try {
-        const raw = localStorage.getItem(STORE_KEY);
+        const raw = storage.getItem(STORE_KEY);
         if (!raw) { const s = structuredClone(defaultState); s.plan = normalizePlan(s.plan); return s; }
         const parsed = JSON.parse(raw);
         return {
@@ -1690,158 +1785,124 @@
       }
     }
 
-    function saveState() {
-      localStorage.setItem(STORE_KEY, JSON.stringify(state));
-      queueRemoteSave();
+    // Shared writes are optimistic compare-and-swap, with a durable local outbox.
+    const OUTBOX_KEY = STORE_KEY + ':outbox:v2';
+    const shared = s => { const c = structuredClone(s); delete c.selectedPlayer; return c; };
+    let syncBase = shared(state), saving = false, syncConflicts = [], conflictChoice = null;
+    try {
+      const box = JSON.parse(storage.getItem(OUTBOX_KEY) || 'null');
+      if (box && box.base && box.local) { syncBase = box.base; mergeRemoteState(box.local); pendingSave = true; }
+    } catch (_) {}
+    const equal = (a,b) => JSON.stringify(a) === JSON.stringify(b);
+    // Arrays with stable ids merge by id; roster positions never move (votes reference them).
+    function mergeThree(base, local, remote, path = '', conflicts = [], choice = null) {
+      if (equal(local,base)) return structuredClone(remote);
+      if (equal(remote,base) || equal(local,remote)) return structuredClone(local);
+      if ([base,local,remote].every(Array.isArray)) {
+        if(path==='feed') return [...new Map([...local,...remote].map(x=>[JSON.stringify(x),x])).values()].sort((a,b)=>b.t-a.t).slice(0,100);
+        if ([...base,...local,...remote].every(x => x && typeof x === 'object' && x.id != null)) {
+          const ids = [...new Set([...remote,...local].map(x=>x.id))];
+          return ids.map(id=>mergeThree(base.find(x=>x.id===id),local.find(x=>x.id===id),remote.find(x=>x.id===id),path+'.'+id,conflicts,choice)).filter(x=>x!==undefined);
+        }
+        if (/\.(owners|drivers)$/.test(path)) return [...new Set([...remote.filter(x=>!base.includes(x)||local.includes(x)),...local.filter(x=>!base.includes(x))])];
+        if (path === 'players') return Array.from({length:Math.max(local.length,remote.length)},(_,i)=>mergeThree(base[i],local[i],remote[i],path+'.'+i,conflicts,choice));
+      }
+      if ([local,remote].every(x=>x && typeof x==='object' && !Array.isArray(x)) && (base===undefined || base && typeof base==='object' && !Array.isArray(base))) {
+        base=base||{};
+        const out={};
+        for (const k of new Set([...Object.keys(base),...Object.keys(local),...Object.keys(remote)])) {
+          const v=mergeThree(base[k],local[k],remote[k],path?path+'.'+k:k,conflicts,choice); if(v!==undefined) out[k]=v;
+        }
+        return out;
+      }
+      conflicts.push({path,local,remote});
+      return structuredClone(choice==='remote'?remote:local);
     }
-
-    function hasRemoteSync() {
-      return !!(SUPABASE_URL && SUPABASE_KEY && BOARD_KEY);
+    function persistOutbox() {
+      storage.setItem(STORE_KEY,JSON.stringify(state));
+      storage.setItem(OUTBOX_KEY,JSON.stringify({base:syncBase,local:shared(state)}));
     }
-
+    function saveState() { pendingSave=true; persistOutbox(); queueRemoteSave(); }
+    function hasRemoteSync() { return !!(SUPABASE_URL && SUPABASE_KEY && BOARD_KEY); }
+    function normalized(remote) {
+      return {...structuredClone(defaultState),...remote,
+        players:withRequiredPlayers(remote.players||structuredClone(defaultState.players)),
+        groupDone:{...defaultState.groupDone,...remote.groupDone},ideas:normalizeIdeas(remote.ideas),
+        ideaVotes:remote.ideaVotes||{},desk:{rooms:normalizeDeskRooms(remote.desk?.rooms)},
+        plan:normalizePlan(remote.plan),feed:Array.isArray(remote.feed)?remote.feed:[]};
+    }
     function mergeRemoteState(remote) {
-      if (!remote || typeof remote !== "object") return;
-      // "Who am I" is a per-device choice — never let a remote sync change it.
-      const localSelected = state.selectedPlayer;
-      state = {
-        ...structuredClone(defaultState),
-        ...remote,
-        players: withRequiredPlayers(remote.players || structuredClone(defaultState.players)),
-        groupDone: { ...defaultState.groupDone, ...(remote.groupDone || {}) },
-        ideas: normalizeIdeas(remote.ideas),
-        ideaVotes: remote.ideaVotes || {},
-        desk: remote.desk ? { rooms: normalizeDeskRooms(remote.desk.rooms) } : structuredClone(defaultDesk),
-        plan: normalizePlan(remote.plan),
-        feed: Array.isArray(remote.feed) ? remote.feed : []
-      };
-      if (typeof localSelected === "number" && state.players[localSelected]) {
-        state.selectedPlayer = localSelected;
-      }
-      localStorage.setItem(STORE_KEY, JSON.stringify(state));
+      const selected=state.selectedPlayer; state=normalized(remote); state.selectedPlayer=selected;
+      storage.setItem(STORE_KEY,JSON.stringify(state));
     }
-
-    function relTime(ts) {
-      const s = Math.round((Date.now() - ts) / 1000);
-      if (s < 10) return "just now";
-      if (s < 60) return `${s}s ago`;
-      const m = Math.round(s / 60);
-      if (m < 60) return `${m}m ago`;
-      const h = Math.round(m / 60);
-      return `${h}h ago`;
-    }
-
+    function relTime(ts) { const m=Math.floor((Date.now()-ts)/60000); return m<1?'just now':m<60?m+'m ago':Math.floor(m/60)+'h ago'; }
     function setSyncChip(kind) {
-      const chip = document.getElementById("syncChip");
-      const textEl = document.getElementById("syncChipText");
-      if (chip) chip.classList.remove("syncing", "offline");
-      if (kind === "disabled") {
-        if (chip) chip.classList.add("offline");
-        if (textEl) textEl.textContent = "Local only";
-        return;
-      }
-      if (kind === "syncing") {
-        if (chip) chip.classList.add("syncing");
-        if (textEl) textEl.textContent = "Syncing…";
-        return;
-      }
-      if (kind === "offline") {
-        if (chip) chip.classList.add("offline");
-        if (textEl) textEl.textContent = "Offline";
-        return;
-      }
-      const rel = lastSyncedAt ? relTime(lastSyncedAt) : null;
-      if (textEl) textEl.textContent = rel ? `Live · ${rel}` : "Live";
+      const chip=document.getElementById('syncChip'), label=document.getElementById('syncChipText');
+      if(chip){chip.classList.toggle('syncing',kind==='syncing');chip.classList.toggle('offline',kind==='offline'||!!syncConflicts.length);}
+      if(label) label.textContent=syncConflicts.length?'Resolve edit conflict':!hasRemoteSync()?'Preview · local only':storage.failed?'Device storage unavailable':kind==='syncing'?'Saving…':pendingSave?'Unsaved · tap to retry':kind==='offline'?'Offline · retry':lastSyncedAt?'Synced · '+relTime(lastSyncedAt):'Connecting…';
     }
-
-    async function remotePull(opts) {
-      opts = opts || {};
-      if (!hasRemoteSync()) { setSyncChip("disabled"); return; }
-      if (!opts.poll) setSyncChip("syncing");
+    const rowUrl = () => SUPABASE_URL+'/rest/v1/board_state?board_key=eq.'+encodeURIComponent(BOARD_KEY);
+    async function readRow() {
+      const r=await fetch(rowUrl()+'&select=state,updated_at',{headers:SB_HEADERS,cache:'no-store',signal:AbortSignal.timeout(15000)});
+      if(!r.ok) throw Error('HTTP '+r.status); const rows=await r.json();
+      if(!rows?.[0]?.state || !rows[0].updated_at) throw Error('Shared board unavailable; never seed over an unknown board');
+      return rows[0];
+    }
+    async function remotePull(opts={}) {
+      if(!hasRemoteSync()){setSyncChip('disabled');return;}
+      if(saving)return;
+      if(pendingSave){if(opts.manual&&syncConflicts.length)showSyncConflicts();else if(!syncConflicts.length)await remoteSave();return;}
+      // Do not tear down a form while someone is typing an unsubmitted draft.
+      if(!opts.initial && document.activeElement?.matches('input,textarea,select'))return;
       try {
-        const r = await fetch(SUPABASE_URL + "/rest/v1/board_state?board_key=eq." + encodeURIComponent(BOARD_KEY) + "&select=state,updated_at", { headers: SB_HEADERS, cache: "no-store" });
-        if (!r.ok) throw new Error("HTTP " + r.status);
-        const rows = await r.json();
-        const row = (Array.isArray(rows) && rows.length) ? rows[0] : null;
-        if (row && row.state && typeof row.state === "object" && Object.keys(row.state).length) {
-          const remoteStamp = row.updated_at || null;
-          const changed = remoteStamp && remoteStamp !== lastSeenUpdatedAt;
-          // Don't overwrite local edits that haven't finished saving yet.
-          const safe = !pendingSave && (Date.now() - lastLocalSaveAt > 4000);
-          // Until this device has read the group's state once, the group's copy always wins.
-          const firstLoad = !remoteLoadAttempted;
-          const allowMerge = opts.manual || opts.initial || firstLoad || (changed && safe);
-          if (allowMerge) {
-            mergeRemoteState(row.state);
-            renderAll();
-            if (opts.manual) toast("Pulled the latest from the group");
-            else if (changed && !opts.initial && !firstLoad) toast("Synced a group update");
-          }
-          lastSeenUpdatedAt = remoteStamp || lastSeenUpdatedAt;
-          remoteLoadAttempted = true;
-        } else {
-          // Empty remote: seed it from this device rather than ever letting an
-          // empty remote row overwrite local state.
-          remoteLoadAttempted = true;
-          if (opts.initial) queueRemoteSave();
+        const row=await readRow();
+        if(pendingSave||saving)return; // an edit may have happened during the request
+        if(row.updated_at!==lastSeenUpdatedAt || !remoteLoadAttempted){
+          mergeRemoteState(row.state);syncBase=shared(state);lastSeenUpdatedAt=row.updated_at;renderAll();
         }
-        lastSyncedAt = Date.now();
-        setSyncChip("live");
-      } catch (e) {
-        setSyncChip(lastSyncedAt ? "live" : "offline");
-        if (opts.manual) toast("Could not reach group sync");
-      }
+        remoteLoadAttempted=true;lastSyncedAt=Date.now();setSyncChip('live');
+      } catch(_){setSyncChip('offline');if(opts.manual)toast('Could not reach group sync. Your local copy is retained.');}
     }
-
-    function startSyncLoops() {
-      if (!hasRemoteSync()) { setSyncChip("disabled"); return; }
-      // Quietly check for group updates in the background.
-      setInterval(() => remotePull({ poll: true }), 10000);
-      // Keep the "synced 2m ago" label fresh.
-      setInterval(() => {
-        const chip = document.getElementById("syncChip");
-        if (chip && lastSyncedAt && !chip.classList.contains("syncing") && !chip.classList.contains("offline")) {
-          setSyncChip("live");
-        }
-      }, 20000);
-    }
-
     function queueRemoteSave() {
-      if (!hasRemoteSync()) return;
-      // Save gate: a device that has never read the group's state (offline start, blocked
-      // network) must not push its possibly-stale local copy over everyone else's.
-      if (!remoteLoadAttempted) return;
-      pendingSave = true;
-      setSyncChip("syncing");
-      clearTimeout(remoteSaveTimer);
-      remoteSaveTimer = setTimeout(remoteSave, 800);
+      if(!hasRemoteSync()){setSyncChip('disabled');return;}
+      setSyncChip('syncing');clearTimeout(remoteSaveTimer);remoteSaveTimer=setTimeout(remoteSave,800);
     }
-
-    let saveSeq = 0;
     async function remoteSave() {
-      if (!hasRemoteSync() || !remoteLoadAttempted) return;
-      const mySeq = ++saveSeq;
-      lastLocalSaveAt = Date.now();
+      if(!hasRemoteSync()||saving||!pendingSave||syncConflicts.length&&!conflictChoice)return;
+      saving=true;setSyncChip('syncing');
       try {
-        const r = await fetch(SUPABASE_URL + "/rest/v1/board_state?on_conflict=board_key", {
-          method: "POST",
-          headers: { ...SB_HEADERS, Prefer: "resolution=merge-duplicates,return=representation" },
-          body: JSON.stringify([{ board_key: BOARD_KEY, state }])
-        });
-        if (!r.ok) throw new Error("HTTP " + r.status);
-        const rows = await r.json();
-        // Track our own write's stamp so the next poll doesn't re-merge it.
-        if (Array.isArray(rows) && rows[0] && rows[0].updated_at) lastSeenUpdatedAt = rows[0].updated_at;
-        if (mySeq === saveSeq) {
-          pendingSave = false;
-          lastSyncedAt = Date.now();
-          setSyncChip("live");
+        for(let attempt=0;attempt<4;attempt++) {
+          const row=await readRow();remoteLoadAttempted=true;
+          const remote=shared(normalized(row.state)), sent=shared(state), conflicts=[];
+          const merged=mergeThree(syncBase,sent,remote,'',conflicts,conflictChoice);
+          if(conflicts.length&&!conflictChoice){syncConflicts=conflicts;persistOutbox();showSyncConflicts();return;}
+          const r=await fetch(rowUrl()+'&updated_at=eq.'+encodeURIComponent(row.updated_at),{
+            method:'PATCH',headers:{...SB_HEADERS,Prefer:'return=representation'},
+            body:JSON.stringify({state:merged}),signal:AbortSignal.timeout(15000)});
+          if(!r.ok)throw Error('HTTP '+r.status);const rows=await r.json();
+          if(!rows.length)continue; // someone wrote after our GET; merge their latest version
+          const newer=shared(state);syncBase=structuredClone(merged);
+          const during=[];const final=mergeThree(sent,newer,merged,'',during);
+          mergeRemoteState(final);pendingSave=!equal(final,merged);syncConflicts=during;conflictChoice=null;
+          lastSeenUpdatedAt=rows[0].updated_at;lastSyncedAt=Date.now();
+          if(pendingSave)persistOutbox();else storage.removeItem(OUTBOX_KEY);
+          renderAll();return;
         }
-      } catch (e) {
-        if (mySeq === saveSeq) {
-          pendingSave = false;
-          setSyncChip(lastSyncedAt ? "live" : "offline");
-        }
-      }
+        throw Error('Board busy; retry shortly');
+      }catch(_){pendingSave=true;persistOutbox();}
+      finally{saving=false;setSyncChip(pendingSave?'offline':'live');}
+    }
+    function showSyncConflicts() {
+      let panel=document.getElementById('syncConflicts');if(!panel){panel=document.createElement('section');panel.id='syncConflicts';panel.className='sync-conflicts';document.body.append(panel);}
+      panel.innerHTML='<h3>Two people changed the same field</h3><p>Neither version has been overwritten. Choose which conflicting fields to keep; all other changes are combined.</p><pre></pre><button data-resolve="local">Keep my conflicting changes</button><button data-resolve="remote">Keep the group’s conflicting changes</button>';
+      panel.querySelector('pre').textContent=syncConflicts.map(c=>c.path+'\nMine: '+JSON.stringify(c.local)+'\nGroup: '+JSON.stringify(c.remote)).join('\n\n');
+      panel.querySelectorAll('button').forEach(b=>b.onclick=()=>{conflictChoice=b.dataset.resolve;panel.remove();remoteSave();});
+    }
+    function startSyncLoops() {
+      if(!hasRemoteSync())return;
+      setInterval(()=>remotePull({poll:true}),10000);
+      window.addEventListener('online',()=>remotePull({manual:true}));
+      window.addEventListener('beforeunload',e=>{if(pendingSave&&storage.failed){e.preventDefault();e.returnValue='';}});
     }
 
     function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
@@ -1899,7 +1960,7 @@
         </div>`;
       }).join("");
       holder.querySelectorAll(".traveller-row").forEach(row => {
-        row.addEventListener("click", () => { state.selectedPlayer = Number(row.dataset.player); saveState(); renderAll(); });
+        row.addEventListener("click", () => { state.selectedPlayer = Number(row.dataset.player); setWhoami(state.selectedPlayer); storage.setItem(STORE_KEY,JSON.stringify(state)); renderAll(); });
       });
     }
 
@@ -2184,9 +2245,9 @@
           const mins = Math.floor(ms / 60000);
           const d = Math.floor(mins / 1440), h = Math.floor((mins % 1440) / 60), m = mins % 60;
           daysEl.innerHTML = `${d}<span class="cd-unit">d</span>${h}<span class="cd-unit">h</span>${m}<span class="cd-unit">m</span>`;
-          if (subEl) subEl.textContent = d >= 1 ? "until you land in Seoul · 23 Oct 2026" : "Seoul is basically today — pack ✈️";
+          if (subEl) subEl.textContent = d >= 1 ? "until Seoul arrival day · 24 Oct 2026 KST" : "Seoul is basically today — pack ✈️";
         } else {
-          daysEl.textContent = "In Korea 🇰🇷";
+          daysEl.textContent = now < new Date("2026-11-04T00:00:00+09:00") ? "Trip underway ✈️" : "Trip complete";
           if (subEl) subEl.textContent = "Korea + Shanghai · 23 Oct → 3 Nov 2026";
         }
       }
@@ -2201,18 +2262,19 @@
       }
     }
 
+    function roomSettled(r) { return r.status === "decided" || r.log?.status === "booked"; }
     function renderHero() {
       renderCountdown();
       ensureDesk();
       const rooms = (state.desk && state.desk.rooms) ? state.desk.rooms : [];
-      const decided = rooms.filter(r => r.status === "decided").length;
+      const decided = rooms.filter(roomSettled).length;
       const pct = rooms.length ? Math.round(decided / rooms.length * 100) : 0;
       const pctEl = document.getElementById("heroProgressPct");
       if (pctEl) tweenNum(pctEl, pct, n => `${Math.round(n)}%`);
       const ring = document.getElementById("heroRing");
       if (ring) { const C = 2 * Math.PI * 52; ring.style.strokeDashoffset = (C * (1 - pct / 100)).toFixed(1); }
       const subP = document.getElementById("heroProgressSub");
-      if (subP) subP.textContent = `${decided} of ${rooms.length} crew decisions booked.`;
+      if (subP) subP.textContent = `${decided} of ${rooms.length} crew decisions marked done.`;
       const tcp = document.getElementById("travellerCountPill");
       if (tcp) tcp.textContent = `${state.players.length} travellers`;
     }
@@ -2303,13 +2365,14 @@
     }
 
     function escapeHtml(str) { return String(str || "").replace(/[&<>"]/g, s => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[s])); }
+    function safeHttpUrl(v){try{const u=new URL(String(v));return ["https:","http:"].includes(u.protocol)?u.href:"#";}catch(_){return "#";}}
     function escapeAttr(str) { return escapeHtml(str).replace(/'/g, "&#039;"); }
 
     // ---- Crew pulse: a lightweight synced activity feed ----
     // Every meaningful mutation appends an event (capped at 40) so the group can
     // see "what happened since I last looked". Synced via the same state blob.
     const PULSE_SEEN_KEY = "koreaPulseSeenV1";
-    const pulseSeenAt = Number(localStorage.getItem(PULSE_SEEN_KEY) || 0);
+    const pulseSeenAt = Number(storage.getItem(PULSE_SEEN_KEY) || 0);
     function logEvent(emoji, msg) {
       if (!Array.isArray(state.feed)) state.feed = [];
       state.feed.unshift({ t: Date.now(), by: state.selectedPlayer, emoji, msg });
@@ -2337,7 +2400,7 @@
       // Only mark the feed "seen" while the Board tab is actually on screen.
       const boardEl = document.getElementById("board");
       if (boardEl && boardEl.classList.contains("active") && feed.length) {
-        localStorage.setItem(PULSE_SEEN_KEY, String(feed[0].t));
+        storage.setItem(PULSE_SEEN_KEY, String(feed[0].t));
       }
     }
 
@@ -2455,14 +2518,14 @@
     }
     function deskBookedCard(r) {
       const o = (r.options || []).find(x => x.id === r.chosen);
-      const info = (r.log && r.log.text) || (o ? (o.title + (o.price ? " · " + o.price : "")) : "") || "Booked — tap reopen to add the details.";
+      const info = (r.log && r.log.text) || (o ? (o.title + (o.price ? " · " + o.price : "")) : "") || "Marked booked by the group · details still needed.";
       // A booked stay is reference material on the trip, so surface the facts of the
       // chosen option (address, times, entry) rather than a single summary line.
       const facts = (o && Array.isArray(o.facts) && o.facts.length)
         ? `<div class="booked-facts">${o.facts.map(f => `<div class="bf-row"><span>${escapeHtml(f.label || "")}</span><strong>${escapeHtml(f.value || "—")}</strong></div>`).join("")}</div>`
         : "";
       const warn = (o && o.warning) ? `<div class="booked-warn">⚠ ${escapeHtml(o.warning)}</div>` : "";
-      const link = (o && o.link) ? `<a class="booked-link" href="${escapeAttr(o.link)}" target="_blank" rel="noopener">Open the listing ↗</a>` : "";
+      const link = (o && o.link) ? `<a class="booked-link" href="${escapeAttr(safeHttpUrl(o.link))}" target="_blank" rel="noopener">Open the listing ↗</a>` : "";
       const reopen = r.booked
         ? `<div class="booked-locked">🔒 ${escapeHtml(r.lockLabel || ("Confirmed on " + (r.bookedVia || "Airbnb")))} — locked</div>`
         : `<button class="booked-reopen" data-desk="unbook" data-room="${r.id}">↩ Move back to open</button>`;
@@ -2583,7 +2646,7 @@
           const chosen = decided && r.chosen === o.id;
           const mine = o.by === idx;
           const voted = !!o.votes[idx];
-          const name = o.link ? `<a href="${escapeAttr(o.link)}" target="_blank" rel="noopener">${escapeHtml(o.title)} ↗</a>` : escapeHtml(o.title);
+          const name = o.link ? `<a href="${escapeAttr(safeHttpUrl(o.link))}" target="_blank" rel="noopener">${escapeHtml(o.title)} ↗</a>` : escapeHtml(o.title);
           const meta = [];
           if (o.price) meta.push(`<span class="pill">${escapeHtml(o.price)}</span>`);
           if (o.availability) meta.push(`<span class="pill ${o.availabilityTone === "done" ? "done" : o.availabilityTone === "hot" ? "hot" : "warn"}">${escapeHtml(o.availability)}</span>`);
@@ -2592,7 +2655,7 @@
           if (chosen) meta.push(`<span class="pill done">✅ Chosen</span>`);
           const photos = Array.isArray(o.photos) ? o.photos : [];
           const gallery = photos.length
-            ? `<div class="opt-gallery" data-gallery="${escapeAttr(o.id)}">${photos.slice(0, 6).map((src, i) => `<a class="opt-shot" href="${escapeAttr(src)}" data-idx="${i}" aria-label="Open ${escapeAttr(o.title)} photo ${i + 1}"><img src="${escapeAttr(src)}" alt="${escapeAttr(o.title)} · photo ${i + 1}" loading="lazy"></a>`).join("")}</div>`
+            ? `<div class="opt-gallery" data-gallery="${escapeAttr(o.id)}">${photos.slice(0, 6).map((src, i) => `<a class="opt-shot" href="${escapeAttr(safeHttpUrl(src))}" data-idx="${i}" aria-label="Open ${escapeAttr(o.title)} photo ${i + 1}"><img src="${escapeAttr(src)}" alt="${escapeAttr(o.title)} · photo ${i + 1}" loading="lazy"></a>`).join("")}</div>`
             : (o.photoNote ? `<div class="opt-photo-empty">📷 ${escapeHtml(o.photoNote)}</div>` : "");
           const hasScores = Array.isArray(o.scores) && o.scores.length;
           const verdict = o.verdict
@@ -2612,7 +2675,7 @@
                 : `<div class="opt-facts">${o.facts.map(f => `<div class="opt-fact"><span>${escapeHtml(f.label || "Detail")}</span><strong>${escapeHtml(f.value || "—")}</strong></div>`).join("")}</div>`)
             : "";
           const rich = (gallery || verdict || scores || facts || o.warning || o.source)
-            ? `<div class="opt-rich">${gallery}${verdict}${scores}${facts}${o.warning ? `<div class="opt-alert">⚠ ${escapeHtml(o.warning)}</div>` : ""}${o.source ? `<div class="opt-source">Source: ${escapeHtml(o.source)}</div>` : ""}</div>`
+            ? `<div class="opt-rich">${gallery}${verdict}${scores}${facts}${o.warning ? `<div class="opt-alert">⚠ ${escapeHtml(o.warning)}</div>` : ""}${o.source ? `<div class="opt-source">Source: ${escapeHtml(o.source)}</div>` : ""}${o.maps ? `<div class="opt-source"><a href="${escapeAttr(safeHttpUrl(safeHttpUrl(o.maps)))}" target="_blank" rel="noopener">Map ↗</a>${o.naver ? ` · <a href="${escapeAttr(safeHttpUrl(safeHttpUrl(o.naver)))}" target="_blank" rel="noopener">Naver ↗</a>` : ""}</div>` : ""}</div>`
             : "";
           return `<div class="opt-card ${leading ? "leading" : ""} ${chosen ? "chosen" : ""}">
             <div class="opt-main">
@@ -2706,7 +2769,7 @@
         if (el.value) drafts[k] = el.value;
         if (el === document.activeElement) focusRoom = k;
       });
-      const isBooked = r => r.status === "decided" || (r.log && r.log.status === "booked");
+      const isBooked = roomSettled;
       const open = rooms.filter(r => !isBooked(r));
       const booked = rooms.filter(isBooked);
       // Open jobs on the left; booked decisions as booked-cards in the side column.
@@ -2783,8 +2846,10 @@
       if (/(check.?in|check.?out|hotel|villa|accom)/.test(t)) return "🏨";
       return "📍";
     }
-    function addPlanItem(dayId, title, time) { ensurePlan(); if (!(title || "").trim()) { toast("Type something to add"); return; } state.plan.items.push({ id: `pl_x_${Date.now()}`, dayId, title: title.trim(), emoji: guessEmoji(title), city: "", kind: "activity", note: "", time: time || "" }); const d = TRIP_DAYS.find(x => x.id === dayId); logEvent("🗓️", `${selectedPlayer().name} added “${title.trim()}” to ${d ? d.date : "the plan"}`); saveState(); renderAll(); toast("Added to the day"); }
-    function changeItemTime(itemId, time) { ensurePlan(); const it = state.plan.items.find(x => x.id === itemId); if (it) { it.time = time || ""; saveState(); renderAll(); } }
+    function addPlanItem(dayId, title, time) { if(!validTime(time)){toast("Use a valid 24-hour time");return;} ensurePlan(); if (!(title || "").trim()) { toast("Type something to add"); return; } state.plan.items.push({ id: `pl_x_${Date.now()}`, dayId, title: title.trim(), emoji: guessEmoji(title), city: "", kind: "activity", note: "", time: time || "" }); const d = TRIP_DAYS.find(x => x.id === dayId); logEvent("🗓️", `${selectedPlayer().name} added “${title.trim()}” to ${d ? d.date : "the plan"}`); saveState(); renderAll(); toast("Added to the day"); }
+    function validTime(t){return !t || /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(t);}
+    function sortPlanItems(a,b){return ((a.optional?1:0)-(b.optional?1:0)) || (a.arrivalFirst?-1:b.arrivalFirst?1:0) || (a.time||"99:99").localeCompare(b.time||"99:99");}
+    function changeItemTime(itemId, time) { if(!validTime(time)){toast("Use a valid 24-hour time");return;} ensurePlan(); const it = state.plan.items.find(x => x.id === itemId); if (it) { it.time = time || ""; saveState(); renderAll(); } }
     function renamePlanItem(itemId) {
       ensurePlan(); const it = state.plan.items.find(x => x.id === itemId); if (!it) return;
       const next = prompt("Rename this item", it.title);
@@ -2852,8 +2917,8 @@
         const rows = b.rows.map(r => `<div class="sb-row"><span>${escapeHtml(r.k)}</span><strong>${escapeHtml(r.v)}</strong></div>`).join("");
         const warn = b.warn ? `<div class="sb-warn">\u26a0 ${escapeHtml(b.warn)}</div>` : "";
         const links = [
-          b.maps ? `<a class="sb-link" href="${escapeAttr(b.maps)}" target="_blank" rel="noopener">\u{1F4CD} Map</a>` : "",
-          b.link ? `<a class="sb-link" href="${escapeAttr(b.link)}" target="_blank" rel="noopener">\u{1F3E0} Listing</a>` : ""
+          b.maps ? `<a class="sb-link" href="${escapeAttr(safeHttpUrl(b.maps))}" target="_blank" rel="noopener">\u{1F4CD} Map</a>` : "",
+          b.link ? `<a class="sb-link" href="${escapeAttr(safeHttpUrl(b.link))}" target="_blank" rel="noopener">\u{1F3E0} Listing</a>` : ""
         ].join("");
         return `<div class="stay-block sb-${b.tone}">
           <div class="sb-head"><span class="sb-emoji">${b.emoji}</span><strong>${escapeHtml(b.title)}</strong><span class="sb-when">${escapeHtml(b.when)}</span></div>
@@ -2871,7 +2936,7 @@
       const flightChip = x => `<span class="arr-chip" title="${escapeAttr(x.p.name + (x.a.info ? " · " + x.a.info : ""))}"><span class="ac-dot" style="background:${x.p.colour}"></span>${escapeHtml(x.p.initials)}${x.a.time ? ` · ${escapeHtml(x.a.time)}` : ""}</span>`;
 
       holder.innerHTML = TRIP_DAYS.map(d => {
-        const dayItems = items.filter(it => it.dayId === d.id).slice().sort((a, b) => (a.time || "99:99").localeCompare(b.time || "99:99"));
+        const dayItems = items.filter(it => it.dayId === d.id).slice().sort(sortPlanItems);
         const cl = d.city.toLowerCase(); const tagCls = cl.includes("jeju") && !cl.includes("seoul") ? "jeju" : "";
         if (dayIsOff(d.id)) {
           return `<div class="plan-day is-off">
@@ -2885,7 +2950,7 @@
         }
         const itemsHtml = dayItems.map(it => {
           const sub = it.kind === "dinner"
-            ? (it.note ? `<a href="${escapeAttr(it.note)}" target="_blank" rel="noopener" class="pi-sub">booking ↗</a>` : `<span class="pi-sub">group dinner</span>`)
+            ? (it.note ? `<a href="${escapeAttr(safeHttpUrl(it.note))}" target="_blank" rel="noopener" class="pi-sub">booking ↗</a>` : `<span class="pi-sub">group dinner</span>`)
             : (it.city ? `<span class="pi-sub">${escapeHtml(it.city)}</span>` : "");
           return `<div class="plan-item ${it.kind === "dinner" ? "dinner" : ""}">
             <span class="pi-emoji">${it.emoji || "📍"}</span>
@@ -3045,7 +3110,7 @@
 
     function renderWho() {
       const el = document.getElementById("whoName");
-      if (el) el.textContent = selectedPlayer().name;
+      if (el) el.textContent = whoamiSaved()===null ? "Viewing only" : selectedPlayer().name;
     }
 
     // ---- Visual itinerary: illustrated poster carousel (overview + per-day slides) ----
@@ -3140,21 +3205,23 @@
     // Dinners, flights and car logistics are not flagged.
     const OPTIONAL_DAY_IDS = ["d28", "d29", "d30"];
     function isOptionalItem(it) {
-      return !!it && OPTIONAL_DAY_IDS.includes(it.dayId) && it.kind !== "dinner" && it.kind !== "flight";
+      return !!it && (!!it.optional || OPTIONAL_DAY_IDS.includes(it.dayId) && it.kind !== "dinner" && it.kind !== "flight");
     }
     function detailFor(title) {
       const t = String(title || "").toLowerCase();
       return DETAILS.find(d => d.match && new RegExp(d.match, "i").test(t)) || null;
     }
+    let detailReturnFocus=null;
     function openDetail(id, imgSrc) {
+      detailReturnFocus=document.activeElement;
       const d = DETAILS.find(x => x.id === id); if (!d) return;
       const modal = document.getElementById("detailModal"), card = document.getElementById("dmCard");
       const li = arr => arr.map(x => `<li>${escapeHtml(x)}</li>`).join("");
       const stats = (d.stats || []).map(x => `<div class="dm-stat"><span>${escapeHtml(x.k)}</span><strong>${escapeHtml(x.v)}</strong></div>`).join("");
       const variants = (d.variants || []).length ? `<div class="dm-sec"><h4>🔀 Pick your version</h4>${d.variants.map(v => `<div class="dm-var"><b>${escapeHtml(v.name)}</b>${v.meta ? `<em>${escapeHtml(v.meta)}</em>` : ""}<p>${escapeHtml(v.detail || "")}</p></div>`).join("")}</div>` : "";
       const secs = (d.sections || []).map(sc => `<div class="dm-sec"><h4>${escapeHtml(sc.h)}</h4><ul>${li(sc.lines)}</ul></div>`).join("");
-      const opts = (d.options || []).length ? `<div class="dm-sec"><h4>Options</h4>${d.options.map(o => `<div class="dm-opt"><div class="dm-opt-h"><b>${escapeHtml(o.name)}</b>${o.price ? `<span>${escapeHtml(o.price)}</span>` : ""}</div>${(o.where || o.when) ? `<p>${escapeHtml([o.where, o.when].filter(Boolean).join(" · "))}</p>` : ""}${o.note ? `<p class="dm-opt-note">${escapeHtml(o.note)}</p>` : ""}${o.book ? `<a class="dm-link" href="${escapeAttr(o.book.url)}" target="_blank" rel="noopener">${escapeHtml(o.book.label)}</a>` : ""}</div>`).join("")}</div>` : "";
-      const links = (d.links || []).map(l => `<a class="dm-link" href="${escapeAttr(l.url)}" target="_blank" rel="noopener">${escapeHtml(l.label)}</a>`).join("");
+      const opts = (d.options || []).length ? `<div class="dm-sec"><h4>Options</h4>${d.options.map(o => `<div class="dm-opt"><div class="dm-opt-h"><b>${escapeHtml(o.name)}</b>${o.price ? `<span>${escapeHtml(o.price)}</span>` : ""}</div>${(o.where || o.when) ? `<p>${escapeHtml([o.where, o.when].filter(Boolean).join(" · "))}</p>` : ""}${o.note ? `<p class="dm-opt-note">${escapeHtml(o.note)}</p>` : ""}${o.book ? `<a class="dm-link" href="${escapeAttr(safeHttpUrl(o.book.url))}" target="_blank" rel="noopener">${escapeHtml(o.book.label)}</a>` : ""}</div>`).join("")}</div>` : "";
+      const links = (d.links || []).map(l => `<a class="dm-link" href="${escapeAttr(safeHttpUrl(l.url))}" target="_blank" rel="noopener">${escapeHtml(l.label)}</a>`).join("");
       card.innerHTML = `<button type="button" class="dm-close" data-dm-close aria-label="Close">✕</button>
         ${imgSrc ? `<div class="dm-hero"><img src="${escapeAttr(imgSrc)}" alt="" onerror="this.parentNode.remove()"></div>` : ""}
         <div class="dm-body"><div class="dm-tag">${escapeHtml(d.icon || "")} ${escapeHtml(d.tag || "")}</div><h3>${escapeHtml(d.name)}</h3>
@@ -3163,14 +3230,14 @@
         ${d.pick ? `<div class="dm-pick"><span>★ Our pick</span>${escapeHtml(d.pick)}</div>` : ""}
         ${variants}${secs}${opts}
         ${links ? `<div class="dm-links">${links}</div>` : ""}
-        ${d.checked ? `<p class="dm-src">Researched ${escapeHtml(d.checked)} from official pages, booking platforms and recent 2025–26 reviews. Prices and hours change, so confirm before paying.</p>` : ""}</div>`;
+        ${d.checked ? `<p class="dm-src">Evidence checked ${escapeHtml(d.checked)}. Sources below cover operating details; a provider listing alone is not an independent quality rating. Date-specific availability is unconfirmed unless a booking is recorded.</p>` : ""}</div>`;
       modal.classList.add("active"); modal.setAttribute("aria-hidden", "false");
       card.scrollTop = 0; const c = card.querySelector(".dm-close"); if (c) c.focus();
     }
-    function closeDetail() { const m = document.getElementById("detailModal"); if (m) { m.classList.remove("active"); m.setAttribute("aria-hidden", "true"); } }
+    function closeDetail() { const m = document.getElementById("detailModal"); if (m) { m.classList.remove("active"); m.setAttribute("aria-hidden", "true"); if(detailReturnFocus?.isConnected)detailReturnFocus.focus(); } }
     function legsHtml(d) {
       const legs = d && DAY_LEGS[d.id]; if (!legs || !legs.length || dayIsOff(d.id)) return "";
-      const a = (u, t) => `<a class="vpd-a" href="${escapeAttr(u)}" target="_blank" rel="noopener">${escapeHtml(t)}</a>`;
+      const a = (u, t) => `<a class="vpd-a" href="${escapeAttr(safeHttpUrl(u))}" target="_blank" rel="noopener">${escapeHtml(t)}</a>`;
       return `<div class="vpd-card wide vpd-drive"><div class="vpd-h">🚗 Driving &amp; parking</div>${legs.map(l => `<div class="vpd-leg"><span class="vpd-legname">${escapeHtml(l.leg)}</span>${l.time ? `<em>${escapeHtml(l.time)}</em>` : ""}
         ${l.note ? `<span class="vpd-note">${escapeHtml(l.note)}</span>` : ""}
         ${l.space ? `<span class="vpd-note">🅿️ Getting a space: ${escapeHtml(l.space)}</span>` : ""}
@@ -3187,7 +3254,7 @@
         <div class="xtra-grid">${cards}</div>
         <div class="bb"><h4>⏰ Book-by dates</h4><ul>${due}</ul></div>
         <details class="xtra-drive"><summary>🚗 Jeju driving rules: pickup, return, fuel, drink-driving</summary><ul><li><b>Pickup:</b> ${escapeHtml(DRIVING_NOTES.pickup)}</li><li><b>Return:</b> ${escapeHtml(DRIVING_NOTES.ret)}</li><li><b>Fuel:</b> ${escapeHtml(DRIVING_NOTES.fuel)}</li><li><b>Drink-driving:</b> ${escapeHtml(DRIVING_NOTES.drink)}</li>${DRIVING_NOTES.tolls ? `<li><b>Tolls & cameras:</b> ${escapeHtml(DRIVING_NOTES.tolls)}</li>` : ""}</ul></details>
-        <details class="xtra-drive"><summary>📷 Photo credits</summary><ul>${PHOTO_CREDITS.map(c => `<li>${escapeHtml(c.what)} · <a class="vpd-a" href="${escapeAttr(c.url)}" target="_blank" rel="noopener">${escapeHtml(c.credit)}</a>${c.licUrl ? ` · <a class="vpd-a" href="${escapeAttr(c.licUrl)}" target="_blank" rel="noopener">licence</a>` : ""}</li>`).join("")}<li>Older real photos (Seoul hero, Bukchon, Gyeongbokgung, Hallasan, Manjanggul, Myeongdong, Namsan): Wikimedia Commons, credits being added.</li></ul></details></div>`;
+        <details class="xtra-drive"><summary>📷 Photo credits</summary><ul>${PHOTO_CREDITS.map(c => `<li>${escapeHtml(c.what)} · <a class="vpd-a" href="${escapeAttr(safeHttpUrl(c.url))}" target="_blank" rel="noopener">${escapeHtml(c.credit)}</a>${c.licUrl ? ` · <a class="vpd-a" href="${escapeAttr(safeHttpUrl(c.licUrl))}" target="_blank" rel="noopener">licence</a>` : ""}</li>`).join("")}<li>Older real photos (Seoul hero, Bukchon, Gyeongbokgung, Hallasan, Manjanggul, Myeongdong, Namsan): Wikimedia Commons, credits being added.</li></ul></details></div>`;
     }
     document.addEventListener("click", e => {
       if (e.target.closest("[data-dm-close]") || e.target.id === "detailModal") { closeDetail(); return; }
@@ -3203,7 +3270,7 @@
       const blocks = (d && DAY_OPS[d.id]) || [];
       const legs = legsHtml(d);
       if ((!blocks.length && !legs) || dayIsOff(d.id)) return "";
-      return `<section class="vpd-section"><h3 class="vpd-title">Details & logistics</h3><p class="vpd-intro">How to run the day: timings, movement, parking, booking actions and weather fallbacks.</p><div class="vpd-wrap">${legs}${blocks.map((b, i) => `<div class="vpd-card${blocks.length % 2 && i === blocks.length - 1 ? " wide" : ""}"><div class="vpd-h">${escapeHtml(b.icon || "ℹ️")} ${escapeHtml(b.title)}</div><ul class="vpd-list">${b.lines.map(x => `<li>${escapeHtml(x)}</li>`).join("")}${b.link ? `<li><a class="vpd-a" href="${escapeAttr(b.link)}" target="_blank" rel="noopener">${escapeHtml(b.label || "Official details ↗")}</a></li>` : ""}${b.maps ? `<li><a class="vpd-a" href="${escapeAttr(b.maps)}" target="_blank" rel="noopener">Open route in Google Maps ↗</a></li>` : ""}</ul></div>`).join("")}</div></section>`;
+      return `<details class="vpd-section"><summary class="vpd-title">Details & logistics · transport, parking & backups</summary><p class="vpd-intro">How to run the day: timings, movement, parking, booking actions and weather fallbacks.</p><div class="vpd-wrap">${legs}${blocks.map((b, i) => `<div class="vpd-card${blocks.length % 2 && i === blocks.length - 1 ? " wide" : ""}"><div class="vpd-h">${escapeHtml(b.icon || "ℹ️")} ${escapeHtml(b.title)}</div><ul class="vpd-list">${b.lines.map(x => `<li>${escapeHtml(x)}</li>`).join("")}${b.link ? `<li><a class="vpd-a" href="${escapeAttr(safeHttpUrl(b.link))}" target="_blank" rel="noopener">${escapeHtml(b.label || "Official details ↗")}</a></li>` : ""}${b.maps ? `<li><a class="vpd-a" href="${escapeAttr(safeHttpUrl(b.maps))}" target="_blank" rel="noopener">Open route in Google Maps ↗</a></li>` : ""}</ul></div>`).join("")}</div></details>`;
     }
     const VP_MTN = `<svg class="vp-mtn" viewBox="0 0 800 90" preserveAspectRatio="none" aria-hidden="true"><path d="M0 90 L90 34 L170 64 L270 24 L360 60 L470 30 L560 60 L650 26 L740 56 L800 40 L800 90Z" fill="rgba(120,140,175,0.42)"/><path d="M0 90 L140 58 L280 76 L420 50 L560 76 L680 54 L800 68 L800 90Z" fill="rgba(90,105,140,0.5)"/></svg>`;
     let vitinIdx = 0, vitinPosterMode = true, vitinSig = "";
@@ -3313,7 +3380,9 @@
       return null;
     }
 
-    function stopNoteForItem(title) {
+    function stopNoteForItem(title, dayId) {
+      if(/head-spa|skin analysis|jjimjilbang|bathhouse/i.test(title)) return "Optional wellness slot · provider and capacity unconfirmed";
+      if(/dinner|bbq|pork|seafood|street food|chimaek/i.test(title)) return ["d31","d1","d2"].includes(dayId)?"Jason + Zhao · table for two · venue to confirm":"Korea crew · up to eight · venue and headcount to confirm";
       const t = (title || "").toLowerCase();
       const notes = [
         [/gyeongbok/, "Royal-palace anchor · 2–2.5 hr · closes Tuesdays"],
@@ -3328,7 +3397,7 @@
         [/gimpo|gmp/, "Domestic-flight buffer · check terminal and bags"],
         [/seongsan/, "60–90 min summit loop · steep stair climb"],
         [/seopjikoji/, "Exposed coast · 60–75 min loop · wind layer"],
-        [/manjanggul/, "Confirm post-works reopening before driving"],
+        [/manjanggul/, "Reopened May 2026 · last entry 17:00 · check day-of notices"],
         [/hallasan/, "Early start · layers, lunch and trail cut-off check"],
         [/jusangjeolli/, "Compact basalt-cliff lookout · 30–45 min"],
         [/cheonjiyeon|waterfall/, "Low-effort south-coast flex stop"],
@@ -3360,7 +3429,7 @@
       ensurePlan();
       const items = state.plan.items || [];
       applyVitinMode();
-      const sig = JSON.stringify({ i: items.map(it => [it.dayId, it.title, it.time, it.emoji, it.kind]), m: state.plan.dayMeta });
+      const sig = JSON.stringify({ i: items, m: state.plan.dayMeta });
       if (sig === vitinSig && host.children.length) return;
       vitinSig = sig;
       const total = 1 + TRIP_DAYS.length;
@@ -3369,7 +3438,8 @@
         const ac = DAY_ACCENT[d.id] || "#f4d9a8";
         const scene = DAY_SCENE[d.id] ? `images/${DAY_SCENE[d.id]}` : "";
         const n = items.filter(it => it.dayId === d.id).length;
-        const cnt = dayIsOff(d.id) ? "Not in the trip" : (n ? `${n} stop${n > 1 ? "s" : ""}` : "Tap to plan");
+        const extras=items.filter(it=>it.dayId===d.id&&it.optional).length;
+        const cnt = dayIsOff(d.id) ? "Not in the trip" : extras ? `${n-extras} main · ${extras} alternatives` : (n ? `${n} stop${n > 1 ? "s" : ""}` : "Tap to plan");
         return `<button class="vp-daynode" style="color:${ac}" data-goslide="${idx + 1}">
           ${scene ? `<img class="vp-daybead" src="${scene}" alt="${escapeAttr(d.city)}" loading="lazy" onerror="this.outerHTML='<span class=&quot;vp-daybead&quot; style=&quot;display:grid;place-items:center;font-size:30px&quot;>📍</span>'">` : `<span class="vp-daybead" style="display:grid;place-items:center;font-size:30px">📍</span>`}
           <span class="vp-daynum">Day ${idx + 1} · ${escapeHtml(d.date.split(" ")[0])}</span>
@@ -3401,7 +3471,7 @@
       const daySlides = TRIP_DAYS.map((d, idx) => {
         const ac = DAY_ACCENT[d.id] || "#f4d9a8";
         const hero = DAY_SCENE[d.id] ? `images/${DAY_SCENE[d.id]}` : "";
-        const dayItems = items.filter(it => it.dayId === d.id).slice().sort((a, b) => (a.time || "99:99").localeCompare(b.time || "99:99"));
+        const dayItems = items.filter(it => it.dayId === d.id).slice().sort(sortPlanItems);
         const head = `<div class="vp-dayhead"><div>
             <div class="vp-dayeyebrow" style="color:${ac}">Day ${idx + 1} · ${escapeHtml(d.date)}</div>
             <div class="vp-daytitle">${escapeHtml(d.city)}</div>
@@ -3412,15 +3482,15 @@
         } else if (!dayItems.length) {
           body = `<div class="vp-empty">${hero ? `<img src="${hero}" alt="" loading="lazy">` : ""}<div><b>Nothing planned yet.</b><br>Tap <b>✎ Edit plan</b> to add stops to ${escapeHtml(d.date)}.</div></div>`;
         } else {
-          const cards = dayItems.map(it => {
+          const cards = dayItems.map((it,itemIndex) => {
             const fn = sceneForItem(it);
             const img = fn
               ? `<img class="vpa-img" src="images/${fn}" alt="${escapeAttr(it.title)}" loading="lazy" onerror="this.outerHTML='<div class=&quot;vpa-imgfb&quot;>${it.emoji || "📍"}</div>'">`
               : `<div class="vpa-imgfb">${it.emoji || "📍"}</div>`;
-            const sub = (it.kind === "dinner") ? (stopNoteForItem(it.title) || "Group dinner") : (it.note || stopNoteForItem(it.title));
+            const sub = it.note || stopNoteForItem(it.title,it.dayId);
             const meta = (it.time || sub) ? `<p>${it.time ? `<span class="vpa-when">${escapeHtml(it.time)}</span>` : ""}${it.time && sub ? " · " : ""}${escapeHtml(sub)}</p>` : "";
             const det = detailFor(it.title);
-            return `<div class="vpa-card${det ? " has-detail" : ""}"${det ? ` data-detail="${det.id}" role="button" tabindex="0" aria-label="${escapeAttr((det.kind === "trail" ? "Trail info: " : "Details: ") + it.title)}"` : ""}>${img}<div class="vpa-txt">${isOptionalItem(it) ? `<span class="vpa-opt">Optional</span>` : ""}<h4>${escapeHtml(it.title)}</h4>${meta}${det ? `<span class="vpa-badge">${det.kind === "trail" ? "🥾 Trail info" : "ℹ️ Details"} ›</span>` : ""}</div></div>`;
+            return `${it.optional && !dayItems[itemIndex-1]?.optional ? `<div class="vpa-alternative">Alternatives · replace a main stop, don’t add these on</div>` : ""}<div class="vpa-card${det ? " has-detail" : ""}"${det ? ` data-detail="${det.id}" role="button" tabindex="0" aria-label="${escapeAttr((det.kind === "trail" ? "Trail info: " : "Details: ") + it.title)}"` : ""}>${img}<div class="vpa-txt">${isOptionalItem(it) ? `<span class="vpa-opt">Optional</span>` : ""}<h4>${escapeHtml(it.title)}</h4>${meta}${det ? `<span class="vpa-badge">${det.kind === "trail" ? "🥾 Trail info" : "ℹ️ Details"} ›</span>` : ""}</div></div>`;
           }).join("");
           body = `<div class="vpa">${cards}</div>`;
         }
@@ -3445,24 +3515,26 @@
       const track = host.querySelector("#vpTrack"), dotsWrap = host.querySelector("#vpDots");
       function go(n) {
         vitinIdx = Math.max(0, Math.min(total - 1, n));
-        track.style.transform = `translateX(-${vitinIdx * 100}%)`;
+        track.querySelectorAll(".vp-slide").forEach((slide,k)=>{slide.hidden=k!==vitinIdx;});
+        host.querySelectorAll("[data-goslide]").forEach(b=>b.setAttribute("aria-current",Number(b.dataset.goslide)===vitinIdx?"step":"false"));
+        host.querySelector("#vpPrev").disabled=vitinIdx===0;host.querySelector("#vpNext").disabled=vitinIdx===total-1;
         dotsWrap.querySelectorAll(".vp-dot").forEach((dn, k) => dn.classList.toggle("on", k === vitinIdx));
         host.querySelectorAll(".vp-jump .vp-jbtn").forEach((jb, k) => jb.classList.toggle("on", k === vitinIdx));
       }
       host.querySelectorAll("[data-goslide]").forEach(b => b.addEventListener("click", () => go(parseInt(b.dataset.goslide, 10))));
       host.querySelector("#vpPrev").addEventListener("click", () => go(vitinIdx - 1));
       host.querySelector("#vpNext").addEventListener("click", () => go(vitinIdx + 1));
-      let x0 = null;
-      track.addEventListener("touchstart", e => { x0 = e.touches[0].clientX; }, { passive: true });
-      track.addEventListener("touchend", e => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) go(vitinIdx + (dx < 0 ? 1 : -1)); x0 = null; });
+      let x0 = null, y0 = null;
+      track.addEventListener("touchstart", e => { x0 = e.touches[0].clientX; y0=e.touches[0].clientY; }, { passive: true });
+      track.addEventListener("touchend", e => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 50 && Math.abs(dx)>Math.abs(e.changedTouches[0].clientY-y0)*1.5 && !e.target.closest("a,button,input,select,textarea")) go(vitinIdx + (dx < 0 ? 1 : -1)); x0 = null; });
       go(Math.min(vitinIdx, total - 1));
     }
 
     // First-load identity gate (ported from Slovenia). Stored per device, never synced.
     const WHOAMI_KEY = "koreaCrewWhoami";
     let whoPrompted = false;
-    function whoamiSaved() { try { const v = localStorage.getItem(WHOAMI_KEY); return v == null ? null : Number(v); } catch (e) { return null; } }
-    function setWhoami(idx) { try { localStorage.setItem(WHOAMI_KEY, String(idx)); } catch (e) {} }
+    function whoamiSaved() { try { const v = storage.getItem(WHOAMI_KEY); return v == null ? null : Number(v); } catch (e) { return null; } }
+    function setWhoami(idx) { try { storage.setItem(WHOAMI_KEY, String(idx)); } catch (e) {} }
     function openWhoModal() {
       const grid = document.getElementById("whoGrid"), modal = document.getElementById("whoModal");
       if (!grid || !modal) return;
@@ -3471,16 +3543,16 @@
         const idx = Number(b.dataset.who);
         state.selectedPlayer = idx; setWhoami(idx);
         modal.classList.remove("active");
-        saveState(); renderAll(); toast(`You're set as ${state.players[idx].name}`);
+        storage.setItem(STORE_KEY,JSON.stringify(state)); renderAll(); toast(`You're set as ${state.players[idx].name}`);
       }));
-      modal.classList.add("active");
+      modal.classList.add("active"); grid.querySelector("button")?.focus();
     }
     // Called once after the first remote pull (or its failure), so the names are the group's real ones.
     function maybePromptWho() {
       if (whoPrompted) return; whoPrompted = true;
       const saved = whoamiSaved();
       if (saved != null && state.players[saved]) { if (state.selectedPlayer !== saved) { state.selectedPlayer = saved; renderAll(); } return; }
-      openWhoModal();
+      // View first. Choose identity using the crew control before contributing.
     }
     function renderAll() {
       ensureDesk(); ensurePlan();
@@ -3598,7 +3670,7 @@
       else if (e.key === "ArrowRight") lbStep(1);
     });
 
-    document.getElementById("playerSelect")?.addEventListener("change", e => { state.selectedPlayer = Number(e.target.value); setWhoami(state.selectedPlayer); saveState(); renderAll(); });
+    document.getElementById("playerSelect")?.addEventListener("change", e => { state.selectedPlayer = Number(e.target.value); setWhoami(state.selectedPlayer); storage.setItem(STORE_KEY,JSON.stringify(state)); renderAll(); });
     document.getElementById("changeWhoBtn")?.addEventListener("click", openWhoModal);
     document.querySelectorAll(".vitin-mode").forEach(b => b.addEventListener("click", () => {
       vitinPosterMode = b.dataset.vitin === "poster";
@@ -3606,7 +3678,7 @@
       if (vitinPosterMode) renderVisualItinerary();
     }));
     document.getElementById("focusPlayerBtn")?.addEventListener("click", () => toast(`${selectedPlayer().name} is selected`));
-    document.getElementById("resetBtn")?.addEventListener("click", () => { if (confirm("Reset this browser's Korea board state?")) { localStorage.removeItem(STORE_KEY); state = loadState(); renderAll(); toast("Board reset"); } });
+    document.getElementById("resetBtn")?.addEventListener("click", () => { if (confirm("Reset this browser's Korea board state?")) { storage.removeItem(STORE_KEY); state = loadState(); renderAll(); toast("Board reset"); } });
 
     document.getElementById("addIdeaBtn").addEventListener("click", () => {
       const title = document.getElementById("newIdeaTitle").value.trim();
@@ -3699,7 +3771,7 @@
       if (deps.length) { lines.push("Departures:"); deps.forEach(p => lines.push(`  🛫 ${p.name}: ${arrivalWhen(p.departure)}`)); lines.push(""); }
       TRIP_DAYS.forEach(d => {
         if (dayIsOff(d.id)) return;
-        const its = state.plan.items.filter(it => it.dayId === d.id).slice().sort((a, b) => (a.time || "99:99").localeCompare(b.time || "99:99"));
+        const its = state.plan.items.filter(it => it.dayId === d.id).slice().sort(sortPlanItems);
         const arr = arrivalsForDay(d.iso), dep = departuresForDay(d.iso);
         const note = dayNote(d);
         lines.push(`${d.date} — ${d.city}${note ? ` (${note})` : ""}`);
@@ -3719,7 +3791,7 @@
       const inputs = Array.from(document.querySelectorAll("[data-pack]"));
       const progress = document.getElementById("packingProgress");
       let packed = {};
-      try { packed = JSON.parse(localStorage.getItem(PACK_STORE_KEY) || "{}"); } catch (e) { packed = {}; }
+      try { packed = JSON.parse(storage.getItem(PACK_STORE_KEY) || "{}"); } catch (e) { packed = {}; }
       const update = () => {
         const done = inputs.filter(input => input.checked).length;
         if (progress) progress.textContent = `${done} / ${inputs.length} packed`;
@@ -3728,19 +3800,136 @@
         input.checked = !!packed[input.dataset.pack];
         input.addEventListener("change", () => {
           packed[input.dataset.pack] = input.checked;
-          localStorage.setItem(PACK_STORE_KEY, JSON.stringify(packed));
+          storage.setItem(PACK_STORE_KEY, JSON.stringify(packed));
           update();
         });
       });
       document.getElementById("resetPackingBtn")?.addEventListener("click", () => {
         packed = {};
         inputs.forEach(input => { input.checked = false; });
-        localStorage.removeItem(PACK_STORE_KEY);
+        storage.removeItem(PACK_STORE_KEY);
         update();
         toast("Packing checklist reset");
       });
       update();
     }
+
+    // Operational corrections share one set of displayed notes and export content.
+    DAY_DETAILS.d27.move='Hongdae → palaces → Hongdae → Gimpo (GMP); Jeju (CJU) arrival 22:15, then prebooked transfer south';
+    DAY_DETAILS.d27.prep='Confirm luggage storage, Secret Garden slot, spa capacity and arrival transfer; villa access saved privately';
+    DAY_DETAILS.d28.move='Conditional east loop: Seopjikoji → Seongsan → optional Manjanggul';
+    DAY_DETAILS.d28.prep='No early pickup assumption: confirm both drivers and car collection before relying on these times';
+    DAY_DETAILS.d30.move='Villa → O’sulloc → Hyeopjae / Hallim → Aewol → villa → local dinner by taxi';
+    DAY_OPS.d25[0].lines.push('Guard change is scheduled at 10:00 and 14:00. Arrive 09:45 if joining the optional 10:00 ceremony; the main palace visit starts 10:30.');
+    DAY_OPS.d25[1].lines[1]='Leave Insadong about 16:00 and target being at the Namsan viewpoint by 17:30, allowing for access and queues. The sunset time is not a cable-car queue arrival time.';
+    DAY_OPS.d26[1].lines[0]='Confirm one dinner venue for up to eight and one bar lane. Skin analysis and the bathhouse replace DDP/shopping; choose at most one wellness alternative.';
+    DAY_OPS.d27[1].lines[2]='Pack and check out before leaving for the 10:00 palace target. Storage with Bliss is unconfirmed: arrange it in writing or prebook a named luggage-storage service near Hongik Univ. Do not rely on finding eight empty lockers.';
+    DAY_OPS.d27[2].lines[2]='Arrival transfer is unresolved. Do not rely on the 22:40 last rental shuttle after a 22:15 landing. Prebook sufficient passenger/luggage capacity and a late villa arrival, or obtain a written late car handover agreement.';
+    DAY_OPS.d27.push({icon:'💆',title:'Spa is conditional',lines:['15:00 is a target, not a confirmed reservation. Confirm the exact THE SEOL:HA branch, treatment duration, language and simultaneous capacity.','Return to Hongdae around 14:15 only if the palace tour and lunch allow it; shorten Bukchon first. Finish treatment by 17:00, collect stored bags, eat and reach GMP around 19:30. If any element slips, drop the spa.']});
+    DAY_OPS.d28[1].lines[0]='From the south-coast villa, use Seopjikoji first (11:00 target), lunch, then Seongsan (13:00 target). Times depend on cars being collected without an exhausted pre-dawn return to the airport.';
+    DAY_OPS.d28.unshift({icon:'🚘',title:'Transport decision before this day works',lines:['Option A: supplier confirms late Tuesday handover and shuttle in writing. Option B: prebook arrival transfer, rest, then arrange Wednesday collection/delivery with a quoted time. Record the confirmed choice in Crew Desk.','Two cars need two named eligible drivers. Confirm both in Crew Desk, vehicle/luggage capacity, licence/IDP requirements and insurance with the supplier.','If the group is not ready to leave the villa by about 10:00, choose Seongsan OR Seopjikoji, lunch, then return south. Drop Manjanggul rather than racing its last-entry cutoff.']});
+    DAY_OPS.d29[0].lines.push('Default is an out-and-back, keeping cars at the start. Nambyeok or lower-lot walking can use the afternoon buffer: drop both south-coast add-ons rather than compressing the hike.');
+    DAY_OPS.d30[2].lines[1]='Leave Aewol around 18:00 and return both cars to the villa. Book dinner around 20:00 near Jungmun / Seogwipo with taxis. No unplanned drive home after drinks.';
+    DAY_OPS.d30[2].maps='https://www.google.com/maps/dir/?api=1&origin=Osulloc+Tea+Museum&destination=Aewol+Cafe+Street&waypoints=Hyeopjae+Beach';
+    DAY_OPS.d31[0].title='Shanghai flight · Jason + Zhao';
+    DAY_OPS.d31[0].lines[2]='Zhao is recorded on 9C8570. His onward flight room is marked booked by the group, but has no flight details; add the carrier, date, airport and time before considering it operationally complete.';
+    DAY_OPS.d31[1].lines.push('Confirm the other six travellers’ departure times and transfers before returning both cars. They are not automatically included in the Shanghai airport run.');
+    DAY_OPS.d1[0].lines[1]='Target Yu Garden entry at 14:00, then Old City and Bund by about 16:30. Check ticket entry and closing times before purchase; public streets remain a fallback if garden tickets fail.';
+    DAY_OPS.d1[0].lines[2]='Optional public ferry only after confirming the operating pier, direction and current hours. Use Metro Line 2 for a dependable Lujiazui crossing if ferry details are unclear.';
+    DAY_OPS.d1[2].lines[0]='Rain alternative: replace Wukang / Yu Garden with Shanghai Museum East in Pudong, then Lujiazui. This is a different route, not an extra cross-city stop; check admission requirements.';
+    DAY_OPS.d2[1].lines[2]='Jason’s ticket is recorded. Zhao’s onward room is marked booked without carrier/date/time: obtain those details separately; do not assume he shares the Helsinki connection.';
+    DAY_OPS.d3[1].lines[2]='Zhao’s onward room is marked booked, but the itinerary cannot show his final routing until the flight details are recorded.';
+    STAY_BLOCKS.d27[0].warn='The 10:00 palace time is a target, not a confirmed ticket. Check out before leaving; confirm where bags are stored and when they can be retrieved.';
+    STAY_BLOCKS.d27[0].rows[0].v='Confirm storage with Bliss in writing or reserve a specific staffed storage point near Hongik Univ. Return for bags after the optional spa and before the airport transfer.';
+    STAY_BLOCKS.d27[1].when='Late arrival · allow roughly 23:45–00:30, depending on airport exit and transfer';
+    STAY_BLOCKS.d27[1].warn='Transport unconfirmed: a 22:15 landing leaves only 25 minutes to the last Lotte shuttle. Book an arrival transfer with capacity for eight plus luggage, or get written late handover approval. Do not assume two ordinary taxis suffice.';
+    DRIVING_NOTES.pickup=DAY_OPS.d28[0].lines.join(' ')+' Lotte lists its final airport shuttle at 22:40; arrival flight lands 22:15. A rested morning collection means a later, reduced sightseeing day.';
+    BOOK_BY[0].what='Resolve Jeju arrival transfer, car collection and two approved drivers; do not assume the 22:40 shuttle or a 06:00 next-day pickup works.';
+    const caveDetail=DETAILS.find(d=>/manjanggul/i.test(d.name));
+    if(caveDetail) for(const l of caveDetail.links||[]) if(l.url?.includes('500307'))l.url=l.url.replace('500307','500182');
+    // Remove duplicate target times from parking reference cards: timeline owns the schedule.
+    for(const [day,legs] of Object.entries(DAY_LEGS)) for(const leg of legs){leg.time='';if(day==='d28'&&/Seongsan/.test(leg.leg))leg.leg='Seongsan parking · after Seopjikoji';}
+    DAY_LEGS.d30=DAY_LEGS.d30.filter(l=>!l.leg.includes('Option A Jeju City'));
+    const os=DAY_LEGS.d30.findIndex(l=>/O.sulloc/.test(l.leg));if(os>0)DAY_LEGS.d30.unshift(DAY_LEGS.d30.splice(os,1)[0]);
+
+    const REVIEW_ACTIONS = [
+      ['Jeju arrival + vehicles','Get a written late handover or prebook a transfer with capacity for eight plus luggage; choose a rested car-collection plan. Confirm a second eligible driver, insurance and passenger split.'],
+      ['Seoul checkout + luggage','Arrange storage after the 11:00 checkout on Tue 27. The palace target is 10:00, so check out before leaving.'],
+      ['Tickets + wellness','Reserve the exact Secret Garden tour and NANTA performance; identify “Ji”. Confirm spa branch, duration and simultaneous capacity.'],
+      ['Accommodation close-out','Verify Monterrey cancellation outcome: recorded deadline 27 Sep 16:00 KST has passed. Agree the eight-person bed/floor-mat allocation and get late-entry instructions privately.'],
+      ['People + flight details','Add Raymond’s arrival. Record Zhao’s onward flight details despite the room being marked booked; confirm the other six travellers’ Jeju exit transfers.'],
+      ['Food + spending','Choose from the sourced shortlists in Crew Desk. Confirm party size, hours and menu before booking. Jeju half-payment is recorded as paid; remaining ₩2.45M due 12 Oct. Shanghai CNY 1,918 + 300 deposit remains payable at check-in. Add transport, food and activity budgets.']
+    ];
+    function reviewPanelHtml(){
+      const missing=state.players.filter(p=>!p.arrival?.date).map(p=>p.name);
+      const noDetails=state.desk.rooms.filter(r=>roomSettled(r)&&!r.log?.text&&!r.chosen).map(r=>r.title);
+      return `<h3>Seoul → Jeju → Shanghai</h3><details><summary>Start here · trip overview & actions</summary><p>Depart 23 Oct · arrive Seoul 24 Oct · Korea crew up to eight · Shanghai is Jason + Zhao only. All itinerary times are local. <strong>Times are targets unless a booking is recorded.</strong></p>
+      <details><summary>Still to confirm before this plan is ready</summary><p>Review checklist · updated 27 Sep. Resolve in Crew Desk; these reminders are not booking confirmations.</p><ul>${REVIEW_ACTIONS.map(([t,b])=>`<li><b>${escapeHtml(t)}.</b> ${escapeHtml(b)}</li>`).join('')}</ul>${missing.length?`<p><b>Arrival dates missing:</b> ${escapeHtml(missing.join(', '))}</p>`:''}${noDetails.length?`<p><b>Marked done without details:</b> ${escapeHtml(noDetails.join(' · '))}</p>`:''}</details>
+      <details><summary>First time here? Understand the geography</summary><div class="review-grid">
+      <div><h4>Seoul · 24–27 Oct</h4><p>Hongdae is the western base. The palaces and Bukchon are north of the centre; Myeongdong and Namsan are central. ICN is Incheon International Airport, well west of Seoul. GMP is Gimpo Airport, the domestic departure for Jeju.</p><a href="https://www.openstreetmap.org/#map=11/37.556/126.965" target="_blank" rel="noopener">Open north-up Seoul map ↗</a></div>
+      <div><h4>Jeju · 27–31 Oct</h4><p>CJU and car depots are on the north coast. Hye-yum Villa is on the south coast near Jungmun / Seogwipo, roughly an hour away. East: Seongsan and Seopjikoji. West: O’sulloc, Hyeopjae and Aewol. Hallasan sits between the coasts.</p><a href="https://www.openstreetmap.org/#map=10/33.377/126.529" target="_blank" rel="noopener">Open north-up Jeju map ↗</a></div>
+      <div><h4>Shanghai · 31 Oct–2 Nov</h4><p>The Off Bund hotel is in Puxi, west of the Huangpu River. Lujiazui’s towers are across the river in Pudong. PVG is Pudong International Airport, far southeast; leave a full airport-transfer buffer.</p><a href="https://www.openstreetmap.org/#map=11/31.209/121.553" target="_blank" rel="noopener">Open north-up Shanghai map ↗</a></div></div></details>
+      <div class="review-actions"><button class="btn small" id="reviewDesk">Open booking decisions</button><button class="btn small secondary" id="downloadOffline">Download offline day pack</button><button class="btn small ghost" id="reviewIdentity">Choose who’s editing</button></div></details>`;
+    }
+    const reviewPanel=document.createElement('section');reviewPanel.className='review-panel';reviewPanel.id='reviewPanel';
+    document.getElementById('vitinPoster').before(reviewPanel);
+    function renderReview(){
+      const opened=[...reviewPanel.querySelectorAll('details')].map(d=>d.open);reviewPanel.innerHTML=reviewPanelHtml();reviewPanel.querySelectorAll('details').forEach((d,i)=>d.open=!!opened[i]);
+      document.getElementById('reviewDesk').onclick=()=>setActiveTab('desk');
+      document.getElementById('reviewIdentity').onclick=openWhoModal;
+      document.getElementById('downloadOffline').onclick=downloadOffline;
+    }
+    function offlineText(){
+      const lines=['KOREA + SHANGHAI · OFFLINE DAY PACK','Generated '+new Date().toLocaleString('en-GB',{timeZone:'Asia/Seoul'})+' KST','Local device snapshot · '+(pendingSave?'contains unsynced changes':lastSyncedAt?'last synced '+new Date(lastSyncedAt).toISOString():'not yet synced'),
+        'All itinerary times local. Targets are not confirmed bookings. Links need internet; the text works offline.',
+        'Privately save tickets, passport copy, entry/visa eligibility, insurance contact, accommodation access codes and emergency contacts separately. Do not add those secrets to the public board.',
+        'Korea: Naver Map, Kakao T, Papago, T-money/cash, working data. China: test Alipay/WeChat Pay and roaming/eSIM, keep a physical card and cash backup.',
+        'Official travel help Korea: https://english.visitkorea.or.kr/ · Emergency services Korea: police 112, ambulance/fire 119.',
+        '', 'STILL TO CONFIRM',...REVIEW_ACTIONS.map(([t,b])=>t+': '+b),''];
+      for(const d of TRIP_DAYS){if(dayIsOff(d.id))continue;lines.push('\n'+d.date+' — '+d.city, 'Sleep: '+DAY_DETAILS[d.id].sleep,'Travel: '+DAY_DETAILS[d.id].move,'Prepare: '+DAY_DETAILS[d.id].prep);
+        for(const it of state.plan.items.filter(x=>x.dayId===d.id).sort(sortPlanItems))lines.push((it.optional?'Alternative · ':'')+(it.time||'Flexible')+' — '+it.title+(it.note?'\n  '+it.note:''));
+        for(const block of STAY_BLOCKS[d.id]||[])lines.push(block.title+' · '+block.when,...block.rows.map(r=>r.k+': '+r.v),block.warn||'',block.maps||'');
+        for(const block of DAY_OPS[d.id]||[])lines.push(block.title,...block.lines,block.link||'');
+        for(const l of DAY_LEGS[d.id]||[])lines.push('Parking: '+l.leg,l.note,l.space,l.naver||l.maps,'Backup: '+l.backup,l.backupMaps||'');
+      }
+      lines.push('\nFOOD SHORTLISTS · not reservations');for(const x of FOOD_EVIDENCE)lines.push(x[2]+' — '+x[3],x[5]+' · checked 27 Sep 2026',x[6],x[7],x[4]);
+      return lines.join('\n');
+    }
+    function downloadOffline(){const blob=new Blob([offlineText()],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='korea-offline-'+new Date().toISOString().slice(0,10)+'.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Day pack downloaded. Save private tickets separately.');}
+    // Preserve typed drafts when another action or remote update redraws the board.
+    document.addEventListener('input',e=>{if(e.target.matches('input,textarea'))e.target.dataset.userDraft='true';});
+    const originalRenderAll=renderAll;
+    renderAll=function(){
+      const fields=[...document.querySelectorAll('input,textarea,select')];
+      const drafts=fields.map((e,i)=>({i,id:e.id,data:JSON.stringify([...e.attributes].filter(a=>a.name.startsWith('data-')&&a.name!=='data-user-draft').map(a=>[a.name,a.value])),draft:e.dataset.userDraft,value:e.value,checked:e.checked,focus:e===document.activeElement,start:e.selectionStart,end:e.selectionEnd})).filter(x=>x.draft||x.focus);
+      originalRenderAll();renderReview();const next=[...document.querySelectorAll('input,textarea,select')];
+      for(const d of drafts){const e=d.id?document.getElementById(d.id):next.find(x=>JSON.stringify([...x.attributes].filter(a=>a.name.startsWith('data-')&&a.name!=='data-user-draft').map(a=>[a.name,a.value]))===d.data);if(!e)continue;
+        if(d.draft){e.value=d.value;e.checked=d.checked;e.dataset.userDraft='true';}if(d.focus){e.focus({preventScroll:true});try{e.setSelectionRange(d.start,d.end)}catch(_){}}
+      }
+    };
+    document.getElementById('browseBoard').onclick=()=>document.getElementById('whoModal').classList.remove('active');
+    // Choosing an identity is attribution, NOT authentication. Enforce it before contributions.
+    const editingSelector='input:not([data-pack]),textarea,select,[data-vote],[data-ls],[data-vibe],[data-piece],[data-desk],[data-plan],[data-taskroom],#planLockBtn,#addIdeaBtn,#addRoomBtn';
+    document.addEventListener('click',e=>{
+      if(e.target.closest('#whoModal,#reviewPanel,.traveller-row[data-player],#changeWhoBtn'))return;
+      if(whoamiSaved()===null&&e.target.closest(editingSelector)){e.preventDefault();e.stopImmediatePropagation();openWhoModal();}
+      const b=e.target.closest('button');if(!b)return;
+      const act=b.dataset.desk;
+      if(['addopt','addnote','savelog'].includes(act)){
+        const container=b.closest('article')||b.parentElement;
+        container.querySelectorAll('[data-user-draft]').forEach(x=>{
+          if(act==='addopt'&&x.closest('.add-opt') || act==='addnote'&&x.classList.contains('rn-input') || act==='savelog'&&x.dataset.f==='logtext')delete x.dataset.userDraft;
+        });
+      }
+      if(b.dataset.plan==='dayadd')document.querySelectorAll('[data-dayadd="'+b.dataset.day+'"]').forEach(x=>delete x.dataset.userDraft);
+    },true);
+    document.addEventListener('focusin',e=>{if(whoamiSaved()===null&&e.target.matches('input:not([data-pack]),textarea,select')&&!e.target.closest('#whoModal'))openWhoModal();});
+    document.addEventListener('keydown',e=>{
+      if((e.key==='Enter'||e.key===' ')&&e.target.matches('.traveller-row[role=button]')){e.preventDefault();e.target.click();}
+      const modal=document.querySelector('#detailModal.active,#whoModal.active,#lightbox.active');
+      if(!modal||e.key!=='Tab')return;const focusable=[...modal.querySelectorAll('button,a[href],input,select,textarea,[tabindex="0"]')].filter(x=>x.getClientRects().length);if(!focusable.length)return;
+      const first=focusable[0],last=focusable[focusable.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+    });
 
     spawnLeaves();
     renderAll();

@@ -1,39 +1,29 @@
 # Korea Boys Trip Board
 
-This repo hosts the Korea boys trip planning board on GitHub Pages.
+Live board: https://jasonxu8693.github.io/korea-boys-trip-board/
 
-## Files
+`index.html` is the canonical single-page app with inline CSS/JavaScript. `images/` contains the existing image assets. There is no build step. GitHub Pages serves `main` at the repository root; `.nojekyll` disables Jekyll processing. The old `korea-idol-quest-board.html` redirects to the current board.
 
-- `index.html` is the board
-- `.nojekyll` tells GitHub Pages to serve the static HTML directly
-- `apps-script/Code.gs` is the optional Google Sheets sync backend
+## Current sync
 
-## GitHub Pages setup
+The board uses Supabase REST, not the historical Google Apps Script backend. `apps-script/` is archived reference and must not be deployed as a second writer.
 
-1. Create a new GitHub repository, for example `korea-boys-trip-board`
-2. Upload `index.html` and `.nojekyll` to the repository root
-3. Go to Settings → Pages
-4. Set Source to `Deploy from a branch`
-5. Choose `main` and `/root`
-6. Wait a few minutes, then open the published GitHub Pages URL
+Writes use a three-way merge against the last read base, then a conditional PATCH matching `updated_at`. A zero-row response means another writer won the race: read again and retry. Same-field conflicts require a user choice. Pending changes and their base are saved in a local outbox and retried on reconnect. Per-device identity and personal packing stay local.
 
-## Google Sheets sync setup
+All crew members should reload after this update. Old open tabs still contain the old unconditional writer; client-side improvements cannot constrain those clients. A timestamp-updating database trigger is required for conditional writes.
 
-GitHub Pages can host the board, but it cannot save votes by itself. To save live votes, use the Google Apps Script file in `apps-script/Code.gs`.
+## Access-control limitation
 
-1. Create a new Google Sheet called `Korea Boys Trip Board Sync`
-2. Go to Extensions → Apps Script
-3. Paste the contents of `apps-script/Code.gs`
-4. Run `setup` once and authorise it
-5. Click Deploy → New deployment → Web app
-6. Set `Execute as` to `Me`
-7. Set `Who has access` to `Anyone`
-8. Copy the Web App URL ending in `/exec`
-9. Open `index.html`, find `const REMOTE_API_URL = "";`, and paste the URL between the quotes
-10. Upload the updated `index.html` back to GitHub
+Choosing a name is attribution, not authentication. The existing public Supabase configuration is unchanged. Do not put door codes, ticket references, passport details, credentials or private insurance information on this public board. Proper protection requires authenticated membership policies and an atomic write endpoint enforced in the backend; this cannot be implemented securely using a public key alone.
 
-After that, everyone should use the GitHub Pages URL, not the raw HTML file.
+## Content updates
 
-## Important limitations
+Existing saved plans receive the idempotent `koreaReviewV11` migration. Timetable edits match the old day/title/time so a traveller's custom retiming is preserved. Default food options merge by stable id while retaining votes. Never clear the live board to make defaults appear.
 
-This is a lightweight group trip sync, not a full application backend. It saves the whole board state to one Google Sheet row. It is fine for a seven person trip, but if two people click at exactly the same time, the latest save may win.
+The trip overview lists unresolved logistics. Shortlist evidence is distinct from availability and booking confirmation. The downloadable text pack is a dated local snapshot, not an offline cached version of the interactive site.
+
+## Validation
+
+Run `node tests/regression.cjs` (no packages required). It uses synthetic state and mocked network responses; it never writes to the live backend. It covers merge conflicts, failed saves, missed polling updates, migrations, URL/time validation and offline export content.
+
+Before deployment, inspect all four sections at 375, 768 and 1440 px, check the published version, and retain the group's existing state. Desktop browser emulation is not certification of every iOS/Android browser.
