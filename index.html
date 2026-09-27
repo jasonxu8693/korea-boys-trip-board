@@ -1194,9 +1194,13 @@
 
   <script>
     const STORE_KEY = "koreaBoysTripQuestBoardV1";
-    // Paste your Google Apps Script Web App URL here after deployment.
-    // It should look like: https://script.google.com/macros/s/AKfycb.../exec
-    const REMOTE_API_URL = "https://script.google.com/macros/s/AKfycbxK5YZiKjHuebkuM1wwoMA-lzp_wM9szMjvwX88wsvcvhlg9n7M962c8GdehEIgiPF04w/exec";
+    // Group sync: Supabase PostgREST (plain fetch — no client library, file stays self-contained).
+    // Shared "trip-boards" project, table board_state, one row per board. Migrated from the Google
+    // Apps Script sheet on 27 Sep 2026 (the sheet is kept untouched as a rollback).
+    const SUPABASE_URL = "https://dxgmeccfipppvjxeeidf.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_iuM5ZRVEFFDk4ic0cU2xhA_PmSTS6Sq";
+    const BOARD_KEY = "korea-boys-trip-oct2026-v1";
+    const SB_HEADERS = { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY, "Content-Type": "application/json" };
     let remoteSaveTimer = null;
     let remoteLoadAttempted = false;
     let lastSeenUpdatedAt = null;
@@ -1596,7 +1600,7 @@
     }
 
     function hasRemoteSync() {
-      return REMOTE_API_URL && REMOTE_API_URL.startsWith("https://script.google.com/");
+      return !!(SUPABASE_URL && SUPABASE_KEY && BOARD_KEY);
     }
 
     function mergeRemoteState(remote) {
@@ -1653,63 +1657,49 @@
       if (textEl) textEl.textContent = rel ? `Live · ${rel}` : "Live";
     }
 
-    function remotePull(opts) {
+    async function remotePull(opts) {
       opts = opts || {};
       if (!hasRemoteSync()) { setSyncChip("disabled"); return; }
       if (!opts.poll) setSyncChip("syncing");
-      const callbackName = `koreaBoardSync_${Date.now()}_${Math.floor(Math.random() * 100000)}`;
-      const script = document.createElement("script");
-      const startedAt = Date.now();
-      let done = false;
-      const cleanup = () => {
-        if (done) return;
-        done = true;
-        try { delete window[callbackName]; } catch (e) { window[callbackName] = undefined; }
-        script.remove();
-      };
-      window[callbackName] = (response) => {
-        if (response && response.ok) {
-          const remoteStamp = response.updatedAt || null;
+      try {
+        const r = await fetch(SUPABASE_URL + "/rest/v1/board_state?board_key=eq." + encodeURIComponent(BOARD_KEY) + "&select=state,updated_at", { headers: SB_HEADERS, cache: "no-store" });
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        const rows = await r.json();
+        const row = (Array.isArray(rows) && rows.length) ? rows[0] : null;
+        if (row && row.state && typeof row.state === "object" && Object.keys(row.state).length) {
+          const remoteStamp = row.updated_at || null;
           const changed = remoteStamp && remoteStamp !== lastSeenUpdatedAt;
           // Don't overwrite local edits that haven't finished saving yet.
           const safe = !pendingSave && (Date.now() - lastLocalSaveAt > 4000);
-          // The first load always applies, unless this device saved something while it was
-          // still waiting (a cold Apps Script can take 30s+). Then only a safe merge applies.
-          const initialOk = opts.initial && lastLocalSaveAt < startedAt;
-          const allowMerge = opts.manual || initialOk || (changed && safe);
-          if (response.state && allowMerge) {
-            mergeRemoteState(response.state);
+          // Until this device has read the group's state once, the group's copy always wins.
+          const firstLoad = !remoteLoadAttempted;
+          const allowMerge = opts.manual || opts.initial || firstLoad || (changed && safe);
+          if (allowMerge) {
+            mergeRemoteState(row.state);
             renderAll();
             if (opts.manual) toast("Pulled the latest from the group");
-            else if (changed && !opts.initial) toast("Synced a group update");
+            else if (changed && !opts.initial && !firstLoad) toast("Synced a group update");
           }
           lastSeenUpdatedAt = remoteStamp || lastSeenUpdatedAt;
-          lastSyncedAt = Date.now();
           remoteLoadAttempted = true;
-          setSyncChip("live");
         } else {
-          setSyncChip(lastSyncedAt ? "live" : "offline");
-          if (opts.manual) toast("Could not read the group sheet");
+          // Empty remote: seed it from this device rather than ever letting an
+          // empty remote row overwrite local state.
+          remoteLoadAttempted = true;
+          if (opts.initial) queueRemoteSave();
         }
-        cleanup();
-      };
-      script.onerror = () => {
+        lastSyncedAt = Date.now();
+        setSyncChip("live");
+      } catch (e) {
         setSyncChip(lastSyncedAt ? "live" : "offline");
-        if (opts.manual) toast("Could not reach the group sheet");
-        cleanup();
-      };
-      script.src = `${REMOTE_API_URL}?callback=${encodeURIComponent(callbackName)}&t=${Date.now()}`;
-      document.body.appendChild(script);
-      // Apps Script cold-starts can take 30s+. Flag slowness at 10s but keep the callback alive,
-      // so a late answer still lands; only give up for good at 60s.
-      setTimeout(() => { if (!done) setSyncChip(lastSyncedAt ? "live" : "offline"); }, 10000);
-      setTimeout(() => { if (!done) cleanup(); }, 60000);
+        if (opts.manual) toast("Could not reach group sync");
+      }
     }
 
     function startSyncLoops() {
       if (!hasRemoteSync()) { setSyncChip("disabled"); return; }
       // Quietly check for group updates in the background.
-      setInterval(() => remotePull({ poll: true }), 25000);
+      setInterval(() => remotePull({ poll: true }), 10000);
       // Keep the "synced 2m ago" label fresh.
       setInterval(() => {
         const chip = document.getElementById("syncChip");
@@ -1721,42 +1711,41 @@
 
     function queueRemoteSave() {
       if (!hasRemoteSync()) return;
+      // Save gate: a device that has never read the group's state (offline start, blocked
+      // network) must not push its possibly-stale local copy over everyone else's.
+      if (!remoteLoadAttempted) return;
       pendingSave = true;
       setSyncChip("syncing");
       clearTimeout(remoteSaveTimer);
-      remoteSaveTimer = setTimeout(remoteSave, 450);
+      remoteSaveTimer = setTimeout(remoteSave, 800);
     }
 
-    function remoteSave() {
-      if (!hasRemoteSync()) return;
-      const iframeId = "koreaBoardSyncFrame";
-      let iframe = document.getElementById(iframeId);
-      if (!iframe) {
-        iframe = document.createElement("iframe");
-        iframe.id = iframeId;
-        iframe.name = iframeId;
-        iframe.style.display = "none";
-        document.body.appendChild(iframe);
-      }
-      const form = document.createElement("form");
-      form.method = "POST";
-      form.action = REMOTE_API_URL;
-      form.target = iframeId;
-      form.style.display = "none";
-
-      const input = document.createElement("textarea");
-      input.name = "payload";
-      input.value = JSON.stringify({ state, updatedAt: new Date().toISOString() });
-      form.appendChild(input);
-      document.body.appendChild(form);
-      form.submit();
+    let saveSeq = 0;
+    async function remoteSave() {
+      if (!hasRemoteSync() || !remoteLoadAttempted) return;
+      const mySeq = ++saveSeq;
       lastLocalSaveAt = Date.now();
-      setTimeout(() => form.remove(), 1000);
-      setTimeout(() => {
-        pendingSave = false;
-        lastSyncedAt = Date.now();
-        setSyncChip("live");
-      }, 1300);
+      try {
+        const r = await fetch(SUPABASE_URL + "/rest/v1/board_state?on_conflict=board_key", {
+          method: "POST",
+          headers: { ...SB_HEADERS, Prefer: "resolution=merge-duplicates,return=representation" },
+          body: JSON.stringify([{ board_key: BOARD_KEY, state }])
+        });
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        const rows = await r.json();
+        // Track our own write's stamp so the next poll doesn't re-merge it.
+        if (Array.isArray(rows) && rows[0] && rows[0].updated_at) lastSeenUpdatedAt = rows[0].updated_at;
+        if (mySeq === saveSeq) {
+          pendingSave = false;
+          lastSyncedAt = Date.now();
+          setSyncChip("live");
+        }
+      } catch (e) {
+        if (mySeq === saveSeq) {
+          pendingSave = false;
+          setSyncChip(lastSyncedAt ? "live" : "offline");
+        }
+      }
     }
 
     function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
