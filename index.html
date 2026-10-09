@@ -347,6 +347,16 @@
     .pack-head p { margin: 5px 0 0; color: var(--subtle); font-size: 12px; }
     .pack-progress { flex: none; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,0.08); color: var(--muted); padding: 8px 12px; font-size: 11px; font-weight: 900; }
     .pack-card { min-height: 0; }
+    .bag-card { margin-top: 14px; }
+    .bag-rule { margin: 6px 0 12px; padding: 10px 12px; border-radius: 12px; background: rgba(255,209,92,0.12); border: 1px solid rgba(255,209,92,0.3); color: #ffe7ae; font-size: 13px; line-height: 1.5; }
+    .bag-table { width: 100%; border-collapse: collapse; font-size: 12.5px; line-height: 1.4; }
+    .bag-table th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--subtle); padding: 6px 8px; border-bottom: 1px solid var(--line); }
+    .bag-table td { padding: 9px 8px; border-bottom: 1px solid rgba(255,255,255,0.07); vertical-align: top; }
+    .bag-table td b { color: var(--ink); }
+    .bag-table .tight { color: #ffd15c; font-weight: 800; }
+    .bag-table small { display: block; color: var(--subtle); margin-top: 2px; }
+    .bag-notes { margin: 10px 0 0; padding-left: 18px; color: var(--muted); font-size: 12.5px; line-height: 1.55; }
+    @media (max-width: 640px) { .bag-table thead { display: none; } .bag-table tr { display: block; padding: 8px 0; border-bottom: 1px solid var(--line); } .bag-table td { display: block; border: 0; padding: 3px 4px; } .bag-table td:first-child { font-weight: 800; } }
     .pack-list { display: grid; gap: 8px; margin-top: 10px; }
     .pack-item { position: relative; z-index: 1; display: grid; grid-template-columns: auto 1fr; align-items: start; gap: 9px; color: var(--muted); font-size: 12.5px; line-height: 1.42; cursor: pointer; }
     .pack-item input { width: 17px; height: 17px; margin: 1px 0 0; accent-color: var(--neon); }
@@ -1263,7 +1273,24 @@
               <label class="pack-item"><input type="checkbox" data-pack="car-kit"><span>Car charger, rental reference and return / fuel instructions</span></label>
             </div></div>
           </div>
-          <div class="pack-foot"><span>Backpack-first: keep space for shopping and check the confirmed domestic-flight baggage allowance before packing. Hallasan kit should move into the day bag the night before.</span><button class="btn small secondary" id="resetPackingBtn" type="button">Reset my checklist</button></div>
+          <div class="info-card bag-card"><div class="emoji">🧳</div><h3>Jason's bag allowances, flight by flight</h3>
+            <p class="bag-rule"><b>Pack to the tightest limits:</b> one checked bag of <b>20 kg max</b> (two flights cap it at 20 kg, not 23), plus <b>one backpack of 7 kg max that fits 40 × 30 × 20 cm</b>, which is Spring Airlines' limit for everything you carry on, weighed at the gate. Korean shopping counts towards both from Tuesday onwards.</p>
+            <table class="bag-table">
+              <thead><tr><th>Flight</th><th>Checked bag</th><th>Cabin bag</th></tr></thead>
+              <tbody>
+                <tr><td>Fri 23 → Sat 24 Oct<small>London LHR → Qingdao → Seoul ICN · Capital Airlines JD432 + Qingdao Airlines QW901</small></td><td><b>1 × 23 kg</b><small>On the ticket. Checked through to Incheon.</small></td><td><span class="tight">~5 kg</span>, 1 piece, 55 × 40 × 20 cm<small>Typical for both Chinese airlines (not shown on the ticket), so keep the backpack light.</small></td></tr>
+                <tr><td>Tue 27 Oct<small>Seoul GMP → Jeju CJU · Asiana OZ8997, economy</small></td><td><span class="tight">20 kg</span><small>Asiana domestic economy allowance.</small></td><td>10 kg, 1 piece, 115 cm total<small>Asiana's standard; easily fine.</small></td></tr>
+                <tr><td>Sat 31 Oct<small>Jeju CJU → Shanghai PVG · Spring Airlines 9C8570</small></td><td><span class="tight">1 × 20 kg</span><small>Included on the ticket. Extra weight is cheaper bought online beforehand than at the desk.</small></td><td><span class="tight">7 kg total</span> incl. any personal item, max 40 × 30 × 20 cm<small>The strictest leg: a normal cabin roller won't pass. Weighed at the gate.</small></td></tr>
+                <tr><td>Mon 2 → Tue 3 Nov<small>Shanghai PVG → Helsinki → London LHR · Finnair AY88 + AY1331, economy (Qantas reward)</small></td><td><b>Likely 1 × 23 kg</b><small>To confirm: check the e-ticket PDF or Qantas Manage Booking. Finnair sells extra bags from ~¥1,324.</small></td><td>8 kg bag (56 × 45 × 25 cm) + a personal item (40 × 30 × 15 cm)<small>Finnair economy standard.</small></td></tr>
+              </tbody>
+            </table>
+            <ul class="bag-notes">
+              <li>Big Olive Young or electronics haul? Weigh the bag at the Airbnb on Tuesday. Over 20 kg, either ship it home or pre-buy extra weight on Spring for Saturday.</li>
+              <li>Power banks and lighters always go in the cabin bag, never the checked bag (all four airlines).</li>
+              <li>Booking references stay in Gmail, not on this shared board.</li>
+            </ul>
+          </div>
+          <div class="pack-foot"><span>Backpack-first: keep space for shopping. Jason's per-flight bag limits are in the card above (checked 20 kg, cabin 7 kg). Hallasan kit should move into the day bag the night before.</span><button class="btn small secondary" id="resetPackingBtn" type="button">Reset my checklist</button></div>
 
           <h3 style="margin:24px 0 12px">📸 Korea in pictures</h3>
           <div class="photo-gallery">
@@ -3226,7 +3253,7 @@
       d27: [
         { icon: "🍁", title: "Changdeokgung + Secret Garden", lines: ["This is now on Tuesday because the palace closes Monday. Reserve a timed Secret Garden tour and enter the palace before the tour slot.", "September–October palace hours are 09:00–18:00, last admission one hour before close. Palace KRW 3,000; Secret Garden adults KRW 5,000.", "The garden is at its best in autumn; allow roughly 90 minutes for the guided garden route."], link: "https://english.visitkorea.or.kr/svc/whereToGo/locIntrdn/rgnContentsView.do?vcontsId=94399", label: "Official palace details" },
         { icon: "🏘️", title: "Bukchon without backtracking", lines: ["Exit toward Anguk and follow the signed visitor route through Bukchon; it is a living residential neighbourhood, not an open-air museum.", "Keep voices down, avoid private doorways and finish the protected alley section within visitor hours.", "Lunch around Anguk, then return to the hotel for bags by about 15:30–16:00."] },
-        { icon: "✈️", title: "Gimpo flight buffer", lines: ["Target leaving central Seoul at 18:30–19:00 for a ~21:00 domestic flight; confirm the final airline terminal and baggage allowance.", "Keep passports/IDs and boarding passes with each traveller, not one organiser.", "On Jeju arrival: collect cars only if the desk is confirmed open after the 22:15 landing; otherwise taxi tonight and collect in the morning."], maps: "https://www.google.com/maps/dir/?api=1&origin=Changdeokgung+Palace&destination=Bukchon+Hanok+Village" }
+        { icon: "✈️", title: "Gimpo flight buffer", lines: ["Target leaving central Seoul at 18:30–19:00 for the 21:00 Asiana flight. Bags: 20 kg checked, 10 kg cabin (Asiana domestic economy).", "Keep passports/IDs and boarding passes with each traveller, not one organiser.", "On Jeju arrival: collect cars only if the desk is confirmed open after the 22:15 landing; otherwise taxi tonight and collect in the morning."], maps: "https://www.google.com/maps/dir/?api=1&origin=Changdeokgung+Palace&destination=Bukchon+Hanok+Village" }
       ],
       d28: [
         { icon: "🌋", title: "Seongsan Ilchulbong", lines: ["Allow 60–90 minutes for the summit route and photos; the stair climb is short but steep.", "September–October listed hours are 05:00–19:00, ticket sales to 18:00; closed the first Monday of each month.", "If the group wants the actual sunrise, leave the base before dawn; otherwise 11:00 is a comfortable scenic visit."], link: "https://www.visitjeju.net/en/detail/view?contentsid=CONT_000000000500349", label: "Official Jeju listing" },
